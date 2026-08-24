@@ -3386,6 +3386,370 @@ DOM.resetEverything.addEventListener(
     "click",
     resetEverything
 );
+    /* ============================================================
+   052A — EVENT CATEGORY RENDERER
+   ============================================================ */
+
+const EVENT_CATEGORIES = [
+
+    {
+        id: "weather",
+        icon: "🌪️",
+        name: "EXTREME WEATHER",
+        description: "Tornadoes, storms, wind and chaos.",
+        events: [
+            {
+                code: "H-TORNADO",
+                name: "H-TORNADO",
+                description: "A tornado hits the simulation.",
+                points: 500,
+                danger: true
+            },
+            {
+                code: "SUPERCELL",
+                name: "SUPERCELL",
+                description: "A powerful thunderstorm develops.",
+                points: 300,
+                danger: true
+            },
+            {
+                code: "FLASH-FLOOD",
+                name: "FLASH FLOOD",
+                description: "Water rapidly floods the area.",
+                points: 250,
+                danger: true
+            }
+        ]
+    },
+
+    {
+        id: "fire",
+        icon: "🔥",
+        name: "FIRE & HEAT",
+        description: "Heat waves, fires and emergencies.",
+        events: [
+            {
+                code: "HEAT-WAVE",
+                name: "HEAT WAVE",
+                description: "Extreme heat hits the simulation.",
+                points: 200,
+                danger: true
+            },
+            {
+                code: "WILDFIRE",
+                name: "WILDFIRE",
+                description: "A wildfire event begins.",
+                points: 400,
+                danger: true
+            }
+        ]
+    },
+
+    {
+        id: "water",
+        icon: "🌊",
+        name: "WATER EVENTS",
+        description: "Floods, waves and water disasters.",
+        events: [
+            {
+                code: "FLOOD",
+                name: "FLOOD",
+                description: "Floodwater spreads through the area.",
+                points: 300,
+                danger: true
+            },
+            {
+                code: "STORM-SURGE",
+                name: "STORM SURGE",
+                description: "A major surge reaches the coast.",
+                points: 450,
+                danger: true
+            }
+        ]
+    },
+
+    {
+        id: "infrastructure",
+        icon: "🏗️",
+        name: "INFRASTRUCTURE",
+        description: "Buildings, roads and utilities.",
+        events: [
+            {
+                code: "POWER-OUT",
+                name: "POWER OUTAGE",
+                description: "The electrical grid goes offline.",
+                points: 150,
+                danger: true
+            },
+            {
+                code: "BRIDGE-CLOSED",
+                name: "BRIDGE CLOSED",
+                description: "A major bridge becomes unavailable.",
+                points: 100,
+                danger: false
+            }
+        ]
+    }
+
+];
+
+
+function renderCategories() {
+
+    DOM.categories.innerHTML = "";
+
+
+    EVENT_CATEGORIES.forEach(
+        category => {
+
+            const wrapper =
+                document.createElement("div");
+
+            wrapper.className =
+                "category";
+
+
+            const header =
+                document.createElement("button");
+
+            header.className =
+                "category-header";
+
+            header.type =
+                "button";
+
+
+            header.innerHTML = `
+                <span class="category-left">
+
+                    <span class="category-icon">
+                        ${category.icon}
+                    </span>
+
+                    <span class="category-copy">
+
+                        <span class="category-name">
+                            ${escapeHTML(category.name)}
+                        </span>
+
+                        <span class="category-description">
+                            ${escapeHTML(category.description)}
+                        </span>
+
+                    </span>
+
+                </span>
+
+                <span class="category-arrow">
+                    ▼
+                </span>
+            `;
+
+
+            const grid =
+                document.createElement("div");
+
+            grid.className =
+                "event-grid";
+
+
+            const inner =
+                document.createElement("div");
+
+            inner.className =
+                "event-grid-inner";
+
+
+            category.events.forEach(
+                event => {
+
+                    const button =
+                        document.createElement("button");
+
+                    button.type =
+                        "button";
+
+                    button.className =
+                        "event-button";
+
+                    button.dataset.danger =
+                        event.danger
+                            ? "true"
+                            : "false";
+
+
+                    button.innerHTML = `
+                        <span class="event-code">
+                            ${escapeHTML(event.name)}
+                        </span>
+
+                        <span class="event-description">
+                            ${escapeHTML(event.description)}
+                        </span>
+
+                        <span class="event-points">
+                            +${event.points} POINTS
+                        </span>
+                    `;
+
+
+                    button.addEventListener(
+                        "click",
+                        () => triggerEvent(event)
+                    );
+
+
+                    inner.appendChild(button);
+
+                }
+            );
+
+
+            grid.appendChild(inner);
+
+
+            header.addEventListener(
+                "click",
+                () => {
+
+                    wrapper.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            wrapper.appendChild(header);
+            wrapper.appendChild(grid);
+
+            DOM.categories.appendChild(wrapper);
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   052B — EVENT TRIGGER
+   ============================================================ */
+
+function triggerEvent(event) {
+
+    STATE.score +=
+        event.points;
+
+    STATE.events +=
+        1;
+
+
+    STATE.history.unshift({
+
+        code:
+            event.code,
+
+        name:
+            event.name,
+
+        points:
+            event.points,
+
+        time:
+            Date.now()
+
+    });
+
+
+    STATE.history =
+        STATE.history.slice(
+            0,
+            APP.maxHistory
+        );
+
+
+    renderHistory();
+
+    updateInterface();
+
+    saveState();
+
+
+    showToast(
+        `${event.name}  +${event.points}`
+    );
+
+
+    if (
+        event.danger
+    ) {
+
+        screenShake();
+
+    }
+
+}
+
+
+/* ============================================================
+   052C — HISTORY RENDERER
+   ============================================================ */
+
+function renderHistory() {
+
+    if (
+        !DOM.history
+    ) {
+
+        return;
+
+    }
+
+
+    if (
+        STATE.history.length === 0
+    ) {
+
+        DOM.history.innerHTML = `
+            <div class="history-empty">
+                No events yet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    DOM.history.innerHTML =
+        STATE.history
+            .map(
+                item => `
+                    <div class="history-row">
+
+                        <div class="history-main">
+
+                            <div class="history-code">
+                                ${escapeHTML(item.code)}
+                            </div>
+
+                            <div class="history-name">
+                                ${escapeHTML(item.name)}
+                                · ${formatTime(item.time)}
+                            </div>
+
+                        </div>
+
+                        <div class="history-points">
+                            +${Number(item.points).toLocaleString()}
+                        </div>
+
+                    </div>
+                `
+            )
+            .join("");
+
+}
 
 
 /* ============================================================
