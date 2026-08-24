@@ -3431,6 +3431,1110 @@ function initializeApplication() {
 
 initializeApplication();
 
+   /* ============================================================
+   055 — DISASTER EVENT DATABASE
+   ============================================================ */
+
+const EVENTS = [
+
+    /* =========================
+       WEATHER
+       ========================= */
+
+    {
+        id: "H-TORNADO",
+        code: "H-TORNADO",
+        name: "HOUSE TORNADO",
+        description: "A tornado crosses a residential area.",
+        points: 500,
+        category: "weather",
+        icon: "🌪️",
+        danger: true,
+        effect: "tornado"
+    },
+
+    {
+        id: "TORNADO",
+        code: "TORNADO",
+        name: "TORNADO",
+        description: "A powerful tornado enters the simulation.",
+        points: 350,
+        category: "weather",
+        icon: "🌪️",
+        danger: true,
+        effect: "tornado"
+    },
+
+    {
+        id: "HAIL",
+        code: "HAIL",
+        name: "HAILSTORM",
+        description: "A severe hailstorm sweeps through.",
+        points: 180,
+        category: "weather",
+        icon: "🧊",
+        danger: true,
+        effect: "hail"
+    },
+
+    {
+        id: "LIGHTNING",
+        code: "LIGHTNING",
+        name: "LIGHTNING STRIKE",
+        description: "Lightning flashes across the simulation.",
+        points: 120,
+        category: "weather",
+        icon: "⚡",
+        danger: true,
+        effect: "lightning"
+    },
+
+    {
+        id: "THUNDERSTORM",
+        code: "STORM",
+        name: "THUNDERSTORM",
+        description: "A major thunderstorm develops.",
+        points: 150,
+        category: "weather",
+        icon: "⛈️",
+        danger: true,
+        effect: "storm"
+    },
+
+
+    /* =========================
+       WATER
+       ========================= */
+
+    {
+        id: "FLOOD",
+        code: "FLOOD",
+        name: "FLASH FLOOD",
+        description: "Water rapidly spreads through low areas.",
+        points: 250,
+        category: "water",
+        icon: "🌊",
+        danger: true,
+        effect: "flood"
+    },
+
+    {
+        id: "TSUNAMI",
+        code: "TSUNAMI",
+        name: "TSUNAMI",
+        description: "A massive wave event is detected.",
+        points: 700,
+        category: "water",
+        icon: "🌊",
+        danger: true,
+        effect: "tsunami"
+    },
+
+
+    /* =========================
+       FIRE
+       ========================= */
+
+    {
+        id: "FIRE",
+        code: "FIRE",
+        name: "STRUCTURE FIRE",
+        description: "A fire event begins.",
+        points: 300,
+        category: "fire",
+        icon: "🔥",
+        danger: true,
+        effect: "fire"
+    },
+
+    {
+        id: "WILDFIRE",
+        code: "WILDFIRE",
+        name: "WILDFIRE",
+        description: "A wildfire spreads across the simulation.",
+        points: 450,
+        category: "fire",
+        icon: "🔥",
+        danger: true,
+        effect: "wildfire"
+    },
+
+
+    /* =========================
+       SPACE
+       ========================= */
+
+    {
+        id: "METEOR",
+        code: "METEOR",
+        name: "METEOR EVENT",
+        description: "A meteor enters the simulation.",
+        points: 600,
+        category: "space",
+        icon: "☄️",
+        danger: true,
+        effect: "meteor"
+    },
+
+
+    /* =========================
+       CHAOS
+       ========================= */
+
+    {
+        id: "BLACKOUT",
+        code: "BLACKOUT",
+        name: "TOTAL BLACKOUT",
+        description: "The electrical grid goes offline.",
+        points: 200,
+        category: "chaos",
+        icon: "🔌",
+        danger: true,
+        effect: "blackout"
+    },
+
+    {
+        id: "CHAOS",
+        code: "CHAOS",
+        name: "TOTAL CHAOS",
+        description: "The simulation enters maximum chaos.",
+        points: 1000,
+        category: "chaos",
+        icon: "💥",
+        danger: true,
+        effect: "chaos"
+    }
+
+];
+
+
+/* ============================================================
+   056 — CATEGORY DATABASE
+   ============================================================ */
+
+const CATEGORIES = [
+
+    {
+        id: "weather",
+        name: "WEATHER",
+        description: "Atmospheric disaster events.",
+        icon: "🌩️"
+    },
+
+    {
+        id: "water",
+        name: "WATER",
+        description: "Flood and ocean events.",
+        icon: "🌊"
+    },
+
+    {
+        id: "fire",
+        name: "FIRE",
+        description: "Fire-related events.",
+        icon: "🔥"
+    },
+
+    {
+        id: "space",
+        name: "SPACE",
+        description: "Events from beyond Earth.",
+        icon: "☄️"
+    },
+
+    {
+        id: "chaos",
+        name: "CHAOS",
+        description: "Things have gone VERY wrong.",
+        icon: "💥"
+    }
+
+];
+
+
+/* ============================================================
+   057 — FIND EVENT
+   ============================================================ */
+
+function findEvent(
+    eventID
+) {
+
+    return EVENTS.find(
+        event =>
+            event.id === eventID
+    );
+
+}
+
+
+/* ============================================================
+   058 — RENDER CATEGORIES
+   ============================================================ */
+
+function renderCategories() {
+
+    DOM.categories.innerHTML =
+        "";
+
+
+    CATEGORIES.forEach(
+        category => {
+
+            const wrapper =
+                document.createElement(
+                    "section"
+                );
+
+            wrapper.className =
+                "category";
+
+
+            const header =
+                document.createElement(
+                    "button"
+                );
+
+            header.type =
+                "button";
+
+            header.className =
+                "category-header";
+
+
+            header.innerHTML = `
+
+                <span class="category-left">
+
+                    <span class="category-icon">
+                        ${category.icon}
+                    </span>
+
+                    <span class="category-copy">
+
+                        <span class="category-name">
+                            ${escapeHTML(category.name)}
+                        </span>
+
+                        <span class="category-description">
+                            ${escapeHTML(category.description)}
+                        </span>
+
+                    </span>
+
+                </span>
+
+                <span class="category-arrow">
+                    ▼
+                </span>
+
+            `;
+
+
+            const grid =
+                document.createElement(
+                    "div"
+                );
+
+            grid.className =
+                "event-grid";
+
+
+            const inner =
+                document.createElement(
+                    "div"
+                );
+
+            inner.className =
+                "event-grid-inner";
+
+
+            const categoryEvents =
+                EVENTS.filter(
+                    event =>
+                        event.category ===
+                        category.id
+                );
+
+
+            categoryEvents.forEach(
+                event => {
+
+                    const button =
+                        createEventButton(
+                            event
+                        );
+
+                    inner.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+
+            grid.appendChild(
+                inner
+            );
+
+
+            wrapper.appendChild(
+                header
+            );
+
+            wrapper.appendChild(
+                grid
+            );
+
+
+            header.addEventListener(
+                "click",
+                () => {
+
+                    wrapper.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            DOM.categories.appendChild(
+                wrapper
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   059 — CREATE EVENT BUTTON
+   ============================================================ */
+
+function createEventButton(
+    event
+) {
+
+    const button =
+        document.createElement(
+            "button"
+        );
+
+
+    button.type =
+        "button";
+
+
+    button.className =
+        "event-button";
+
+
+    button.dataset.danger =
+        event.danger
+            ? "true"
+            : "false";
+
+
+    button.innerHTML = `
+
+        <span class="event-code">
+            ${event.icon}
+            ${escapeHTML(event.code)}
+        </span>
+
+        <span class="event-description">
+            ${escapeHTML(event.description)}
+        </span>
+
+        <span class="event-points">
+            +${event.points.toLocaleString()} PTS
+        </span>
+
+    `;
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            triggerEvent(
+                event.id
+            );
+
+        }
+    );
+
+
+    return button;
+
+}
+
+
+/* ============================================================
+   060 — ADD HISTORY ENTRY
+   ============================================================ */
+
+function addHistoryEntry(
+    event
+) {
+
+    STATE.history.unshift({
+
+        id:
+            event.id,
+
+        code:
+            event.code,
+
+        name:
+            event.name,
+
+        points:
+            event.points,
+
+        time:
+            new Date().toISOString()
+
+    });
+
+
+    STATE.history =
+        STATE.history.slice(
+            0,
+            APP.maxHistory
+        );
+
+
+    renderHistory();
+
+}
+
+
+/* ============================================================
+   061 — RENDER HISTORY
+   ============================================================ */
+
+function renderHistory() {
+
+    if (
+        STATE.history.length ===
+        0
+    ) {
+
+        DOM.history.innerHTML = `
+
+            <div class="history-empty">
+                No events yet.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    DOM.history.innerHTML =
+        STATE.history
+            .map(
+                item => `
+
+                    <div class="history-row">
+
+                        <div class="history-main">
+
+                            <div class="history-code">
+                                ${escapeHTML(item.code)}
+                            </div>
+
+                            <div class="history-name">
+                                ${escapeHTML(item.name)}
+                                ·
+                                ${escapeHTML(
+                                    formatTime(item.time)
+                                )}
+                            </div>
+
+                        </div>
+
+                        <div class="history-points">
+                            +${Number(
+                                item.points
+                            ).toLocaleString()}
+                        </div>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   062 — SCORE EVENT
+   ============================================================ */
+
+function scoreEvent(
+    event
+) {
+
+    STATE.score +=
+        event.points;
+
+    STATE.events +=
+        1;
+
+    addHistoryEntry(
+        event
+    );
+
+
+    updateInterface();
+
+    saveState();
+
+}
+
+
+/* ============================================================
+   063 — CRITICAL ALERT
+   ============================================================ */
+
+function showCriticalAlert(
+    title,
+    subtitle,
+    pink = false
+) {
+
+    const alert =
+        document.createElement(
+            "div"
+        );
+
+
+    alert.className =
+        "critical-alert";
+
+
+    if (pink) {
+
+        alert.classList.add(
+            "pink-purple-alert"
+        );
+
+    }
+
+
+    alert.innerHTML = `
+
+        <span class="critical-alert-title">
+            ${escapeHTML(title)}
+        </span>
+
+        <span class="critical-alert-sub">
+            ${escapeHTML(subtitle)}
+        </span>
+
+    `;
+
+
+    appendEffect(
+        alert
+    );
+
+
+    setTimeout(
+        () => {
+
+            alert.remove();
+
+        },
+        3000
+    );
+
+}
+
+
+/* ============================================================
+   064 — TORNADO EFFECT
+   ============================================================ */
+
+function createTornadoEffect(
+    event
+) {
+
+    showCriticalAlert(
+        event.name,
+        "⚠️ DISASTER EVENT DETECTED",
+        false
+    );
+
+
+    screenShake(
+        900
+    );
+
+
+    const tornado =
+        document.createElement(
+            "div"
+        );
+
+
+    tornado.style.position =
+        "absolute";
+
+    tornado.style.left =
+        "50%";
+
+    tornado.style.top =
+        "50%";
+
+    tornado.style.width =
+        "180px";
+
+    tornado.style.height =
+        "180px";
+
+    tornado.style.borderRadius =
+        "50%";
+
+    tornado.style.transform =
+        "translate(-50%, -50%)";
+
+    tornado.style.background =
+        `radial-gradient(
+            circle,
+            rgba(255,255,255,0.12),
+            rgba(166,108,255,0.08) 30%,
+            transparent 70%
+        )`;
+
+    tornado.style.boxShadow =
+        `
+            0 0 40px rgba(166,108,255,0.4),
+            0 0 100px rgba(84,221,255,0.18)
+        `;
+
+    tornado.style.animation =
+        "tornado-spin 900ms linear";
+
+
+    appendEffect(
+        tornado
+    );
+
+
+    for (
+        let i = 0;
+        i < 28;
+        i++
+    ) {
+
+        createTornadoParticle();
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            tornado.remove();
+
+        },
+        1000
+    );
+
+}
+
+
+/* ============================================================
+   065 — TORNADO PARTICLE
+   ============================================================ */
+
+function createTornadoParticle() {
+
+    const particle =
+        document.createElement(
+            "div"
+        );
+
+
+    const size =
+        randomInt(
+            5,
+            15
+        );
+
+
+    particle.style.position =
+        "absolute";
+
+    particle.style.left =
+        "50%";
+
+    particle.style.top =
+        "50%";
+
+    particle.style.width =
+        `${size}px`;
+
+    particle.style.height =
+        `${size}px`;
+
+    particle.style.borderRadius =
+        "50%";
+
+    particle.style.background =
+        "rgba(220,230,255,0.75)";
+
+    particle.style.boxShadow =
+        "0 0 12px rgba(180,210,255,0.4)";
+
+    particle.style.setProperty(
+        "--x",
+        `${randomInt(-220,220)}px`
+    );
+
+    particle.style.setProperty(
+        "--y",
+        `${randomInt(-220,220)}px`
+    );
+
+    particle.style.animation =
+        `tornado-particle ${
+            randomInt(600,1100)
+        }ms ease-out forwards`;
+
+
+    appendEffect(
+        particle
+    );
+
+
+    setTimeout(
+        () => {
+
+            particle.remove();
+
+        },
+        1200
+    );
+
+}
+
+
+/* ============================================================
+   066 — GENERIC EFFECT
+   ============================================================ */
+
+function createGenericEffect(
+    event
+) {
+
+    showCriticalAlert(
+        event.name,
+        "DISASTER EVENT ACTIVATED",
+        event.category === "chaos"
+    );
+
+
+    if (
+        event.danger
+    ) {
+
+        screenShake(
+            650
+        );
+
+    }
+
+
+    for (
+        let i = 0;
+        i < 18;
+        i++
+    ) {
+
+        const particle =
+            document.createElement(
+                "div"
+            );
+
+
+        particle.style.position =
+            "absolute";
+
+        particle.style.left =
+            `${randomInt(10,90)}%`;
+
+        particle.style.top =
+            `${randomInt(10,90)}%`;
+
+        particle.style.width =
+            `${randomInt(4,12)}px`;
+
+        particle.style.height =
+            `${randomInt(4,12)}px`;
+
+        particle.style.borderRadius =
+            "50%";
+
+        particle.style.background =
+            "rgba(255,255,255,0.65)";
+
+        particle.style.animation =
+            `generic-particle ${
+                randomInt(500,1000)
+            }ms ease-out forwards`;
+
+
+        appendEffect(
+            particle
+        );
+
+
+        setTimeout(
+            () => {
+
+                particle.remove();
+
+            },
+            1100
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   067 — EVENT EFFECT ROUTER
+   ============================================================ */
+
+function runEventEffect(
+    event
+) {
+
+    switch (
+        event.effect
+    ) {
+
+        case "tornado":
+
+            createTornadoEffect(
+                event
+            );
+
+            break;
+
+
+        default:
+
+            createGenericEffect(
+                event
+            );
+
+            break;
+
+    }
+
+}
+
+
+/* ============================================================
+   068 — TRIGGER EVENT
+   ============================================================ */
+
+function triggerEvent(
+    eventID
+) {
+
+    const event =
+        findEvent(
+            eventID
+        );
+
+
+    if (!event) {
+
+        console.warn(
+            "Unknown event:",
+            eventID
+        );
+
+        return;
+
+    }
+
+
+    scoreEvent(
+        event
+    );
+
+
+    runEventEffect(
+        event
+    );
+
+
+    showToast(
+        `${event.icon} ${event.name} +${event.points} PTS`
+    );
+
+}
+
+
+/* ============================================================
+   069 — EXTRA CSS FOR EFFECTS
+   ============================================================ */
+
+const effectStyle =
+    document.createElement(
+        "style"
+    );
+
+
+effectStyle.textContent = `
+
+    @keyframes tornado-spin {
+
+        0% {
+            transform:
+                translate(-50%, -50%)
+                rotate(0deg)
+                scale(0.4);
+
+            opacity: 0;
+        }
+
+        20% {
+            opacity: 1;
+        }
+
+        100% {
+            transform:
+                translate(-50%, -50%)
+                rotate(720deg)
+                scale(2.8);
+
+            opacity: 0;
+        }
+
+    }
+
+
+    @keyframes tornado-particle {
+
+        0% {
+
+            transform:
+                translate(0,0)
+                scale(0.2);
+
+            opacity: 0;
+
+        }
+
+        15% {
+
+            opacity: 1;
+
+        }
+
+        100% {
+
+            transform:
+                translate(
+                    var(--x),
+                    var(--y)
+                )
+                scale(1);
+
+            opacity: 0;
+
+        }
+
+    }
+
+
+    @keyframes generic-particle {
+
+        0% {
+
+            transform:
+                translate(0,0)
+                scale(0.2);
+
+            opacity: 0;
+
+        }
+
+        15% {
+
+            opacity: 1;
+
+        }
+
+        100% {
+
+            transform:
+                translate(
+                    ${randomInt(-180,180)}px,
+                    ${randomInt(-180,180)}px
+                )
+                scale(1.5);
+
+            opacity: 0;
+
+        }
+
+    }
+
+`;
+
+
+document.head.appendChild(
+    effectStyle
+);
+
+
+/* ============================================================
+   070 — INITIALIZE EVENT CENTER
+   ============================================================ */
+
+renderCategories();
+
+
+/* ============================================================
+   071 — OPEN WEATHER BY DEFAULT
+   ============================================================ */
+
+const firstCategory =
+    DOM.categories.querySelector(
+        ".category"
+    );
+
+
+if (
+    firstCategory
+) {
+
+    firstCategory.classList.add(
+        "open"
+    );
+
+}
+
+
+/* ============================================================
+   END PART 2
+   ============================================================ */
+
 
 /* ============================================================
    END PART 1
