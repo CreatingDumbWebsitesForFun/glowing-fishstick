@@ -4,105 +4,163 @@
 <meta charset="UTF-8">
 
 <meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    name="viewport"
+    content="width=device-width,
+             initial-scale=1.0,
+             viewport-fit=cover"
 >
 
-<meta name="theme-color" content="#080b14">
+<meta
+    name="theme-color"
+    content="#060812"
+>
 
-<title>Damage Program™ — Ultimate Control Center</title>
+<meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+>
+
+<meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+>
+
+<title>
+    DAMAGE PROGRAM™ — Ultimate Control Center
+</title>
 
 <style>
 
 /* ============================================================
    DAMAGE PROGRAM™
-   FACTORY RESET — MEGA CORE
-   VANILLA HTML / CSS / JAVASCRIPT
+   ULTIMATE EDITION
+   FACTORY RESET
+   PART 1 — FOUNDATION
    ============================================================ */
 
+
 /* ============================================================
-   001 — ROOT
+   001 — ROOT VARIABLES
    ============================================================ */
 
 :root {
 
-    --background:
-        #070910;
+    --bg-0:
+        #05060c;
 
-    --background-2:
-        #0b0f1c;
+    --bg-1:
+        #080b14;
+
+    --bg-2:
+        #0d1220;
+
+    --bg-3:
+        #12192a;
 
     --panel:
-        rgba(17, 22, 40, 0.82);
+        rgba(17, 23, 39, 0.82);
 
     --panel-solid:
-        #111628;
+        #111727;
 
-    --panel-light:
-        rgba(255,255,255,0.055);
+    --panel-hover:
+        rgba(255, 255, 255, 0.065);
+
+    --panel-active:
+        rgba(255, 255, 255, 0.095);
 
     --border:
-        rgba(255,255,255,0.11);
+        rgba(255, 255, 255, 0.09);
 
-    --border-bright:
-        rgba(255,255,255,0.20);
+    --border-strong:
+        rgba(255, 255, 255, 0.18);
 
     --text:
         #f5f7ff;
 
+    --text-soft:
+        #c6cee2;
+
     --muted:
-        #9da8c4;
+        #8995b0;
 
     --cyan:
-        #54dcff;
+        #54ddff;
+
+    --cyan-soft:
+        #2aa8d0;
 
     --blue:
-        #4287ff;
+        #4389ff;
 
     --purple:
-        #a56cff;
+        #a66cff;
+
+    --purple-dark:
+        #6538bd;
 
     --pink:
         #ff5fd5;
+
+    --pink-dark:
+        #c932a2;
 
     --red:
         #ff405b;
 
     --red-dark:
-        #7d1729;
+        #8e172b;
 
     --orange:
-        #ff9d42;
+        #ff9c42;
 
     --yellow:
-        #ffd85a;
+        #ffd65a;
 
     --green:
         #50e49a;
 
     --water:
-        #238fff;
+        #2698ff;
 
     --water-dark:
-        #0752b8;
+        #064da9;
+
+    --ice:
+        #dff7ff;
+
+    --shadow-small:
+        0 8px 24px rgba(0,0,0,0.25);
 
     --shadow:
-        0 25px 80px rgba(0,0,0,0.42);
+        0 20px 60px rgba(0,0,0,0.36);
+
+    --shadow-large:
+        0 35px 100px rgba(0,0,0,0.48);
+
+    --radius-small:
+        12px;
 
     --radius:
-        22px;
+        20px;
 
-    --small-radius:
-        14px;
+    --radius-large:
+        28px;
+
+    --transition-fast:
+        120ms ease;
 
     --transition:
         180ms ease;
+
+    --transition-slow:
+        320ms ease;
 
 }
 
 
 /* ============================================================
-   002 — UNIVERSAL
+   002 — RESET
    ============================================================ */
 
 * {
@@ -118,43 +176,54 @@
 
 html {
 
+    width:
+        100%;
+
+    min-height:
+        100%;
+
     margin:
         0;
 
     padding:
         0;
 
-    min-height:
-        100%;
-
     background:
-        var(--background);
+        var(--bg-0);
+
+    scroll-behavior:
+        smooth;
 
 }
 
 
 body {
 
+    width:
+        100%;
+
+    min-height:
+        100vh;
+
     margin:
         0;
 
     padding:
         0;
 
-    min-height:
-        100vh;
-
     color:
         var(--text);
 
     background:
-        var(--background);
+        var(--bg-1);
 
     font-family:
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
-        system-ui,
+        Roboto,
+        Helvetica,
+        Arial,
         sans-serif;
 
     overflow-x:
@@ -163,7 +232,10 @@ body {
 }
 
 
-button {
+button,
+input,
+select,
+textarea {
 
     font:
         inherit;
@@ -171,13 +243,35 @@ button {
 }
 
 
-button:focus-visible {
+button {
+
+    border:
+        0;
+
+}
+
+
+button,
+[role="button"] {
+
+    -webkit-user-select:
+        none;
+
+    user-select:
+        none;
+
+}
+
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
 
     outline:
         2px solid var(--cyan);
 
     outline-offset:
-        2px;
+        3px;
 
 }
 
@@ -197,30 +291,30 @@ body::before {
     inset:
         0;
 
+    z-index:
+        -20;
+
     pointer-events:
         none;
-
-    z-index:
-        -10;
 
     background:
 
         radial-gradient(
-            circle at 12% 8%,
-            rgba(84,220,255,0.13),
+            circle at 8% 5%,
+            rgba(84,221,255,0.12),
+            transparent 29%
+        ),
+
+        radial-gradient(
+            circle at 91% 10%,
+            rgba(255,95,213,0.10),
             transparent 30%
         ),
 
         radial-gradient(
-            circle at 88% 18%,
-            rgba(255,95,213,0.12),
-            transparent 30%
-        ),
-
-        radial-gradient(
-            circle at 50% 100%,
-            rgba(165,108,255,0.10),
-            transparent 40%
+            circle at 48% 105%,
+            rgba(166,108,255,0.11),
+            transparent 42%
         );
 
 }
@@ -237,46 +331,52 @@ body::after {
     inset:
         0;
 
+    z-index:
+        -19;
+
     pointer-events:
         none;
 
-    z-index:
-        -9;
-
     opacity:
-        0.12;
+        0.08;
 
     background-image:
+
         linear-gradient(
-            rgba(255,255,255,0.035) 1px,
+            rgba(255,255,255,0.045) 1px,
             transparent 1px
         );
 
     background-size:
-        100% 4px;
+        100% 5px;
 
 }
 
 
 /* ============================================================
-   004 — APP
+   004 — APP SHELL
    ============================================================ */
 
 #app {
 
     width:
-        min(1200px, 100%);
+        min(1280px, 100%);
+
+    min-height:
+        100vh;
 
     margin:
         0 auto;
 
     padding:
-        16px;
+        18px;
 
 }
 
 
-@media (max-width: 600px) {
+@media (
+    max-width: 700px
+) {
 
     #app {
 
@@ -304,16 +404,18 @@ body::after {
         var(--shadow);
 
     backdrop-filter:
-        blur(18px);
+        blur(20px)
+        saturate(130%);
 
     -webkit-backdrop-filter:
-        blur(18px);
+        blur(20px)
+        saturate(130%);
 
 }
 
 
 /* ============================================================
-   006 — HEADER
+   006 — TOP BAR
    ============================================================ */
 
 .topbar {
@@ -328,13 +430,13 @@ body::after {
         space-between;
 
     gap:
-        15px;
+        20px;
 
     padding:
         18px;
 
     border-radius:
-        var(--radius);
+        var(--radius-large);
 
 }
 
@@ -347,8 +449,11 @@ body::after {
     align-items:
         center;
 
+    min-width:
+        0;
+
     gap:
-        13px;
+        14px;
 
 }
 
@@ -356,10 +461,13 @@ body::after {
 .logo {
 
     width:
-        54px;
+        56px;
 
     height:
-        54px;
+        56px;
+
+    flex:
+        0 0 auto;
 
     display:
         grid;
@@ -367,21 +475,38 @@ body::after {
     place-items:
         center;
 
-    border-radius:
-        17px;
+    border:
+        1px solid rgba(255,255,255,0.12);
 
-    font-size:
-        28px;
+    border-radius:
+        18px;
 
     background:
+
         linear-gradient(
             145deg,
-            #17243e,
-            #241633
+            #17253f,
+            #21142f
         );
 
     box-shadow:
-        inset 0 0 25px rgba(84,220,255,0.10);
+
+        inset 0 0 28px
+        rgba(84,221,255,0.08),
+
+        0 0 30px
+        rgba(84,221,255,0.05);
+
+    font-size:
+        29px;
+
+}
+
+
+.brand-copy {
+
+    min-width:
+        0;
 
 }
 
@@ -391,14 +516,20 @@ body::after {
     margin:
         0;
 
+    color:
+        var(--text);
+
     font-size:
-        clamp(23px, 5vw, 36px);
+        clamp(23px, 5vw, 38px);
+
+    font-weight:
+        950;
 
     line-height:
         1;
 
     letter-spacing:
-        -0.045em;
+        -0.055em;
 
 }
 
@@ -406,19 +537,19 @@ body::after {
 .title-sub {
 
     margin-top:
-        6px;
+        7px;
 
     color:
         var(--muted);
 
     font-size:
-        11px;
-
-    letter-spacing:
-        0.14em;
+        10px;
 
     font-weight:
-        700;
+        800;
+
+    letter-spacing:
+        0.17em;
 
 }
 
@@ -431,6 +562,9 @@ body::after {
     align-items:
         center;
 
+    flex:
+        0 0 auto;
+
     gap:
         8px;
 
@@ -438,7 +572,10 @@ body::after {
         var(--muted);
 
     font-size:
-        12px;
+        11px;
+
+    font-weight:
+        800;
 
     white-space:
         nowrap;
@@ -461,13 +598,14 @@ body::after {
         var(--green);
 
     box-shadow:
-        0 0 15px var(--green);
+        0 0 16px
+        rgba(80,228,154,0.9);
 
 }
 
 
 /* ============================================================
-   007 — LAYOUT
+   007 — MAIN GRID
    ============================================================ */
 
 .main-grid {
@@ -477,7 +615,10 @@ body::after {
 
     grid-template-columns:
         minmax(0, 1.2fr)
-        minmax(280px, 0.8fr);
+        minmax(300px, 0.8fr);
+
+    align-items:
+        start;
 
     gap:
         16px;
@@ -488,7 +629,9 @@ body::after {
 }
 
 
-@media (max-width: 850px) {
+@media (
+    max-width: 900px
+) {
 
     .main-grid {
 
@@ -508,7 +651,7 @@ body::after {
 
 
 /* ============================================================
-   008 — CARDS
+   008 — CARD
    ============================================================ */
 
 .card {
@@ -531,55 +674,107 @@ body::after {
 
 
 /* ============================================================
-   009 — SCORE
+   009 — SCORE CARD
    ============================================================ */
 
 .score-card {
 
-    text-align:
-        center;
+    position:
+        relative;
+
+    overflow:
+        hidden;
 
     padding:
         28px 18px;
+
+    text-align:
+        center;
+
+}
+
+
+.score-card::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        -100px;
+
+    width:
+        360px;
+
+    height:
+        220px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius:
+        50%;
+
+    background:
+        radial-gradient(
+            ellipse,
+            rgba(84,221,255,0.10),
+            transparent 70%
+        );
+
+    pointer-events:
+        none;
 
 }
 
 
 .score-label {
 
+    position:
+        relative;
+
     color:
         var(--muted);
 
     font-size:
-        11px;
+        10px;
 
     font-weight:
-        850;
+        900;
 
     letter-spacing:
-        0.20em;
+        0.22em;
 
 }
 
 
 .score-number {
 
+    position:
+        relative;
+
     margin:
-        9px 0;
+        10px 0;
 
     font-size:
-        clamp(55px, 13vw, 105px);
-
-    line-height:
-        0.95;
+        clamp(58px, 13vw, 110px);
 
     font-weight:
         950;
 
+    line-height:
+        0.92;
+
     letter-spacing:
-        -0.07em;
+        -0.075em;
 
     background:
+
         linear-gradient(
             90deg,
             var(--cyan),
@@ -601,6 +796,9 @@ body::after {
 
 .score-meta {
 
+    position:
+        relative;
+
     display:
         flex;
 
@@ -618,8 +816,20 @@ body::after {
 
 .pill {
 
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    min-height:
+        30px;
+
     padding:
-        7px 11px;
+        6px 11px;
 
     border:
         1px solid var(--border);
@@ -630,11 +840,14 @@ body::after {
     color:
         var(--muted);
 
-    font-size:
-        11px;
-
     background:
         rgba(255,255,255,0.025);
+
+    font-size:
+        10px;
+
+    font-weight:
+        800;
 
 }
 
@@ -671,8 +884,11 @@ body::after {
     font-size:
         16px;
 
+    font-weight:
+        900;
+
     letter-spacing:
-        -0.02em;
+        -0.025em;
 
 }
 
@@ -683,13 +899,16 @@ body::after {
         var(--muted);
 
     font-size:
-        11px;
+        10px;
+
+    font-weight:
+        700;
 
 }
 
 
 /* ============================================================
-   011 — CATEGORY CONTAINER
+   011 — CATEGORY LIST
    ============================================================ */
 
 .categories {
@@ -715,27 +934,37 @@ body::after {
         18px;
 
     background:
-        rgba(7,10,20,0.55);
+        rgba(5,8,17,0.52);
+
+    transition:
+        border-color var(--transition),
+        background var(--transition);
 
 }
 
+
+.category.open {
+
+    border-color:
+        var(--border-strong);
+
+    background:
+        rgba(8,12,24,0.72);
+
+}
+
+
+/* ============================================================
+   012 — CATEGORY HEADER
+   ============================================================ */
 
 .category-header {
 
     width:
         100%;
 
-    border:
-        0;
-
-    color:
-        var(--text);
-
-    background:
-        transparent;
-
-    padding:
-        16px;
+    min-height:
+        70px;
 
     display:
         flex;
@@ -745,6 +974,18 @@ body::after {
 
     justify-content:
         space-between;
+
+    gap:
+        12px;
+
+    padding:
+        14px;
+
+    color:
+        var(--text);
+
+    background:
+        transparent;
 
     text-align:
         left;
@@ -761,7 +1002,7 @@ body::after {
 .category-header:active {
 
     background:
-        rgba(255,255,255,0.035);
+        rgba(255,255,255,0.04);
 
 }
 
@@ -774,6 +1015,9 @@ body::after {
     align-items:
         center;
 
+    min-width:
+        0;
+
     gap:
         12px;
 
@@ -783,10 +1027,13 @@ body::after {
 .category-icon {
 
     width:
-        38px;
+        40px;
 
     height:
-        38px;
+        40px;
+
+    flex:
+        0 0 auto;
 
     display:
         grid;
@@ -794,14 +1041,25 @@ body::after {
     place-items:
         center;
 
+    border:
+        1px solid rgba(255,255,255,0.06);
+
+    border-radius:
+        13px;
+
+    background:
+        rgba(255,255,255,0.045);
+
     font-size:
         23px;
 
-    border-radius:
-        12px;
+}
 
-    background:
-        rgba(255,255,255,0.05);
+
+.category-copy {
+
+    min-width:
+        0;
 
 }
 
@@ -811,8 +1069,23 @@ body::after {
     display:
         block;
 
+    overflow:
+        hidden;
+
+    color:
+        var(--text);
+
+    font-size:
+        14px;
+
     font-weight:
         900;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
 
 }
 
@@ -823,18 +1096,33 @@ body::after {
         block;
 
     margin-top:
-        2px;
+        3px;
+
+    overflow:
+        hidden;
 
     color:
         var(--muted);
 
     font-size:
-        11px;
+        10px;
+
+    line-height:
+        1.3;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
 
 }
 
 
 .category-arrow {
+
+    flex:
+        0 0 auto;
 
     color:
         var(--muted);
@@ -857,13 +1145,16 @@ body::after {
 
 
 /* ============================================================
-   012 — EVENT GRID
+   013 — EVENT GRID
    ============================================================ */
 
 .event-grid {
 
     display:
-        none;
+        grid;
+
+    grid-template-rows:
+        0fr;
 
     grid-template-columns:
         repeat(2, minmax(0,1fr));
@@ -872,33 +1163,39 @@ body::after {
         9px;
 
     padding:
-        0 10px 10px;
+        0 10px;
+
+    overflow:
+        hidden;
+
+    transition:
+        grid-template-rows 240ms ease,
+        padding-bottom 240ms ease;
 
 }
 
 
 .category.open .event-grid {
 
-    display:
-        grid;
+    grid-template-rows:
+        1fr;
+
+    padding-bottom:
+        10px;
 
 }
 
 
-@media (max-width: 540px) {
+.event-grid-inner {
 
-    .event-grid {
-
-        grid-template-columns:
-            1fr;
-
-    }
+    min-height:
+        0;
 
 }
 
 
 /* ============================================================
-   013 — EVENT BUTTON
+   014 — EVENT BUTTON
    ============================================================ */
 
 .event-button {
@@ -906,11 +1203,17 @@ body::after {
     position:
         relative;
 
+    width:
+        100%;
+
     min-height:
-        80px;
+        84px;
 
     padding:
         13px;
+
+    overflow:
+        hidden;
 
     border:
         1px solid var(--border);
@@ -922,9 +1225,10 @@ body::after {
         var(--text);
 
     background:
+
         linear-gradient(
             145deg,
-            rgba(255,255,255,0.065),
+            rgba(255,255,255,0.06),
             rgba(255,255,255,0.018)
         );
 
@@ -935,15 +1239,36 @@ body::after {
         pointer;
 
     transition:
-        transform var(--transition),
+        transform var(--transition-fast),
         border-color var(--transition),
         background var(--transition);
 
-    overflow:
-        hidden;
-
     touch-action:
         manipulation;
+
+}
+
+
+.event-button::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(84,221,255,0.07),
+            transparent 45%
+        );
+
+    pointer-events:
+        none;
 
 }
 
@@ -956,41 +1281,56 @@ body::after {
     position:
         absolute;
 
-    inset:
+    top:
         0;
+
+    bottom:
+        0;
+
+    left:
+        -120%;
+
+    width:
+        70%;
+
+    transform:
+        skewX(-20deg);
 
     background:
         linear-gradient(
-            120deg,
+            90deg,
             transparent,
-            rgba(255,255,255,0.07),
+            rgba(255,255,255,0.09),
             transparent
         );
 
-    transform:
-        translateX(-120%);
-
     transition:
-        transform 500ms ease;
+        left 500ms ease;
 
-}
-
-
-.event-button:hover::after {
-
-    transform:
-        translateX(120%);
+    pointer-events:
+        none;
 
 }
 
 
 .event-button:hover {
 
+    border-color:
+        var(--border-strong);
+
+    background:
+        var(--panel-hover);
+
     transform:
         translateY(-2px);
 
-    border-color:
-        var(--border-bright);
+}
+
+
+.event-button:hover::after {
+
+    left:
+        145%;
 
 }
 
@@ -1005,8 +1345,14 @@ body::after {
 
 .event-code {
 
+    position:
+        relative;
+
     display:
         block;
+
+    color:
+        var(--text);
 
     font-size:
         14px;
@@ -1019,17 +1365,20 @@ body::after {
 
 .event-description {
 
+    position:
+        relative;
+
     display:
         block;
 
     margin-top:
-        4px;
+        5px;
 
     color:
         var(--muted);
 
     font-size:
-        11px;
+        10px;
 
     line-height:
         1.35;
@@ -1039,17 +1388,20 @@ body::after {
 
 .event-points {
 
+    position:
+        relative;
+
     display:
         inline-block;
 
     margin-top:
-        5px;
+        7px;
 
     color:
         var(--yellow);
 
     font-size:
-        11px;
+        10px;
 
     font-weight:
         900;
@@ -1057,17 +1409,73 @@ body::after {
 }
 
 
+.event-button[data-danger="true"] {
+
+    border-color:
+        rgba(255,64,91,0.16);
+
+}
+
+
+.event-button[data-danger="true"]
+.event-points {
+
+    color:
+        #ff8192;
+
+}
+
+
+@media (
+    max-width: 540px
+) {
+
+    .event-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
 /* ============================================================
-   014 — HISTORY
+   015 — HISTORY
    ============================================================ */
 
 .history {
 
     max-height:
-        410px;
+        460px;
 
-    overflow:
+    overflow-y:
         auto;
+
+    overscroll-behavior:
+        contain;
+
+    scrollbar-width:
+        thin;
+
+}
+
+
+.history::-webkit-scrollbar {
+
+    width:
+        6px;
+
+}
+
+
+.history::-webkit-scrollbar-thumb {
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(255,255,255,0.12);
 
 }
 
@@ -1075,7 +1483,7 @@ body::after {
 .history-empty {
 
     padding:
-        38px 10px;
+        42px 10px;
 
     color:
         var(--muted);
@@ -1084,7 +1492,7 @@ body::after {
         center;
 
     font-size:
-        13px;
+        12px;
 
 }
 
@@ -1116,30 +1524,54 @@ body::after {
         13px;
 
     background:
-        rgba(255,255,255,0.035);
+        rgba(255,255,255,0.032);
 
     font-size:
-        12px;
+        11px;
+
+}
+
+
+.history-main {
+
+    min-width:
+        0;
+
+}
+
+
+.history-code {
+
+    font-weight:
+        950;
+
+}
+
+
+.history-name {
+
+    color:
+        var(--muted);
 
 }
 
 
 .history-points {
 
+    flex:
+        0 0 auto;
+
     color:
         var(--yellow);
 
     font-weight:
-        900;
-
-    white-space:
-        nowrap;
+        950;
 
 }
 
 
 /* ============================================================
-   015 — CONTROLS
+   016 — CONTROLS
    ============================================================ */
 
 .control-grid {
@@ -1159,7 +1591,10 @@ body::after {
 .control-button {
 
     min-height:
-        48px;
+        50px;
+
+    padding:
+        10px;
 
     border:
         1px solid var(--border);
@@ -1176,8 +1611,24 @@ body::after {
     cursor:
         pointer;
 
+    transition:
+        transform var(--transition-fast),
+        border-color var(--transition),
+        background var(--transition);
+
     touch-action:
         manipulation;
+
+}
+
+
+.control-button:hover {
+
+    border-color:
+        var(--border-strong);
+
+    background:
+        #1a2237;
 
 }
 
@@ -1192,28 +1643,28 @@ body::after {
 
 .control-restore {
 
+    border-color:
+        rgba(80,228,154,0.22);
+
     background:
         rgba(16,43,34,0.95);
-
-    border-color:
-        rgba(80,228,154,0.25);
 
 }
 
 
 .control-danger {
 
+    border-color:
+        rgba(255,64,91,0.24);
+
     background:
         rgba(53,18,29,0.95);
-
-    border-color:
-        rgba(255,64,91,0.25);
 
 }
 
 
 /* ============================================================
-   016 — EFFECT LAYER
+   017 — EFFECT LAYER
    ============================================================ */
 
 #effect-layer {
@@ -1237,7 +1688,7 @@ body::after {
 
 
 /* ============================================================
-   017 — TOAST
+   018 — TOAST
    ============================================================ */
 
 #toast {
@@ -1249,25 +1700,28 @@ body::after {
         50%;
 
     bottom:
-        22px;
+        max(20px, env(safe-area-inset-bottom));
 
     z-index:
-        30000;
+        50000;
+
+    width:
+        max-content;
 
     max-width:
         calc(100vw - 30px);
 
     padding:
-        13px 18px;
+        12px 17px;
 
     border:
-        1px solid var(--border);
+        1px solid var(--border-strong);
 
     border-radius:
         14px;
 
     background:
-        rgba(13,17,29,0.95);
+        rgba(10,14,25,0.96);
 
     box-shadow:
         var(--shadow);
@@ -1276,7 +1730,7 @@ body::after {
         var(--text);
 
     font-size:
-        13px;
+        12px;
 
     font-weight:
         900;
@@ -1291,8 +1745,11 @@ body::after {
         translate(-50%, 20px);
 
     transition:
-        opacity 220ms ease,
-        transform 220ms ease;
+        opacity 180ms ease,
+        transform 180ms ease;
+
+    pointer-events:
+        none;
 
 }
 
@@ -1309,7 +1766,7 @@ body::after {
 
 
 /* ============================================================
-   018 — CRITICAL TEXT
+   019 — CRITICAL ALERT BASE
    ============================================================ */
 
 .critical-alert {
@@ -1321,13 +1778,16 @@ body::after {
         50%;
 
     top:
-        14%;
+        clamp(70px, 13vh, 150px);
 
     z-index:
-        20000;
+        30000;
 
     width:
-        min(900px, 92vw);
+        min(900px, calc(100vw - 32px));
+
+    padding:
+        14px;
 
     transform:
         translateX(-50%);
@@ -1335,15 +1795,14 @@ body::after {
     text-align:
         center;
 
-    color:
-        var(--red);
-
-    text-shadow:
-        0 0 8px rgba(255,64,91,0.8),
-        0 0 30px rgba(255,64,91,0.55);
+    pointer-events:
+        none;
 
     animation:
-        critical-in-out 2.7s ease forwards;
+        critical-alert-life
+        2800ms
+        ease
+        forwards;
 
 }
 
@@ -1353,14 +1812,27 @@ body::after {
     display:
         block;
 
+    overflow-wrap:
+        anywhere;
+
+    color:
+        var(--red);
+
     font-size:
-        clamp(24px, 7vw, 54px);
+        clamp(24px, 7vw, 55px);
 
     font-weight:
         1000;
 
+    line-height:
+        1.05;
+
     letter-spacing:
-        0.025em;
+        0.015em;
+
+    text-shadow:
+        0 0 8px rgba(255,64,91,0.9),
+        0 0 28px rgba(255,64,91,0.55);
 
 }
 
@@ -1370,25 +1842,34 @@ body::after {
     display:
         block;
 
+    max-width:
+        100%;
+
     margin-top:
-        7px;
+        8px;
 
     color:
-        #ff9eac;
+        #ffacb8;
 
     font-size:
-        12px;
+        clamp(9px, 2.5vw, 13px);
 
     font-weight:
-        800;
+        850;
+
+    line-height:
+        1.4;
 
     letter-spacing:
-        0.12em;
+        0.11em;
+
+    overflow-wrap:
+        anywhere;
 
 }
 
 
-@keyframes critical-in-out {
+@keyframes critical-alert-life {
 
     0% {
 
@@ -1396,8 +1877,8 @@ body::after {
             0;
 
         transform:
-            translate(-50%, -15px)
-            scale(0.90);
+            translate(-50%, -18px)
+            scale(0.92);
 
     }
 
@@ -1412,7 +1893,7 @@ body::after {
 
     }
 
-    72% {
+    76% {
 
         opacity:
             1;
@@ -1430,7 +1911,7 @@ body::after {
 
         transform:
             translate(-50%, -8px)
-            scale(1.04);
+            scale(1.03);
 
     }
 
@@ -1438,33 +1919,25 @@ body::after {
 
 
 /* ============================================================
-   019 — PINK / PURPLE ALERT
+   020 — PINK PURPLE ALERT
    ============================================================ */
 
-.pink-purple-alert {
-
-    color:
-        var(--pink);
-
-    text-shadow:
-        0 0 10px rgba(255,95,213,0.75),
-        0 0 35px rgba(165,108,255,0.60);
-
-}
-
-
-.pink-purple-alert .critical-alert-title {
+.pink-purple-alert
+.critical-alert-title {
 
     background:
+
         linear-gradient(
             90deg,
-            #ff73dc,
-            #a56cff,
-            #ff73dc
+            #ff63d5,
+            #ff8de2,
+            #a66cff,
+            #7355ff,
+            #ff63d5
         );
 
     background-size:
-        200% auto;
+        250% auto;
 
     -webkit-background-clip:
         text;
@@ -1476,905 +1949,36 @@ body::after {
         transparent;
 
     animation:
-        pink-gradient 1.6s linear infinite;
+        pink-purple-flow
+        1800ms
+        linear
+        infinite;
 
 }
 
 
-@keyframes pink-gradient {
-
-    to {
-
-        background-position:
-            200% center;
-
-    }
-
-}
-
-
-/* ============================================================
-   020 — WIND
-   ============================================================ */
-
-.wind-gust {
-
-    position:
-        absolute;
-
-    left:
-        -220px;
-
-    height:
-        3px;
-
-    border-radius:
-        999px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(220,245,255,0.95),
-            transparent
-        );
-
-    box-shadow:
-        0 0 9px rgba(110,205,255,0.8);
-
-    transform:
-        skewX(-25deg);
-
-    animation:
-        wind-gust 1s linear forwards;
-
-}
-
-
-@keyframes wind-gust {
-
-    0% {
-
-        transform:
-            translateX(-200px)
-            skewX(-25deg);
-
-        opacity:
-            0;
-
-    }
-
-    12% {
-
-        opacity:
-            1;
-
-    }
-
-    100% {
-
-        transform:
-            translateX(120vw)
-            skewX(-25deg);
-
-        opacity:
-            0;
-
-    }
-
-}
-
-
-/* ============================================================
-   021 — DEBRIS
-   ============================================================ */
-
-.wind-debris {
-
-    position:
-        absolute;
-
-    left:
-        -80px;
-
-    font-size:
-        19px;
-
-    animation:
-        debris-fly 1.45s cubic-bezier(.2,.8,.2,1) forwards;
-
-}
-
-
-@keyframes debris-fly {
-
-    0% {
-
-        transform:
-            translateX(-100px)
-            rotate(0deg);
-
-        opacity:
-            0;
-
-    }
-
-    15% {
-
-        opacity:
-            1;
-
-    }
-
-    100% {
-
-        transform:
-            translate(
-                115vw,
-                var(--debris-y)
-            )
-            rotate(720deg);
-
-        opacity:
-            0;
-
-    }
-
-}
-
-
-/* ============================================================
-   022 — SCREEN SHAKE
-   ============================================================ */
-
-.screen-shake {
-
-    animation:
-        screen-shake 700ms ease;
-
-}
-
-
-@keyframes screen-shake {
-
-    0%, 100% {
-
-        transform:
-            translate(0,0);
-
-    }
-
-    15% {
-
-        transform:
-            translate(-7px,4px);
-
-    }
-
-    30% {
-
-        transform:
-            translate(7px,-5px);
-
-    }
-
-    45% {
-
-        transform:
-            translate(-6px,-3px);
-
-    }
-
-    60% {
-
-        transform:
-            translate(5px,4px);
-
-    }
-
-    75% {
-
-        transform:
-            translate(-3px,-2px);
-
-    }
-
-}
-
-
-/* ============================================================
-   023 — FLOOD
-   ============================================================ */
-
-.flood-layer {
-
-    position:
-        absolute;
-
-    left:
-        0;
-
-    right:
-        0;
-
-    bottom:
-        0;
-
-    height:
-        0;
-
-    overflow:
-        visible;
-
-    background:
-        linear-gradient(
-            to bottom,
-            rgba(76,188,255,0.68),
-            rgba(7,67,150,0.97)
-        );
-
-    border-top:
-        3px solid rgba(204,244,255,0.8);
-
-    box-shadow:
-        0 -12px 35px rgba(54,169,255,0.25);
-
-    transition:
-        height 2.8s cubic-bezier(.2,.8,.2,1);
-
-}
-
-
-.flood-wave {
-
-    position:
-        absolute;
-
-    left:
-        -10%;
-
-    top:
-        -12px;
-
-    width:
-        120%;
-
-    height:
-        24px;
-
-    background:
-        repeating-linear-gradient(
-            90deg,
-            transparent 0 20px,
-            rgba(255,255,255,0.25) 20px 45px,
-            transparent 45px 75px
-        );
-
-    animation:
-        flood-wave 900ms linear infinite;
-
-}
-
-
-@keyframes flood-wave {
-
-    to {
-
-        transform:
-            translateX(-75px);
-
-    }
-
-}
-
-
-/* ============================================================
-   024 — RAIN
-   ============================================================ */
-
-.rain-drop {
-
-    position:
-        absolute;
-
-    top:
-        -45px;
-
-    width:
-        2px;
-
-    height:
-        30px;
-
-    background:
-        rgba(195,228,255,0.75);
-
-    animation:
-        rain-drop 800ms linear forwards;
-
-}
-
-
-@keyframes rain-drop {
-
-    to {
-
-        transform:
-            translateY(120vh)
-            rotate(13deg);
-
-        opacity:
-            0;
-
-    }
-
-}
-
-
-/* ============================================================
-   025 — HAIL
-   ============================================================ */
-
-.hailstone {
-
-    position:
-        absolute;
-
-    top:
-        -50px;
-
-    border-radius:
-        50%;
-
-    background:
-        #ffffff;
-
-    box-shadow:
-        0 0 9px rgba(255,255,255,0.85);
-
-    animation:
-        hail-fall 900ms linear forwards;
-
-}
-
-
-@keyframes hail-fall {
-
-    to {
-
-        transform:
-            translateY(120vh)
-            rotate(450deg);
-
-        opacity:
-            0.15;
-
-    }
-
-}
-
-
-/* ============================================================
-   026 — TORNADO
-   ============================================================ */
-
-.tornado {
-
-    position:
-        absolute;
-
-    left:
-        -300px;
-
-    bottom:
-        4%;
-
-    width:
-        210px;
-
-    height:
-        400px;
-
-    filter:
-        drop-shadow(
-            0 0 25px
-            rgba(150,160,185,0.22)
-        );
-
-    animation:
-        tornado-cross 3.4s linear forwards;
-
-}
-
-
-.tornado.large {
-
-    width:
-        280px;
-
-    height:
-        500px;
-
-}
-
-
-.tornado-funnel {
-
-    position:
-        absolute;
-
-    inset:
-        0;
-
-    background:
-
-        radial-gradient(
-            ellipse at 50% 10%,
-            rgba(244,247,255,0.28),
-            transparent 34%
-        ),
-
-        radial-gradient(
-            ellipse at 50% 43%,
-            rgba(75,80,99,0.86),
-            rgba(25,28,39,0.97) 58%,
-            transparent 73%
-        );
-
-    clip-path:
-        polygon(
-            27% 0,
-            73% 0,
-            84% 18%,
-            69% 44%,
-            60% 67%,
-            54% 100%,
-            46% 100%,
-            40% 67%,
-            31% 44%,
-            16% 18%
-        );
-
-    animation:
-        tornado-wobble 420ms linear infinite alternate;
-
-}
-
-
-.tornado-dust {
-
-    position:
-        absolute;
-
-    left:
-        29%;
-
-    bottom:
-        -5px;
-
-    width:
-        42%;
-
-    height:
-        20px;
-
-    border-radius:
-        50%;
-
-    background:
-        rgba(185,180,155,0.35);
-
-    filter:
-        blur(7px);
-
-}
-
-
-@keyframes tornado-wobble {
-
-    from {
-
-        transform:
-            rotate(-2deg)
-            scaleX(0.98);
-
-    }
-
-    to {
-
-        transform:
-            rotate(2deg)
-            scaleX(1.03);
-
-    }
-
-}
-
-
-@keyframes tornado-cross {
-
-    from {
-
-        left:
-            -320px;
-
-    }
-
-    to {
-
-        left:
-            110vw;
-
-    }
-
-}
-
-
-/* ============================================================
-   027 — HURRICANE
-   ============================================================ */
-
-.hurricane {
-
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        50%;
-
-    width:
-        min(84vw, 780px);
-
-    aspect-ratio:
-        1;
-
-    transform:
-        translate(-50%,-50%)
-        scale(0.25);
-
-    border-radius:
-        50%;
-
-    background:
-
-        conic-gradient(
-            from 0deg,
-            transparent 0 7%,
-            rgba(74,180,255,0.25) 10%,
-            transparent 17%,
-            rgba(157,106,255,0.24) 25%,
-            transparent 34%,
-            rgba(70,180,255,0.25) 43%,
-            transparent 52%,
-            rgba(255,255,255,0.12) 59%,
-            transparent 69%
-        );
-
-    box-shadow:
-        inset 0 0 100px rgba(80,170,255,0.14);
-
-    animation:
-        hurricane-spin 4.2s linear forwards;
-
-}
-
-
-.hurricane-eye {
-
-    position:
-        absolute;
-
-    inset:
-        37%;
-
-    border-radius:
-        50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(220,238,255,0.95) 0 5%,
-            rgba(220,238,255,0.14) 36%,
-            transparent 72%
-        );
-
-    box-shadow:
-        0 0 40px rgba(205,230,255,0.22);
-
-}
-
-
-@keyframes hurricane-spin {
-
-    0% {
-
-        opacity:
-            0;
-
-        transform:
-            translate(-50%,-50%)
-            scale(0.20)
-            rotate(0deg);
-
-    }
-
-    18% {
-
-        opacity:
-            1;
-
-    }
-
-    100% {
-
-        opacity:
-            0;
-
-        transform:
-            translate(-50%,-50%)
-            scale(1.28)
-            rotate(1080deg);
-
-    }
-
-}
-
-
-/* ============================================================
-   028 — NUKE SIMULATION
-   ============================================================ */
-
-.nuke-object {
-
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        -100px;
-
-    transform:
-        translateX(-50%);
-
-    font-size:
-        72px;
-
-    filter:
-        drop-shadow(
-            0 0 18px
-            rgba(255,210,80,0.55)
-        );
-
-    animation:
-        nuke-drop 1.15s
-        cubic-bezier(.7,0,.9,.25)
-        forwards;
-
-}
-
-
-@keyframes nuke-drop {
-
-    to {
-
-        top:
-            50%;
-
-    }
-
-}
-
-
-.nuke-explosion {
-
-    position:
-        absolute;
-
-    left:
-        50%;
-
-    top:
-        50%;
-
-    width:
-        30px;
-
-    height:
-        30px;
-
-    border-radius:
-        50%;
-
-    transform:
-        translate(-50%,-50%);
-
-    background:
-
-        radial-gradient(
-            circle,
-            #ffffff 0 5%,
-            #fff3a0 15%,
-            #ffb52d 34%,
-            #ff4b35 53%,
-            transparent 72%
-        );
-
-    animation:
-        nuke-boom 1.5s ease-out forwards;
-
-}
-
-
-@keyframes nuke-boom {
-
-    to {
-
-        width:
-            105vmax;
-
-        height:
-            105vmax;
-
-        opacity:
-            0;
-
-    }
-
-}
-
-
-/* ============================================================
-   029 — POWER OUTAGE
-   ============================================================ */
-
-body.power-out {
-
-    filter:
-        brightness(0.045);
-
-}
-
-
-body.power-out #effect-layer {
-
-    filter:
-        brightness(0.55);
-
-}
-
-
-.power-message {
-
-    position:
-        fixed;
-
-    inset:
-        0;
-
-    display:
-        grid;
-
-    place-items:
-        center;
+.pink-purple-alert
+.critical-alert-sub {
 
     color:
-        #aeb4c5;
-
-    font-size:
-        clamp(18px,5vw,34px);
-
-    font-weight:
-        950;
-
-    text-align:
-        center;
+        #dca9ff;
 
 }
 
 
-.power-flicker {
-
-    animation:
-        power-flicker 500ms steps(5,end);
-
-}
-
-
-@keyframes power-flicker {
-
-    0%,
-    100% {
-
-        filter:
-            brightness(1);
-
-    }
-
-    20% {
-
-        filter:
-            brightness(0.5);
-
-    }
-
-    40% {
-
-        filter:
-            brightness(1.4);
-
-    }
-
-    60% {
-
-        filter:
-            brightness(0.35);
-
-    }
-
-    80% {
-
-        filter:
-            brightness(0.75);
-
-    }
-
-}
-
-
-/* ============================================================
-   030 — BUTTON PHYSICS
-   ============================================================ */
-
-.flying-button {
-
-    position:
-        relative;
-
-    z-index:
-        100;
-
-    animation:
-        button-fly 1.8s
-        cubic-bezier(.2,.8,.2,1)
-        forwards;
-
-}
-
-
-@keyframes button-fly {
+@keyframes pink-purple-flow {
 
     0% {
 
-        transform:
-            translate(0,0)
-            rotate(0deg);
-
-    }
-
-    35% {
-
-        transform:
-            translate(
-                calc(var(--fly-x) * 0.45),
-                calc(var(--fly-y) * 0.45)
-            )
-            rotate(12deg);
+        background-position:
+            0% center;
 
     }
 
     100% {
 
-        transform:
-            translate(
-                var(--fly-x),
-                var(--fly-y)
-            )
-            rotate(360deg);
+        background-position:
+            250% center;
 
     }
 
@@ -2382,31 +1986,40 @@ body.power-out #effect-layer {
 
 
 /* ============================================================
-   031 — RED CRITICAL PULSE
+   021 — RED SCREEN PULSE
    ============================================================ */
 
 .critical-pulse {
 
     animation:
-        critical-pulse 600ms ease;
+        critical-screen-pulse
+        650ms
+        ease;
 
 }
 
 
-@keyframes critical-pulse {
+@keyframes critical-screen-pulse {
 
     0%,
     100% {
 
-        box-shadow:
+        filter:
             none;
+
+    }
+
+    35% {
+
+        filter:
+            brightness(1.12);
 
     }
 
     50% {
 
-        box-shadow:
-            inset 0 0 0 9999px rgba(255,0,40,0.035);
+        filter:
+            brightness(0.88);
 
     }
 
@@ -2414,10 +2027,45 @@ body.power-out #effect-layer {
 
 
 /* ============================================================
-   032 — MOBILE
+   022 — REDUCED MOTION
    ============================================================ */
 
-@media (max-width: 600px) {
+@media (
+    prefers-reduced-motion: reduce
+) {
+
+    *,
+    *::before,
+    *::after {
+
+        animation-duration:
+            1ms
+            !important;
+
+        animation-iteration-count:
+            1
+            !important;
+
+        scroll-behavior:
+            auto
+            !important;
+
+        transition-duration:
+            1ms
+            !important;
+
+    }
+
+}
+
+
+/* ============================================================
+   023 — MOBILE HEADER
+   ============================================================ */
+
+@media (
+    max-width: 600px
+) {
 
     .topbar {
 
@@ -2429,10 +2077,13 @@ body.power-out #effect-layer {
     .logo {
 
         width:
-            46px;
+            47px;
 
         height:
-            46px;
+            47px;
+
+        border-radius:
+            15px;
 
         font-size:
             23px;
@@ -2448,8 +2099,14 @@ body.power-out #effect-layer {
 
     .title-sub {
 
+        max-width:
+            230px;
+
         font-size:
-            9px;
+            8px;
+
+        line-height:
+            1.4;
 
     }
 
@@ -2471,25 +2128,90 @@ body.power-out #effect-layer {
 
 
 /* ============================================================
-   END OF INITIAL STYLE CORE
+   024 — IPAD LANDSCAPE
+   ============================================================ */
+
+@media (
+    min-width: 700px
+)
+and (
+    max-width: 1100px
+) {
+
+    #app {
+
+        padding:
+            14px;
+
+    }
+
+    .main-grid {
+
+        grid-template-columns:
+            minmax(0, 1.1fr)
+            minmax(280px, 0.9fr);
+
+    }
+
+}
+
+
+/* ============================================================
+   025 — SAFE AREA
+   ============================================================ */
+
+@supports (
+    padding: env(safe-area-inset-top)
+) {
+
+    #app {
+
+        padding-top:
+            max(
+                18px,
+                env(safe-area-inset-top)
+            );
+
+        padding-bottom:
+            max(
+                18px,
+                env(safe-area-inset-bottom)
+            );
+
+    }
+
+}
+
+
+/* ============================================================
+   END PART 1 CSS
    ============================================================ */
 
 </style>
 </head>
 
+
 <body>
+
 
 <div id="app">
 
-    <header class="topbar glass">
+
+    <header
+        class="topbar glass"
+        id="topbar"
+    >
 
         <div class="brand">
 
-            <div class="logo">
+            <div
+                class="logo"
+                aria-hidden="true"
+            >
                 ⚠️
             </div>
 
-            <div>
+            <div class="brand-copy">
 
                 <h1 class="title-main">
                     DAMAGE PROGRAM™
@@ -2503,11 +2225,20 @@ body.power-out #effect-layer {
 
         </div>
 
-        <div class="system-status">
 
-            <span class="system-dot"></span>
+        <div
+            class="system-status"
+            id="system-status"
+        >
 
-            SYSTEM ONLINE
+            <span
+                class="system-dot"
+                id="system-dot"
+            ></span>
+
+            <span id="system-status-text">
+                SYSTEM ONLINE
+            </span>
 
         </div>
 
@@ -2520,18 +2251,24 @@ body.power-out #effect-layer {
         <main>
 
 
-            <section class="card glass score-card">
+            <section
+                class="card glass score-card"
+                id="score-card"
+            >
 
                 <div class="score-label">
                     CURRENT SCORE
                 </div>
 
+
                 <div
                     id="score"
                     class="score-number"
+                    aria-live="polite"
                 >
                     0
                 </div>
+
 
                 <div class="score-meta">
 
@@ -2542,9 +2279,11 @@ body.power-out #effect-layer {
                         0 events
                     </span>
 
+
                     <span class="pill">
                         SIMULATION MODE
                     </span>
+
 
                     <span
                         id="achievement-pill"
@@ -2575,6 +2314,7 @@ body.power-out #effect-layer {
 
                 </div>
 
+
                 <div
                     id="categories"
                     class="categories"
@@ -2589,7 +2329,10 @@ body.power-out #effect-layer {
         <aside>
 
 
-            <section class="card glass">
+            <section
+                class="card glass"
+                id="history-card"
+            >
 
                 <div class="section-title">
 
@@ -2603,9 +2346,11 @@ body.power-out #effect-layer {
 
                 </div>
 
+
                 <div
                     id="history"
                     class="history"
+                    aria-live="polite"
                 >
 
                     <div class="history-empty">
@@ -2640,6 +2385,7 @@ body.power-out #effect-layer {
                     <button
                         id="reset-score"
                         class="control-button"
+                        type="button"
                     >
                         🔄 Reset Score
                     </button>
@@ -2648,6 +2394,7 @@ body.power-out #effect-layer {
                     <button
                         id="clear-history"
                         class="control-button"
+                        type="button"
                     >
                         🗑️ Clear History
                     </button>
@@ -2656,6 +2403,7 @@ body.power-out #effect-layer {
                     <button
                         id="restore-power"
                         class="control-button control-restore"
+                        type="button"
                     >
                         🔌 Restore Power
                     </button>
@@ -2664,6 +2412,7 @@ body.power-out #effect-layer {
                     <button
                         id="reset-everything"
                         class="control-button control-danger"
+                        type="button"
                     >
                         💥 Reset Everything
                     </button>
@@ -2678,69 +2427,158 @@ body.power-out #effect-layer {
 
     </div>
 
+
 </div>
 
 
-<div id="effect-layer"></div>
+<div
+    id="effect-layer"
+    aria-hidden="true"
+></div>
 
-<div id="toast"></div>
+
+<div
+    id="toast"
+    role="status"
+    aria-live="polite"
+></div>
 
 
 <script>
 
 /* ============================================================
    DAMAGE PROGRAM™
-   JAVASCRIPT CORE
+   ULTIMATE EDITION
+   PART 1 — APPLICATION FOUNDATION
    ============================================================ */
 
 
 /* ============================================================
-   033 — DOM REFERENCES
+   026 — DOM CACHE
    ============================================================ */
 
 const DOM = {
 
+    app:
+        document.getElementById(
+            "app"
+        ),
+
+    topbar:
+        document.getElementById(
+            "topbar"
+        ),
+
     score:
-        document.getElementById("score"),
+        document.getElementById(
+            "score"
+        ),
+
+    scoreCard:
+        document.getElementById(
+            "score-card"
+        ),
 
     eventCount:
-        document.getElementById("event-count"),
+        document.getElementById(
+            "event-count"
+        ),
 
     achievementPill:
-        document.getElementById("achievement-pill"),
+        document.getElementById(
+            "achievement-pill"
+        ),
 
     categories:
-        document.getElementById("categories"),
+        document.getElementById(
+            "categories"
+        ),
 
     history:
-        document.getElementById("history"),
+        document.getElementById(
+            "history"
+        ),
 
     historyCount:
-        document.getElementById("history-count"),
+        document.getElementById(
+            "history-count"
+        ),
 
     effectLayer:
-        document.getElementById("effect-layer"),
+        document.getElementById(
+            "effect-layer"
+        ),
 
     toast:
-        document.getElementById("toast"),
+        document.getElementById(
+            "toast"
+        ),
+
+    systemDot:
+        document.getElementById(
+            "system-dot"
+        ),
+
+    systemStatusText:
+        document.getElementById(
+            "system-status-text"
+        ),
 
     resetScore:
-        document.getElementById("reset-score"),
+        document.getElementById(
+            "reset-score"
+        ),
 
     clearHistory:
-        document.getElementById("clear-history"),
+        document.getElementById(
+            "clear-history"
+        ),
 
     restorePower:
-        document.getElementById("restore-power"),
+        document.getElementById(
+            "restore-power"
+        ),
 
     resetEverything:
-        document.getElementById("reset-everything")
+        document.getElementById(
+            "reset-everything"
+        )
 
 };
 
 
 /* ============================================================
-   034 — STATE
+   027 — APPLICATION CONSTANTS
+   ============================================================ */
+
+const APP = {
+
+    name:
+        "DAMAGE PROGRAM™",
+
+    version:
+        "ULTIMATE EDITION",
+
+    storageKey:
+        "damage-program-ultimate-state",
+
+    maxHistory:
+        250,
+
+    maxEffects:
+        180,
+
+    maxParticles:
+        120,
+
+    achievementMaximum:
+        100
+
+};
+
+
+/* ============================================================
+   028 — STATE
    ============================================================ */
 
 const STATE = {
@@ -2754,1099 +2592,640 @@ const STATE = {
     powerOut:
         false,
 
-    achievements:
-        new Set(),
-
     history:
         [],
 
-    runningEffects:
-        new Set()
+    achievements:
+        [],
+
+    settings: {
+
+        effects:
+            true,
+
+        particles:
+            true,
+
+        shake:
+            true,
+
+        sounds:
+            false
+
+    },
+
+    sessionStarted:
+        Date.now()
 
 };
 
 
 /* ============================================================
-   035 — EVENT DATA
+   029 — RUNTIME
    ============================================================ */
 
-const EVENT_DATA = {
+const RUNTIME = {
 
-    Tornado: {
+    toastTimer:
+        null,
 
-        icon:
-            "🌪️",
+    effectCount:
+        0,
 
-        description:
-            "Rotating funnel events",
+    lastRender:
+        0,
 
-        events: [
-
-            {
-                code:
-                    "NADO",
-
-                name:
-                    "Tornado",
-
-                points:
-                    1,
-
-                type:
-                    "tornado",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "PDS",
-
-                name:
-                    "Particularly Dangerous Situation",
-
-                points:
-                    3,
-
-                type:
-                    "tornado",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "DSTW",
-
-                name:
-                    "Destructive Severe Thunderstorm",
-
-                points:
-                    3,
-
-                type:
-                    "wind",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "TE",
-
-                name:
-                    "Tornado Emergency",
-
-                points:
-                    10,
-
-                type:
-                    "tornado",
-
-                danger:
-                    true
-
-            },
-
-            {
-                code:
-                    "NADO-H",
-
-                name:
-                    "Tornado hits house",
-
-                points:
-                    7,
-
-                type:
-                    "tornado-house",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "TE-H",
-
-                name:
-                    "Tornado Emergency + house",
-
-                points:
-                    15,
-
-                type:
-                    "tornado-house",
-
-                danger:
-                    true
-
-            }
-
-        ]
-
-    },
-
-
-    Flood: {
-
-        icon:
-            "🌊",
-
-        description:
-            "Rising-water events",
-
-        events: [
-
-            {
-                code:
-                    "FW",
-
-                name:
-                    "Flood Watch",
-
-                points:
-                    1,
-
-                type:
-                    "flood",
-
-                floodLevel:
-                    12,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "SFW",
-
-                name:
-                    "Flood Warning",
-
-                points:
-                    5,
-
-                type:
-                    "flood",
-
-                floodLevel:
-                    28,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "FLD",
-
-                name:
-                    "Flood",
-
-                points:
-                    10,
-
-                type:
-                    "flood",
-
-                floodLevel:
-                    50,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "FE",
-
-                name:
-                    "Flood Emergency",
-
-                points:
-                    20,
-
-                type:
-                    "flood",
-
-                floodLevel:
-                    76,
-
-                danger:
-                    true
-
-            }
-
-        ]
-
-    },
-
-
-    Hurricane: {
-
-        icon:
-            "🌀",
-
-        description:
-            "Spiral storm events",
-
-        events: [
-
-            {
-                code:
-                    "TWS",
-
-                name:
-                    "Tropical Weather Statement",
-
-                points:
-                    10,
-
-                type:
-                    "hurricane",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "HW",
-
-                name:
-                    "Hurricane Watch",
-
-                points:
-                    25,
-
-                type:
-                    "hurricane",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "HUR",
-
-                name:
-                    "Hurricane",
-
-                points:
-                    50,
-
-                type:
-                    "hurricane",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "HWN",
-
-                name:
-                    "Hurricane Warning",
-
-                points:
-                    60,
-
-                type:
-                    "hurricane",
-
-                danger:
-                    true
-
-            }
-
-        ]
-
-    },
-
-
-    Nuke: {
-
-        icon:
-            "☢️",
-
-        description:
-            "Fictional simulation events",
-
-        events: [
-
-            {
-                code:
-                    "NW",
-
-                name:
-                    "Nuclear Watch",
-
-                points:
-                    50,
-
-                type:
-                    "warning",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "NUKE",
-
-                name:
-                    "Nuclear Event",
-
-                points:
-                    75,
-
-                type:
-                    "nuke",
-
-                danger:
-                    true
-
-            },
-
-            {
-                code:
-                    "N10",
-
-                name:
-                    "10-minute Simulation Alert",
-
-                points:
-                    75,
-
-                type:
-                    "nuke",
-
-                danger:
-                    true
-
-            },
-
-            {
-                code:
-                    "PINK",
-
-                name:
-                    "Pink / Purple Alert",
-
-                points:
-                    75,
-
-                type:
-                    "pink",
-
-                danger:
-                    false
-
-            }
-
-        ]
-
-    },
-
-
-    "Wind / Power": {
-
-        icon:
-            "💨",
-
-        description:
-            "Extreme gusts and electrical events",
-
-        events: [
-
-            {
-                code:
-                    "EWW",
-
-                name:
-                    "Extreme Wind Warning",
-
-                points:
-                    20,
-
-                type:
-                    "eww",
-
-                danger:
-                    true
-
-            },
-
-            {
-                code:
-                    "PO",
-
-                name:
-                    "Power Outage",
-
-                points:
-                    7,
-
-                type:
-                    "power-out",
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "PR",
-
-                name:
-                    "Power Restoration",
-
-                points:
-                    25,
-
-                type:
-                    "power-restore",
-
-                danger:
-                    false
-
-            }
-
-        ]
-
-    },
-
-
-    Hail: {
-
-        icon:
-            "🧊",
-
-        description:
-            "Hail from 1 to 8 inches",
-
-        events: [
-
-            {
-                code:
-                    "1 IN",
-
-                name:
-                    "1 inch hail",
-
-                points:
-                    1,
-
-                type:
-                    "hail",
-
-                size:
-                    1,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "2 IN",
-
-                name:
-                    "2 inch hail",
-
-                points:
-                    2,
-
-                type:
-                    "hail",
-
-                size:
-                    2,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "3 IN",
-
-                name:
-                    "3 inch hail",
-
-                points:
-                    3,
-
-                type:
-                    "hail",
-
-                size:
-                    3,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "4 IN",
-
-                name:
-                    "4 inch hail",
-
-                points:
-                    4,
-
-                type:
-                    "hail",
-
-                size:
-                    4,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "5 IN",
-
-                name:
-                    "5 inch hail",
-
-                points:
-                    5,
-
-                type:
-                    "hail",
-
-                size:
-                    5,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "6 IN",
-
-                name:
-                    "6 inch hail",
-
-                points:
-                    6,
-
-                type:
-                    "hail",
-
-                size:
-                    6,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "7 IN",
-
-                name:
-                    "7 inch hail",
-
-                points:
-                    7,
-
-                type:
-                    "hail",
-
-                size:
-                    7,
-
-                danger:
-                    false
-
-            },
-
-            {
-                code:
-                    "8 IN",
-
-                name:
-                    "8 inch hail",
-
-                points:
-                    8,
-
-                type:
-                    "hail",
-
-                size:
-                    8,
-
-                danger:
-                    true
-
-            }
-
-        ]
-
-    }
+    initialized:
+        false
 
 };
 
 
 /* ============================================================
-   036 — ACHIEVEMENTS
+   030 — UTILITY: RANDOM
    ============================================================ */
 
-const ACHIEVEMENTS = [
-
-    {
-        amount:
-            1,
-
-        title:
-            "FIRST ALERT",
-
-        description:
-            "Trigger your first event."
-
-    },
-
-    {
-        amount:
-            5,
-
-        title:
-            "GETTING STARTED",
-
-        description:
-            "Trigger 5 events."
-
-    },
-
-    {
-        amount:
-            10,
-
-        title:
-            "DISASTER REGULAR",
-
-        description:
-            "Trigger 10 events."
-
-    },
-
-    {
-        amount:
-            25,
-
-        title:
-            "STORM CHASER",
-
-        description:
-            "Trigger 25 events."
-
-    },
-
-    {
-        amount:
-            50,
-
-        title:
-            "CHAOS COORDINATOR",
-
-        description:
-            "Trigger 50 events."
-
-    },
-
-    {
-        amount:
-            75,
-
-        title:
-            "YOU AGAIN?!",
-
-        description:
-            "Trigger 75 events."
-
-    },
-
-    {
-        amount:
-            100,
-
-        title:
-            "DAMAGE PROGRAM LEGEND",
-
-        description:
-            "Trigger 100 events."
-
-    }
-
-];
-
-
-/* ============================================================
-   037 — BUILD CATEGORIES
-   ============================================================ */
-
-function buildCategories() {
-
-    DOM.categories.innerHTML =
-        "";
-
-    Object.entries(EVENT_DATA).forEach(
-        ([categoryName, categoryData]) => {
-
-            const category =
-                document.createElement("div");
-
-            category.className =
-                "category";
-
-
-            const header =
-                document.createElement("button");
-
-            header.className =
-                "category-header";
-
-            header.type =
-                "button";
-
-
-            header.innerHTML = `
-
-                <span class="category-left">
-
-                    <span class="category-icon">
-                        ${categoryData.icon}
-                    </span>
-
-                    <span>
-
-                        <span class="category-name">
-                            ${categoryName}
-                        </span>
-
-                        <span class="category-description">
-                            ${categoryData.description}
-                        </span>
-
-                    </span>
-
-                </span>
-
-                <span class="category-arrow">
-                    ⌄
-                </span>
-
-            `;
-
-
-            const eventGrid =
-                document.createElement("div");
-
-            eventGrid.className =
-                "event-grid";
-
-
-            header.addEventListener(
-                "click",
-                () => {
-
-                    category.classList.toggle(
-                        "open"
-                    );
-
-                }
-            );
-
-
-            categoryData.events.forEach(
-                eventData => {
-
-                    const button =
-                        createEventButton(
-                            eventData
-                        );
-
-                    eventGrid.appendChild(
-                        button
-                    );
-
-                }
-            );
-
-
-            category.appendChild(
-                header
-            );
-
-            category.appendChild(
-                eventGrid
-            );
-
-            DOM.categories.appendChild(
-                category
-            );
-
-        }
-    );
-
-}
-
-
-/* ============================================================
-   038 — EVENT BUTTON
-   ============================================================ */
-
-function createEventButton(eventData) {
-
-    const button =
-        document.createElement("button");
-
-    button.type =
-        "button";
-
-    button.className =
-        "event-button";
-
-
-    button.innerHTML = `
-
-        <span class="event-code">
-            ${eventData.code}
-        </span>
-
-        <span class="event-description">
-            ${eventData.name}
-        </span>
-
-        <span class="event-points">
-            +${eventData.points} points
-        </span>
-
-    `;
-
-
-    button.addEventListener(
-        "click",
-        () => {
-
-            triggerEvent(
-                eventData,
-                button
-            );
-
-        }
-    );
-
-
-    return button;
-
-}
-
-
-/* ============================================================
-   039 — TRIGGER EVENT
-   ============================================================ */
-
-function triggerEvent(
-    eventData,
-    sourceButton
+function random(
+    minimum,
+    maximum
 ) {
 
-    STATE.score +=
-        eventData.points;
+    return (
+        Math.random() *
+        (
+            maximum -
+            minimum
+        )
+    ) +
+    minimum;
 
-    STATE.events +=
-        1;
-
-
-    STATE.history.unshift({
-
-        code:
-            eventData.code,
-
-        name:
-            eventData.name,
-
-        points:
-            eventData.points,
-
-        time:
-            new Date()
-
-    });
+}
 
 
-    updateInterface();
+/* ============================================================
+   031 — UTILITY: RANDOM INTEGER
+   ============================================================ */
 
-    addHistoryEntry(
-        eventData
+function randomInt(
+    minimum,
+    maximum
+) {
+
+    return Math.floor(
+        random(
+            minimum,
+            maximum + 1
+        )
     );
 
+}
 
-    runEventEffect(
-        eventData,
-        sourceButton
+
+/* ============================================================
+   032 — UTILITY: CLAMP
+   ============================================================ */
+
+function clamp(
+    value,
+    minimum,
+    maximum
+) {
+
+    return Math.min(
+        maximum,
+        Math.max(
+            minimum,
+            value
+        )
     );
 
+}
 
-    if (
-        eventData.danger ===
-        true
+
+/* ============================================================
+   033 — UTILITY: ESCAPE HTML
+   ============================================================ */
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value
+    )
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+/* ============================================================
+   034 — UTILITY: TIME
+   ============================================================ */
+
+function formatTime(
+    date
+) {
+
+    const value =
+        date instanceof Date
+            ? date
+            : new Date(date);
+
+    return value.toLocaleTimeString(
+        [],
+        {
+            hour:
+                "numeric",
+
+            minute:
+                "2-digit",
+
+            second:
+                "2-digit"
+        }
+    );
+
+}
+
+
+/* ============================================================
+   035 — STORAGE LOAD
+   ============================================================ */
+
+function loadState() {
+
+    try {
+
+        const raw =
+            localStorage.getItem(
+                APP.storageKey
+            );
+
+
+        if (!raw) {
+
+            return;
+
+        }
+
+
+        const saved =
+            JSON.parse(
+                raw
+            );
+
+
+        if (
+            typeof saved.score ===
+            "number"
+        ) {
+
+            STATE.score =
+                saved.score;
+
+        }
+
+
+        if (
+            typeof saved.events ===
+            "number"
+        ) {
+
+            STATE.events =
+                saved.events;
+
+        }
+
+
+        if (
+            typeof saved.powerOut ===
+            "boolean"
+        ) {
+
+            STATE.powerOut =
+                saved.powerOut;
+
+        }
+
+
+        if (
+            Array.isArray(
+                saved.history
+            )
+        ) {
+
+            STATE.history =
+                saved.history.slice(
+                    0,
+                    APP.maxHistory
+                );
+
+        }
+
+
+        if (
+            Array.isArray(
+                saved.achievements
+            )
+        ) {
+
+            STATE.achievements =
+                saved.achievements;
+
+        }
+
+
+        if (
+            saved.settings &&
+            typeof saved.settings ===
+            "object"
+        ) {
+
+            STATE.settings = {
+
+                ...STATE.settings,
+
+                ...saved.settings
+
+            };
+
+        }
+
+    }
+
+    catch (
+        error
     ) {
 
-        showCriticalAlert(
-            eventData
+        console.warn(
+            "Could not load saved state.",
+            error
         );
 
     }
 
+}
 
-    checkAchievements();
+
+/* ============================================================
+   036 — STORAGE SAVE
+   ============================================================ */
+
+function saveState() {
+
+    try {
+
+        localStorage.setItem(
+            APP.storageKey,
+
+            JSON.stringify({
+
+                score:
+                    STATE.score,
+
+                events:
+                    STATE.events,
+
+                powerOut:
+                    STATE.powerOut,
+
+                history:
+                    STATE.history,
+
+                achievements:
+                    STATE.achievements,
+
+                settings:
+                    STATE.settings
+
+            })
+
+        );
+
+    }
+
+    catch (
+        error
+    ) {
+
+        console.warn(
+            "Could not save state.",
+            error
+        );
+
+    }
 
 }
 
 
 /* ============================================================
-   040 — INTERFACE UPDATE
+   037 — UPDATE SCORE
    ============================================================ */
 
-function updateInterface() {
+function updateScoreDisplay() {
 
     DOM.score.textContent =
         STATE.score.toLocaleString();
 
+}
+
+
+/* ============================================================
+   038 — UPDATE EVENT COUNT
+   ============================================================ */
+
+function updateEventCountDisplay() {
+
     DOM.eventCount.textContent =
         `${STATE.events} events`;
+
+}
+
+
+/* ============================================================
+   039 — UPDATE ACHIEVEMENT COUNT
+   ============================================================ */
+
+function updateAchievementDisplay() {
+
+    const completed =
+        STATE.achievements.length;
+
+
+    DOM.achievementPill.textContent =
+        `${completed} / ${APP.achievementMaximum}`;
+
+}
+
+
+/* ============================================================
+   040 — UPDATE HISTORY COUNT
+   ============================================================ */
+
+function updateHistoryCountDisplay() {
 
     DOM.historyCount.textContent =
         STATE.history.length;
 
-    DOM.achievementPill.textContent =
-        `${Math.min(STATE.events,100)} / 100`;
+}
+
+
+/* ============================================================
+   041 — UPDATE POWER STATUS
+   ============================================================ */
+
+function updatePowerDisplay() {
+
+    if (
+        STATE.powerOut
+    ) {
+
+        DOM.systemDot.style.background =
+            "var(--red)";
+
+        DOM.systemDot.style.boxShadow =
+            "0 0 16px rgba(255,64,91,0.9)";
+
+        DOM.systemStatusText.textContent =
+            "POWER OFFLINE";
+
+    }
+
+    else {
+
+        DOM.systemDot.style.background =
+            "var(--green)";
+
+        DOM.systemDot.style.boxShadow =
+            "0 0 16px rgba(80,228,154,0.9)";
+
+        DOM.systemStatusText.textContent =
+            "SYSTEM ONLINE";
+
+    }
 
 }
 
 
 /* ============================================================
-   041 — HISTORY
+   042 — UPDATE INTERFACE
    ============================================================ */
 
-function addHistoryEntry(
-    eventData
+function updateInterface() {
+
+    updateScoreDisplay();
+
+    updateEventCountDisplay();
+
+    updateAchievementDisplay();
+
+    updateHistoryCountDisplay();
+
+    updatePowerDisplay();
+
+}
+
+
+/* ============================================================
+   043 — TOAST
+   ============================================================ */
+
+function showToast(
+    message
 ) {
 
-    const empty =
-        DOM.history.querySelector(
-            ".history-empty"
+    DOM.toast.textContent =
+        message;
+
+    DOM.toast.classList.add(
+        "visible"
+    );
+
+
+    clearTimeout(
+        RUNTIME.toastTimer
+    );
+
+
+    RUNTIME.toastTimer =
+        setTimeout(
+            () => {
+
+                DOM.toast.classList.remove(
+                    "visible"
+                );
+
+            },
+            2300
         );
 
+}
 
-    if (empty) {
 
-        DOM.history.innerHTML =
-            "";
+/* ============================================================
+   044 — EFFECT REGISTRATION
+   ============================================================ */
+
+function registerEffect(
+    element
+) {
+
+    RUNTIME.effectCount +=
+        1;
+
+
+    if (
+        RUNTIME.effectCount >
+        APP.maxEffects
+    ) {
+
+        const first =
+            DOM.effectLayer.firstElementChild;
+
+
+        if (first) {
+
+            first.remove();
+
+        }
+
+
+        RUNTIME.effectCount =
+            Math.max(
+                0,
+                RUNTIME.effectCount - 1
+            );
 
     }
 
 
-    const row =
-        document.createElement(
-            "div"
-        );
+    element.addEventListener(
+        "animationend",
+        () => {
 
-    row.className =
-        "history-row";
+            RUNTIME.effectCount =
+                Math.max(
+                    0,
+                    RUNTIME.effectCount - 1
+                );
 
-
-    row.innerHTML = `
-
-        <span>
-            <b>${eventData.code}</b>
-            —
-            ${eventData.name}
-        </span>
-
-        <span class="history-points">
-            +${eventData.points}
-        </span>
-
-    `;
+        },
+        {
+            once:
+                true
+        }
+    );
 
 
-    DOM.history.prepend(
-        row
+    element.addEventListener(
+        "transitionend",
+        () => {
+
+            RUNTIME.effectCount =
+                Math.max(
+                    0,
+                    RUNTIME.effectCount - 1
+                );
+
+        },
+        {
+            once:
+                true
+        }
     );
 
 }
 
 
 /* ============================================================
-   042 — CRITICAL ALERT
+   045 — EFFECT APPEND
    ============================================================ */
 
-function showCriticalAlert(
-    eventData
+function appendEffect(
+    element
 ) {
 
-    const alert =
-        document.createElement(
-            "div"
-        );
+    if (
+        !STATE.settings.effects
+    ) {
 
-    alert.className =
-        "critical-alert";
+        return null;
+
+    }
 
 
-    alert.innerHTML = `
-
-        <span class="critical-alert-title">
-            ⚠️ CRITICAL EVENT
-        </span>
-
-        <span class="critical-alert-sub">
-            ${eventData.name.toUpperCase()}
-        </span>
-
-    `;
+    registerEffect(
+        element
+    );
 
 
     DOM.effectLayer.appendChild(
-        alert
+        element
     );
+
+
+    return element;
+
+}
+
+
+/* ============================================================
+   046 — CLEAR EFFECTS
+   ============================================================ */
+
+function clearEffects() {
+
+    DOM.effectLayer.innerHTML =
+        "";
+
+    RUNTIME.effectCount =
+        0;
+
+}
+
+
+/* ============================================================
+   047 — SHAKE
+   ============================================================ */
+
+function screenShake(
+    duration = 700
+) {
+
+    if (
+        !STATE.settings.shake
+    ) {
+
+        return;
+
+    }
+
+
+    document.body.classList.remove(
+        "critical-pulse"
+    );
+
+
+    void document.body.offsetWidth;
 
 
     document.body.classList.add(
@@ -3862,1019 +3241,62 @@ function showCriticalAlert(
             );
 
         },
-        650
-    );
-
-
-    setTimeout(
-        () => {
-
-            alert.remove();
-
-        },
-        2800
+        duration
     );
 
 }
 
 
 /* ============================================================
-   043 — ACHIEVEMENTS
+   048 — RESET SCORE
    ============================================================ */
 
-function checkAchievements() {
+function resetScore() {
 
-    ACHIEVEMENTS.forEach(
-        achievement => {
+    STATE.score =
+        0;
 
-            if (
-                STATE.events >=
-                achievement.amount
-            ) {
+    updateInterface();
 
-                if (
-                    !STATE.achievements.has(
-                        achievement.amount
-                    )
-                ) {
+    saveState();
 
-                    STATE.achievements.add(
-                        achievement.amount
-                    );
-
-                    showAchievement(
-                        achievement
-                    );
-
-                }
-
-            }
-
-        }
+    showToast(
+        "🔄 SCORE RESET"
     );
 
 }
 
 
 /* ============================================================
-   044 — ACHIEVEMENT POPUP
+   049 — CLEAR HISTORY
    ============================================================ */
 
-function showAchievement(
-    achievement
-) {
+function clearHistory() {
 
-    const popup =
-        document.createElement(
-            "div"
-        );
+    STATE.history =
+        [];
 
+    STATE.events =
+        0;
 
-    popup.className =
-        "critical-alert pink-purple-alert";
+    STATE.achievements =
+        [];
 
+    renderHistory();
 
-    popup.innerHTML = `
+    updateInterface();
 
-        <span class="critical-alert-title">
-            🏆 ${achievement.title}
-        </span>
+    saveState();
 
-        <span class="critical-alert-sub">
-            ${achievement.description}
-        </span>
-
-    `;
-
-
-    DOM.effectLayer.appendChild(
-        popup
-    );
-
-
-    setTimeout(
-        () => {
-
-            popup.remove();
-
-        },
-        3000
+    showToast(
+        "🗑️ HISTORY CLEARED"
     );
 
 }
 
 
 /* ============================================================
-   045 — EFFECT ROUTER
-   ============================================================ */
-
-function runEventEffect(
-    eventData,
-    sourceButton
-) {
-
-    switch (
-        eventData.type
-    ) {
-
-        case "tornado":
-
-            createTornado(
-                eventData,
-                false
-            );
-
-            break;
-
-
-        case "tornado-house":
-
-            createTornado(
-                eventData,
-                true
-            );
-
-            break;
-
-
-        case "wind":
-
-            createWind(
-                18
-            );
-
-            break;
-
-
-        case "eww":
-
-            createExtremeWind();
-
-            break;
-
-
-        case "flood":
-
-            createFlood(
-                eventData.floodLevel
-            );
-
-            break;
-
-
-        case "hurricane":
-
-            createHurricane();
-
-            break;
-
-
-        case "nuke":
-
-            createNuke();
-
-            break;
-
-
-        case "warning":
-
-            showToast(
-                "⚠️ Simulation warning triggered."
-            );
-
-            break;
-
-
-        case "pink":
-
-            createPinkPurpleAlert();
-
-            break;
-
-
-        case "power-out":
-
-            createPowerOutage();
-
-            break;
-
-
-        case "power-restore":
-
-            restorePower();
-
-            break;
-
-
-        case "hail":
-
-            createHail(
-                eventData.size
-            );
-
-            break;
-
-    }
-
-}
-
-
-/* ============================================================
-   046 — TORNADO
-   ============================================================ */
-
-function createTornado(
-    eventData,
-    hitsHouse
-) {
-
-    const tornado =
-        document.createElement(
-            "div"
-        );
-
-    tornado.className =
-        "tornado";
-
-
-    if (
-        eventData.points >=
-        3
-    ) {
-
-        tornado.classList.add(
-            "large"
-        );
-
-    }
-
-
-    const funnel =
-        document.createElement(
-            "div"
-        );
-
-    funnel.className =
-        "tornado-funnel";
-
-
-    const dust =
-        document.createElement(
-            "div"
-        );
-
-    dust.className =
-        "tornado-dust";
-
-
-    tornado.appendChild(
-        funnel
-    );
-
-    tornado.appendChild(
-        dust
-    );
-
-
-    DOM.effectLayer.appendChild(
-        tornado
-    );
-
-
-    createWind(
-        eventData.points >= 7
-            ? 28
-            : 14
-    );
-
-
-    if (
-        hitsHouse
-    ) {
-
-        showToast(
-            "🏠 SIMULATION: structure impact"
-        );
-
-    }
-
-
-    if (
-        eventData.points >= 7
-    ) {
-
-        createButtonChaos(
-            eventData.points
-        );
-
-    }
-
-
-    setTimeout(
-        () => {
-
-            tornado.remove();
-
-        },
-        3500
-    );
-
-}
-
-
-/* ============================================================
-   047 — BUTTON CHAOS
-   ============================================================ */
-
-function createButtonChaos(
-    amount
-) {
-
-    const buttons =
-        Array.from(
-            document.querySelectorAll(
-                ".event-button"
-            )
-        );
-
-
-    const shuffled =
-        buttons.sort(
-            () =>
-                Math.random() - 0.5
-        );
-
-
-    const amountToMove =
-        Math.min(
-            amount,
-            shuffled.length
-        );
-
-
-    for (
-        let i = 0;
-        i < amountToMove;
-        i++
-    ) {
-
-        const button =
-            shuffled[i];
-
-
-        const x =
-            Math.round(
-                (Math.random() * 260) - 130
-            );
-
-        const y =
-            Math.round(
-                (Math.random() * -180) - 40
-            );
-
-
-        button.style.setProperty(
-            "--fly-x",
-            `${x}px`
-        );
-
-
-        button.style.setProperty(
-            "--fly-y",
-            `${y}px`
-        );
-
-
-        button.classList.add(
-            "flying-button"
-        );
-
-
-        setTimeout(
-            () => {
-
-                button.classList.remove(
-                    "flying-button"
-                );
-
-            },
-            1900
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   048 — WIND
-   ============================================================ */
-
-function createWind(
-    amount = 15
-) {
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        const gust =
-            document.createElement(
-                "div"
-            );
-
-
-        gust.className =
-            "wind-gust";
-
-
-        gust.style.top =
-            `${Math.random() * 100}%`;
-
-
-        gust.style.width =
-            `${60 + Math.random() * 190}px`;
-
-
-        gust.style.animationDelay =
-            `${Math.random() * 0.45}s`;
-
-
-        DOM.effectLayer.appendChild(
-            gust
-        );
-
-
-        setTimeout(
-            () => {
-
-                gust.remove();
-
-            },
-            1700
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   049 — EXTREME WIND
-   ============================================================ */
-
-function createExtremeWind() {
-
-    createWind(
-        38
-    );
-
-
-    const debrisTypes = [
-
-        "🍃",
-        "🌿",
-        "📄",
-        "🪵",
-        "🍂"
-
-    ];
-
-
-    for (
-        let i = 0;
-        i < 15;
-        i++
-    ) {
-
-        const debris =
-            document.createElement(
-                "div"
-            );
-
-
-        debris.className =
-            "wind-debris";
-
-
-        debris.textContent =
-            debrisTypes[
-                Math.floor(
-                    Math.random() *
-                    debrisTypes.length
-                )
-            ];
-
-
-        debris.style.top =
-            `${Math.random() * 92}%`;
-
-
-        debris.style.setProperty(
-            "--debris-y",
-            `${Math.random() * 200 - 100}px`
-        );
-
-
-        debris.style.animationDelay =
-            `${Math.random() * 0.5}s`;
-
-
-        DOM.effectLayer.appendChild(
-            debris
-        );
-
-
-        setTimeout(
-            () => {
-
-                debris.remove();
-
-            },
-            2200
-        );
-
-    }
-
-
-    document.body.classList.add(
-        "screen-shake"
-    );
-
-
-    setTimeout(
-        () => {
-
-            document.body.classList.remove(
-                "screen-shake"
-            );
-
-        },
-        800
-    );
-
-}
-
-
-/* ============================================================
-   050 — FLOOD
-   ============================================================ */
-
-function createFlood(
-    targetHeight
-) {
-
-    const flood =
-        document.createElement(
-            "div"
-        );
-
-    flood.className =
-        "flood-layer";
-
-
-    const wave =
-        document.createElement(
-            "div"
-        );
-
-    wave.className =
-        "flood-wave";
-
-
-    flood.appendChild(
-        wave
-    );
-
-
-    DOM.effectLayer.appendChild(
-        flood
-    );
-
-
-    requestAnimationFrame(
-        () => {
-
-            flood.style.height =
-                `${targetHeight}%`;
-
-        }
-    );
-
-
-    createRain(
-        targetHeight >= 45
-            ? 50
-            : 28
-    );
-
-
-    setTimeout(
-        () => {
-
-            flood.style.height =
-                "0%";
-
-
-            setTimeout(
-                () => {
-
-                    flood.remove();
-
-                },
-                3100
-            );
-
-        },
-        4300
-    );
-
-}
-
-
-/* ============================================================
-   051 — RAIN
-   ============================================================ */
-
-function createRain(
-    amount
-) {
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        const drop =
-            document.createElement(
-                "div"
-            );
-
-
-        drop.className =
-            "rain-drop";
-
-
-        drop.style.left =
-            `${Math.random() * 100}%`;
-
-
-        drop.style.animationDelay =
-            `${Math.random() * 0.8}s`;
-
-
-        DOM.effectLayer.appendChild(
-            drop
-        );
-
-
-        setTimeout(
-            () => {
-
-                drop.remove();
-
-            },
-            1900
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   052 — HURRICANE
-   ============================================================ */
-
-function createHurricane() {
-
-    const hurricane =
-        document.createElement(
-            "div"
-        );
-
-    hurricane.className =
-        "hurricane";
-
-
-    const eye =
-        document.createElement(
-            "div"
-        );
-
-    eye.className =
-        "hurricane-eye";
-
-
-    hurricane.appendChild(
-        eye
-    );
-
-
-    DOM.effectLayer.appendChild(
-        hurricane
-    );
-
-
-    createRain(
-        65
-    );
-
-
-    setTimeout(
-        () => {
-
-            hurricane.remove();
-
-        },
-        4400
-    );
-
-}
-
-
-/* ============================================================
-   053 — HAIL
-   ============================================================ */
-
-function createHail(
-    size
-) {
-
-    const amount =
-        Math.min(
-            50,
-            12 + size * 4
-        );
-
-
-    for (
-        let i = 0;
-        i < amount;
-        i++
-    ) {
-
-        const hail =
-            document.createElement(
-                "div"
-            );
-
-
-        hail.className =
-            "hailstone";
-
-
-        const pixelSize =
-            4 + size * 2.4;
-
-
-        hail.style.width =
-            `${pixelSize}px`;
-
-
-        hail.style.height =
-            `${pixelSize}px`;
-
-
-        hail.style.left =
-            `${Math.random() * 100}%`;
-
-
-        hail.style.animationDelay =
-            `${Math.random() * 0.55}s`;
-
-
-        DOM.effectLayer.appendChild(
-            hail
-        );
-
-
-        setTimeout(
-            () => {
-
-                hail.remove();
-
-            },
-            1900
-        );
-
-    }
-
-}
-
-
-/* ============================================================
-   054 — NUKE SIMULATION
-   ============================================================ */
-
-function createNuke() {
-
-    const object =
-        document.createElement(
-            "div"
-        );
-
-    object.className =
-        "nuke-object";
-
-    object.textContent =
-        "☢️";
-
-
-    DOM.effectLayer.appendChild(
-        object
-    );
-
-
-    setTimeout(
-        () => {
-
-            object.remove();
-
-            createNukeExplosion();
-
-        },
-        1200
-    );
-
-}
-
-
-/* ============================================================
-   055 — NUKE EXPLOSION
-   ============================================================ */
-
-function createNukeExplosion() {
-
-    const explosion =
-        document.createElement(
-            "div"
-        );
-
-    explosion.className =
-        "nuke-explosion";
-
-
-    DOM.effectLayer.appendChild(
-        explosion
-    );
-
-
-    document.body.classList.add(
-        "screen-shake"
-    );
-
-
-    setTimeout(
-        () => {
-
-            document.body.classList.remove(
-                "screen-shake"
-            );
-
-        },
-        800
-    );
-
-
-    setTimeout(
-        () => {
-
-            explosion.remove();
-
-        },
-        1600
-    );
-
-}
-
-
-/* ============================================================
-   056 — PINK / PURPLE
-   ============================================================ */
-
-function createPinkPurpleAlert() {
-
-    const alert =
-        document.createElement(
-            "div"
-        );
-
-
-    alert.className =
-        "critical-alert pink-purple-alert";
-
-
-    alert.innerHTML = `
-
-        <span class="critical-alert-title">
-            💗💜 CHAOS ALERT 💜💗
-        </span>
-
-        <span class="critical-alert-sub">
-            FICTIONAL PINK / PURPLE SIMULATION EVENT
-        </span>
-
-    `;
-
-
-    DOM.effectLayer.appendChild(
-        alert
-    );
-
-
-    setTimeout(
-        () => {
-
-            alert.remove();
-
-        },
-        3100
-    );
-
-}
-
-
-/* ============================================================
-   057 — POWER OUTAGE
-   ============================================================ */
-
-function createPowerOutage() {
-
-    if (
-        STATE.powerOut
-    ) {
-
-        showToast(
-            "⚡ POWER IS ALREADY OUT"
-        );
-
-        return;
-
-    }
-
-
-    STATE.powerOut =
-        true;
-
-
-    document.body.classList.add(
-        "power-flicker"
-    );
-
-
-    setTimeout(
-        () => {
-
-            document.body.classList.remove(
-                "power-flicker"
-            );
-
-            document.body.classList.add(
-                "power-out"
-            );
-
-        },
-        650
-    );
-
-
-    const message =
-        document.createElement(
-            "div"
-        );
-
-
-    message.className =
-        "power-message";
-
-
-    message.textContent =
-        "⚡ POWER OUTAGE — SIMULATION";
-
-
-    DOM.effectLayer.appendChild(
-        message
-    );
-
-
-    setTimeout(
-        () => {
-
-            message.remove();
-
-        },
-        2300
-    );
-
-}
-
-
-/* ============================================================
-   058 — RESTORE POWER
+   050 — RESTORE POWER
    ============================================================ */
 
 function restorePower() {
@@ -4882,16 +3304,13 @@ function restorePower() {
     STATE.powerOut =
         false;
 
-
     document.body.classList.remove(
         "power-out"
     );
 
+    updatePowerDisplay();
 
-    document.body.classList.remove(
-        "power-flicker"
-    );
-
+    saveState();
 
     showToast(
         "🔌 POWER RESTORED"
@@ -4901,194 +3320,121 @@ function restorePower() {
 
 
 /* ============================================================
-   059 — TOAST
+   051 — FULL RESET
    ============================================================ */
 
-let toastTimer =
-    null;
+function resetEverything() {
 
+    STATE.score =
+        0;
 
-function showToast(
-    message
-) {
+    STATE.events =
+        0;
 
-    DOM.toast.textContent =
-        message;
+    STATE.powerOut =
+        false;
 
+    STATE.history =
+        [];
 
-    DOM.toast.classList.add(
-        "visible"
+    STATE.achievements =
+        [];
+
+    clearEffects();
+
+    document.body.classList.remove(
+        "power-out",
+        "critical-pulse"
     );
 
+    renderHistory();
 
-    clearTimeout(
-        toastTimer
+    updateInterface();
+
+    saveState();
+
+    showToast(
+        "💥 DAMAGE PROGRAM RESET"
     );
-
-
-    toastTimer =
-        setTimeout(
-            () => {
-
-                DOM.toast.classList.remove(
-                    "visible"
-                );
-
-            },
-            2200
-        );
 
 }
 
 
 /* ============================================================
-   060 — RESET SCORE
+   052 — BUTTON EVENTS
    ============================================================ */
 
 DOM.resetScore.addEventListener(
     "click",
-    () => {
-
-        STATE.score =
-            0;
-
-        updateInterface();
-
-        showToast(
-            "🔄 SCORE RESET"
-        );
-
-    }
+    resetScore
 );
 
-
-/* ============================================================
-   061 — CLEAR HISTORY
-   ============================================================ */
 
 DOM.clearHistory.addEventListener(
     "click",
-    () => {
-
-        STATE.history =
-            [];
-
-        STATE.events =
-            0;
-
-        STATE.achievements.clear();
-
-        DOM.history.innerHTML = `
-
-            <div class="history-empty">
-                No events yet.
-            </div>
-
-        `;
-
-        updateInterface();
-
-        showToast(
-            "🗑️ HISTORY CLEARED"
-        );
-
-    }
+    clearHistory
 );
 
-
-/* ============================================================
-   062 — RESTORE POWER BUTTON
-   ============================================================ */
 
 DOM.restorePower.addEventListener(
     "click",
-    () => {
-
-        restorePower();
-
-    }
+    restorePower
 );
 
-
-/* ============================================================
-   063 — FULL RESET
-   ============================================================ */
 
 DOM.resetEverything.addEventListener(
     "click",
-    () => {
-
-        STATE.score =
-            0;
-
-        STATE.events =
-            0;
-
-        STATE.powerOut =
-            false;
-
-        STATE.history =
-            [];
-
-        STATE.achievements.clear();
+    resetEverything
+);
 
 
-        DOM.history.innerHTML = `
+/* ============================================================
+   053 — INITIALIZATION
+   ============================================================ */
 
-            <div class="history-empty">
-                No events yet.
-            </div>
+function initializeApplication() {
 
-        `;
+    if (
+        RUNTIME.initialized
+    ) {
 
-
-        DOM.effectLayer.innerHTML =
-            "";
-
-
-        document.body.classList.remove(
-            "power-out",
-            "power-flicker",
-            "screen-shake",
-            "critical-pulse"
-        );
-
-
-        updateInterface();
-
-
-        showToast(
-            "💥 DAMAGE PROGRAM RESET"
-        );
+        return;
 
     }
-);
+
+
+    RUNTIME.initialized =
+        true;
+
+
+    loadState();
+
+    renderHistory();
+
+    updateInterface();
+
+
+    console.log(
+        `${APP.name} ${APP.version}`
+    );
+
+    console.log(
+        "PART 1 FOUNDATION ONLINE."
+    );
+
+}
 
 
 /* ============================================================
-   064 — INITIALIZE
+   054 — START
    ============================================================ */
 
-buildCategories();
-
-updateInterface();
+initializeApplication();
 
 
 /* ============================================================
-   065 — READY
+   END PART 1
    ============================================================ */
-
-console.log(
-    "DAMAGE PROGRAM™ MEGA CORE ONLINE"
-);
-
-console.log(
-    "Factory reset complete."
-);
-
-console.log(
-    "Simulation mode active."
-);
 
 </script>
 
