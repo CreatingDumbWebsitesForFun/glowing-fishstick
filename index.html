@@ -1597,3 +1597,703 @@ window.playDamageEffect =
 
 </script>
 
+<script>
+/* =========================================================
+   DAMAGE PROGRAM™ V3 — TOUCH EVENT CONTROL
+   ========================================================= */
+
+(() => {
+  const container = document.getElementById("dp-categories");
+
+  if (!container) {
+    console.error("Damage Program: dp-categories not found.");
+    return;
+  }
+
+  /* ---------- EVENT DATA ---------- */
+
+  const categories = {
+    "🌪️ TORNADO": [
+      ["NADO", "Tornado", 1],
+      ["PDS", "PDS", 3],
+      ["DSTW", "Destructive Severe Thunderstorm Warning", 3],
+      ["TE", "Tornado Emergency", 10],
+      ["NADO-H", "Tornado hits house", 7],
+      ["TE-H", "Tornado Emergency hits house", 15]
+    ],
+
+    "🌊 FLOOD": [
+      ["FW", "Flood Watch", 1],
+      ["SFW", "Flood Warning", 5],
+      ["FLD", "Flood", 10],
+      ["FE", "Flood Emergency", 20]
+    ],
+
+    "🌀 HURRICANE": [
+      ["TWS", "Tropical Weather Statement", 10],
+      ["HW", "Hurricane Watch", 25],
+      ["HUR", "Hurricane", 50],
+      ["HWN", "Hurricane Warning", 0]
+    ],
+
+    "☢️ NUKE": [
+      ["NW", "Nuke Watch", 50],
+      ["NUKE", "Nuke announced", 75],
+      ["N10", "10-minute nuke warning", 75],
+      ["PINK", "Pink / purple nuke text", 75]
+    ],
+
+    "💨 WIND / POWER": [
+      ["EWW", "Extreme Wind Warning", 20],
+      ["PO", "Power Outage", 7],
+      ["PR", "Power Restoration", 25]
+    ],
+
+    "🧊 HAIL": [
+      ["HAIL1", '1" hail', 1],
+      ["HAIL2", '2" hail', 2],
+      ["HAIL3", '3" hail', 3],
+      ["HAIL4", '4" hail', 4],
+      ["HAIL5", '5" hail', 5],
+      ["HAIL6", '6" hail', 6],
+      ["HAIL7", '7" hail', 7],
+      ["HAIL8", '8" hail', 8]
+    ]
+  };
+
+  /* ---------- STYLES ---------- */
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #dp-event-controls {
+      width: 100%;
+      margin-top: 18px;
+      font-family: Arial, sans-serif;
+    }
+
+    #dp-open-events {
+      width: 100%;
+      min-height: 64px;
+      border: none;
+      border-radius: 18px;
+      background: #252b2c;
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 5px 14px rgba(0,0,0,.25);
+    }
+
+    #dp-open-events:active {
+      transform: scale(.97);
+    }
+
+    #dp-event-panel {
+      display: none;
+      margin-top: 12px;
+    }
+
+    #dp-event-panel.open {
+      display: block;
+    }
+
+    .dp-category {
+      margin: 10px 0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #202526;
+      box-shadow: 0 4px 12px rgba(0,0,0,.22);
+    }
+
+    .dp-category-button {
+      width: 100%;
+      min-height: 58px;
+      padding: 12px 16px;
+      border: none;
+      background: #2b3132;
+      color: white;
+      text-align: left;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dp-category-button:active {
+      background: #3a4243;
+    }
+
+    .dp-category-events {
+      display: none;
+      padding: 10px;
+      background: #171b1c;
+    }
+
+    .dp-category-events.open {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .dp-event-button {
+      min-height: 58px;
+      border: 1px solid #444;
+      border-radius: 13px;
+      background: #303738;
+      color: white;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      padding: 8px;
+    }
+
+    .dp-event-button:active {
+      transform: scale(.95);
+      background: #50595a;
+    }
+
+    .dp-event-code {
+      display: block;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .dp-event-name {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      opacity: .75;
+    }
+
+    .dp-event-points {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .dp-category-events.open {
+        grid-template-columns: 1fr;
+      }
+
+      #dp-open-events {
+        min-height: 70px;
+        font-size: 21px;
+      }
+
+      .dp-category-button {
+        min-height: 64px;
+        font-size: 20px;
+      }
+
+      .dp-event-button {
+        min-height: 66px;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  /* ---------- BUILD UI ---------- */
+
+  const controls = document.createElement("div");
+  controls.id = "dp-event-controls";
+
+  const openButton = document.createElement("button");
+  openButton.id = "dp-open-events";
+  openButton.type = "button";
+  openButton.textContent = "⚠️ OPEN EVENTS ▼";
+
+  const panel = document.createElement("div");
+  panel.id = "dp-event-panel";
+
+  controls.appendChild(openButton);
+  controls.appendChild(panel);
+
+  container.appendChild(controls);
+
+  /* ---------- OPEN / CLOSE ALL EVENTS ---------- */
+
+  openButton.addEventListener("click", () => {
+    const isOpen = panel.classList.toggle("open");
+
+    openButton.textContent = isOpen
+      ? "⚠️ CLOSE EVENTS ▲"
+      : "⚠️ OPEN EVENTS ▼";
+  });
+
+  /* ---------- BUILD CATEGORIES ---------- */
+
+  Object.entries(categories).forEach(([categoryName, events]) => {
+
+    const category = document.createElement("div");
+    category.className = "dp-category";
+
+    const categoryButton = document.createElement("button");
+    categoryButton.type = "button";
+    categoryButton.className = "dp-category-button";
+    categoryButton.textContent = categoryName + " ▼";
+
+    const eventList = document.createElement("div");
+    eventList.className = "dp-category-events";
+
+    categoryButton.addEventListener("click", () => {
+      const opened = eventList.classList.toggle("open");
+
+      categoryButton.textContent =
+        categoryName + (opened ? " ▲" : " ▼");
+    });
+
+    events.forEach(([code, name, points]) => {
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "dp-event-button";
+
+      button.innerHTML = `
+        <span class="dp-event-code">${code}</span>
+        <span class="dp-event-name">${name}</span>
+        <span class="dp-event-points">
+          ${points === 0 ? "0 extra" : "+" + points + " points"}
+        </span>
+      `;
+
+      button.addEventListener("click", () => {
+        addDamageEvent(code, name, points);
+      });
+
+      eventList.appendChild(button);
+    });
+
+    category.appendChild(categoryButton);
+    category.appendChild(eventList);
+    panel.appendChild(category);
+  });
+
+  /* ---------- SCORE ---------- */
+
+  function addDamageEvent(code, name, points) {
+
+    /*
+      Try to use the existing V3 score system.
+      If it exists, use it.
+    */
+
+    if (typeof window.addPoints === "function") {
+      window.addPoints(points);
+    } else if (typeof window.addScore === "function") {
+      window.addScore(points);
+    } else {
+
+      const scoreElement =
+        document.getElementById("dp-score");
+
+      if (scoreElement) {
+        const current =
+          parseInt(scoreElement.textContent) || 0;
+
+        scoreElement.textContent =
+          current + points;
+      }
+    }
+
+    /* ---------- EVENT HISTORY ---------- */
+
+    const history =
+      document.getElementById("dp-history-list");
+
+    if (history) {
+
+      const item = document.createElement("div");
+
+      item.style.padding = "10px";
+      item.style.marginTop = "7px";
+      item.style.borderRadius = "10px";
+      item.style.background = "#252b2c";
+      item.style.color = "white";
+
+      item.innerHTML = `
+        <strong>${code}</strong>
+        — ${name}
+        <span style="float:right;font-weight:bold;">
+          ${points > 0 ? "+" + points : "0"}
+        </span>
+      `;
+
+      history.prepend(item);
+    }
+
+    /* ---------- VISUAL EFFECT HOOK ---------- */
+
+    if (typeof window.triggerDamageEffect === "function") {
+      window.triggerDamageEffect(code);
+    }
+
+    console.log(
+      "DAMAGE EVENT:",
+      code,
+      "|",
+      name,
+      "|",
+      points,
+      "points"
+    );
+  }
+
+})();
+</script><script>
+/* =========================================================
+   DAMAGE PROGRAM™ V3 — TOUCH EVENT CONTROL
+   ========================================================= */
+
+(() => {
+  const container = document.getElementById("dp-categories");
+
+  if (!container) {
+    console.error("Damage Program: dp-categories not found.");
+    return;
+  }
+
+  /* ---------- EVENT DATA ---------- */
+
+  const categories = {
+    "🌪️ TORNADO": [
+      ["NADO", "Tornado", 1],
+      ["PDS", "PDS", 3],
+      ["DSTW", "Destructive Severe Thunderstorm Warning", 3],
+      ["TE", "Tornado Emergency", 10],
+      ["NADO-H", "Tornado hits house", 7],
+      ["TE-H", "Tornado Emergency hits house", 15]
+    ],
+
+    "🌊 FLOOD": [
+      ["FW", "Flood Watch", 1],
+      ["SFW", "Flood Warning", 5],
+      ["FLD", "Flood", 10],
+      ["FE", "Flood Emergency", 20]
+    ],
+
+    "🌀 HURRICANE": [
+      ["TWS", "Tropical Weather Statement", 10],
+      ["HW", "Hurricane Watch", 25],
+      ["HUR", "Hurricane", 50],
+      ["HWN", "Hurricane Warning", 0]
+    ],
+
+    "☢️ NUKE": [
+      ["NW", "Nuke Watch", 50],
+      ["NUKE", "Nuke announced", 75],
+      ["N10", "10-minute nuke warning", 75],
+      ["PINK", "Pink / purple nuke text", 75]
+    ],
+
+    "💨 WIND / POWER": [
+      ["EWW", "Extreme Wind Warning", 20],
+      ["PO", "Power Outage", 7],
+      ["PR", "Power Restoration", 25]
+    ],
+
+    "🧊 HAIL": [
+      ["HAIL1", '1" hail', 1],
+      ["HAIL2", '2" hail', 2],
+      ["HAIL3", '3" hail', 3],
+      ["HAIL4", '4" hail', 4],
+      ["HAIL5", '5" hail', 5],
+      ["HAIL6", '6" hail', 6],
+      ["HAIL7", '7" hail', 7],
+      ["HAIL8", '8" hail', 8]
+    ]
+  };
+
+  /* ---------- STYLES ---------- */
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+    #dp-event-controls {
+      width: 100%;
+      margin-top: 18px;
+      font-family: Arial, sans-serif;
+    }
+
+    #dp-open-events {
+      width: 100%;
+      min-height: 64px;
+      border: none;
+      border-radius: 18px;
+      background: #252b2c;
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      box-shadow: 0 5px 14px rgba(0,0,0,.25);
+    }
+
+    #dp-open-events:active {
+      transform: scale(.97);
+    }
+
+    #dp-event-panel {
+      display: none;
+      margin-top: 12px;
+    }
+
+    #dp-event-panel.open {
+      display: block;
+    }
+
+    .dp-category {
+      margin: 10px 0;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #202526;
+      box-shadow: 0 4px 12px rgba(0,0,0,.22);
+    }
+
+    .dp-category-button {
+      width: 100%;
+      min-height: 58px;
+      padding: 12px 16px;
+      border: none;
+      background: #2b3132;
+      color: white;
+      text-align: left;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .dp-category-button:active {
+      background: #3a4243;
+    }
+
+    .dp-category-events {
+      display: none;
+      padding: 10px;
+      background: #171b1c;
+    }
+
+    .dp-category-events.open {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+    }
+
+    .dp-event-button {
+      min-height: 58px;
+      border: 1px solid #444;
+      border-radius: 13px;
+      background: #303738;
+      color: white;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      padding: 8px;
+    }
+
+    .dp-event-button:active {
+      transform: scale(.95);
+      background: #50595a;
+    }
+
+    .dp-event-code {
+      display: block;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .dp-event-name {
+      display: block;
+      margin-top: 3px;
+      font-size: 11px;
+      opacity: .75;
+    }
+
+    .dp-event-points {
+      display: block;
+      margin-top: 3px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      .dp-category-events.open {
+        grid-template-columns: 1fr;
+      }
+
+      #dp-open-events {
+        min-height: 70px;
+        font-size: 21px;
+      }
+
+      .dp-category-button {
+        min-height: 64px;
+        font-size: 20px;
+      }
+
+      .dp-event-button {
+        min-height: 66px;
+      }
+    }
+  `;
+
+  document.head.appendChild(style);
+
+  /* ---------- BUILD UI ---------- */
+
+  const controls = document.createElement("div");
+  controls.id = "dp-event-controls";
+
+  const openButton = document.createElement("button");
+  openButton.id = "dp-open-events";
+  openButton.type = "button";
+  openButton.textContent = "⚠️ OPEN EVENTS ▼";
+
+  const panel = document.createElement("div");
+  panel.id = "dp-event-panel";
+
+  controls.appendChild(openButton);
+  controls.appendChild(panel);
+
+  container.appendChild(controls);
+
+  /* ---------- OPEN / CLOSE ALL EVENTS ---------- */
+
+  openButton.addEventListener("click", () => {
+    const isOpen = panel.classList.toggle("open");
+
+    openButton.textContent = isOpen
+      ? "⚠️ CLOSE EVENTS ▲"
+      : "⚠️ OPEN EVENTS ▼";
+  });
+
+  /* ---------- BUILD CATEGORIES ---------- */
+
+  Object.entries(categories).forEach(([categoryName, events]) => {
+
+    const category = document.createElement("div");
+    category.className = "dp-category";
+
+    const categoryButton = document.createElement("button");
+    categoryButton.type = "button";
+    categoryButton.className = "dp-category-button";
+    categoryButton.textContent = categoryName + " ▼";
+
+    const eventList = document.createElement("div");
+    eventList.className = "dp-category-events";
+
+    categoryButton.addEventListener("click", () => {
+      const opened = eventList.classList.toggle("open");
+
+      categoryButton.textContent =
+        categoryName + (opened ? " ▲" : " ▼");
+    });
+
+    events.forEach(([code, name, points]) => {
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "dp-event-button";
+
+      button.innerHTML = `
+        <span class="dp-event-code">${code}</span>
+        <span class="dp-event-name">${name}</span>
+        <span class="dp-event-points">
+          ${points === 0 ? "0 extra" : "+" + points + " points"}
+        </span>
+      `;
+
+      button.addEventListener("click", () => {
+        addDamageEvent(code, name, points);
+      });
+
+      eventList.appendChild(button);
+    });
+
+    category.appendChild(categoryButton);
+    category.appendChild(eventList);
+    panel.appendChild(category);
+  });
+
+  /* ---------- SCORE ---------- */
+
+  function addDamageEvent(code, name, points) {
+
+    /*
+      Try to use the existing V3 score system.
+      If it exists, use it.
+    */
+
+    if (typeof window.addPoints === "function") {
+      window.addPoints(points);
+    } else if (typeof window.addScore === "function") {
+      window.addScore(points);
+    } else {
+
+      const scoreElement =
+        document.getElementById("dp-score");
+
+      if (scoreElement) {
+        const current =
+          parseInt(scoreElement.textContent) || 0;
+
+        scoreElement.textContent =
+          current + points;
+      }
+    }
+
+    /* ---------- EVENT HISTORY ---------- */
+
+    const history =
+      document.getElementById("dp-history-list");
+
+    if (history) {
+
+      const item = document.createElement("div");
+
+      item.style.padding = "10px";
+      item.style.marginTop = "7px";
+      item.style.borderRadius = "10px";
+      item.style.background = "#252b2c";
+      item.style.color = "white";
+
+      item.innerHTML = `
+        <strong>${code}</strong>
+        — ${name}
+        <span style="float:right;font-weight:bold;">
+          ${points > 0 ? "+" + points : "0"}
+        </span>
+      `;
+
+      history.prepend(item);
+    }
+
+    /* ---------- VISUAL EFFECT HOOK ---------- */
+
+    if (typeof window.triggerDamageEffect === "function") {
+      window.triggerDamageEffect(code);
+    }
+
+    console.log(
+      "DAMAGE EVENT:",
+      code,
+      "|",
+      name,
+      "|",
+      points,
+      "points"
+    );
+  }
+
+})();
+</script>
+
