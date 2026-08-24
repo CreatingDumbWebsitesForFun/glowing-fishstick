@@ -1,659 +1,1599 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Damage Program™</title>
+<!-- =============================== -->
+<!-- DAMAGE PROGRAM™ V3 -->
+<!-- =============================== -->
 
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #111;
-        color: white;
-        text-align: center;
-    }
+<div id="damage-program">
 
-    .container {
-        max-width: 600px;
-        margin: auto;
-        padding: 25px;
-    }
+  <h1>⚠️ DAMAGE PROGRAM™</h1>
+  <p class="dp-subtitle">V3 • DISASTER CONTROL</p>
 
-    h1 {
-        font-size: 36px;
-        margin-bottom: 5px;
-    }
-
-    .subtitle {
-        font-size: 18px;
-        opacity: 0.7;
-    }
-
-    #score {
-        font-size: 80px;
-        font-weight: bold;
-        margin: 30px 0;
-    }
-
-    .buttons {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 14px;
-    }
-
-    button {
-        font-size: 25px;
-        font-weight: bold;
-        padding: 22px;
-        border: none;
-        border-radius: 15px;
-        background: white;
-        color: black;
-    }
-
-    button:active {
-        transform: scale(0.95);
-    }
-
-    .reset {
-        margin-top: 20px;
-        width: 100%;
-        background: #333;
-        color: white;
-    }
-
-    #message {
-        margin-top: 20px;
-        font-size: 20px;
-        min-height: 25px;
-    }
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-    <h1>⚔️ DAMAGE PROGRAM™</h1>
-    <div class="subtitle">POINTS COUNTER</div>
-
-    <div id="score">000</div>
-
-    <div class="buttons">
-        <button onclick="addPoints(1)">+1</button>
-        <button onclick="addPoints(3)">+3</button>
-        <button onclick="addPoints(5)">+5</button>
-        <button onclick="addPoints(10)">+10</button>
-        <button onclick="addPoints(20)">+20</button>
-        <button onclick="addPoints(50)">+50</button>
-        <button onclick="addPoints(75)">+75</button>
-    </div>
-
-    <button class="reset" onclick="resetScore()">🔄 RESET</button>
-
-    <div id="message"></div>
-
-</div>
-
-<script>
-
-let score = 0;
-
-function updateScore() {
-    document.getElementById("score").textContent =
-        String(score).padStart(3, "0");
-}
-
-function addPoints(points) {
-    score += points;
-
-    document.getElementById("message").textContent =
-        "+" + points + " POINTS!";
-
-    updateScore();
-}
-
-function resetScore() {
-    score = 0;
-
-    document.getElementById("message").textContent =
-        "SCORE RESET";
-
-    updateScore();
-}
-
-</script>
-<!-- ============================= -->
-<!-- DAMAGE PROGRAM™ V2 -->
-<!-- ============================= -->
-
-<style>
-  .damage-program-v2 {
-    margin: 30px auto;
-    max-width: 760px;
-    padding: 20px;
-    border-radius: 22px;
-    background: rgba(255,255,255,0.08);
-    color: white;
-    font-family: system-ui, sans-serif;
-  }
-
-  .damage-program-v2 h2 {
-    text-align: center;
-    margin: 0 0 5px;
-    font-size: 32px;
-  }
-
-  .dp-subtitle {
-    text-align: center;
-    opacity: 0.7;
-    margin-bottom: 20px;
-  }
-
-  .dp-score {
-    text-align: center;
-    padding: 18px;
-    margin-bottom: 15px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.08);
-  }
-
-  .dp-score-number {
-    font-size: 75px;
-    font-weight: 900;
-    line-height: 1;
-  }
-
-  .dp-score-label {
-    letter-spacing: 4px;
-    opacity: 0.7;
-    font-weight: bold;
-  }
-
-  .dp-group {
-    margin: 10px 0;
-    border-radius: 16px;
-    overflow: hidden;
-    background: rgba(255,255,255,0.07);
-  }
-
-  .dp-dropdown {
-    width: 100%;
-    padding: 16px;
-    border: none;
-    background: transparent;
-    color: white;
-    font-size: 19px;
-    font-weight: 800;
-    text-align: left;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .dp-arrow {
-    transition: transform 0.2s;
-  }
-
-  .dp-group.open .dp-arrow {
-    transform: rotate(180deg);
-  }
-
-  .dp-items {
-    display: none;
-    padding: 0 10px 10px;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-  }
-
-  .dp-group.open .dp-items {
-    display: grid;
-  }
-
-  .dp-event {
-    border: none;
-    border-radius: 12px;
-    padding: 13px;
-    background: rgba(255,255,255,0.10);
-    color: white;
-    text-align: left;
-    font-weight: 800;
-    cursor: pointer;
-  }
-
-  .dp-event:active {
-    transform: scale(0.97);
-  }
-
-  .dp-points {
-    display: block;
-    margin-top: 3px;
-    font-size: 12px;
-    opacity: 0.65;
-  }
-
-  /* Effects */
-  #dp-effects {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
-    z-index: 9999;
-  }
-
-  .dp-rain {
-    position: absolute;
-    top: -30px;
-    width: 2px;
-    height: 24px;
-    background: #9bd4ff;
-    animation: dpRain 1s linear forwards;
-  }
-
-  @keyframes dpRain {
-    to {
-      transform: translateY(110vh);
-      opacity: 0;
-    }
-  }
-
-  .dp-wind {
-    position: absolute;
-    left: -40%;
-    height: 3px;
-    width: 65%;
-    background: rgba(255,255,255,0.65);
-    border-radius: 5px;
-    animation: dpWind 1.1s forwards;
-  }
-
-  @keyframes dpWind {
-    to {
-      left: 120%;
-      opacity: 0;
-    }
-  }
-
-  .dp-hail {
-    position: absolute;
-    top: -20px;
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: white;
-    animation: dpHail 1.1s linear forwards;
-  }
-
-  @keyframes dpHail {
-    to {
-      transform: translateY(110vh);
-      opacity: 0;
-    }
-  }
-
-  .dp-flash {
-    position: absolute;
-    inset: 0;
-    background: white;
-    animation: dpFlash 0.35s;
-  }
-
-  @keyframes dpFlash {
-    20% { opacity: 0.8; }
-    45% { opacity: 0; }
-    65% { opacity: 0.5; }
-    100% { opacity: 0; }
-  }
-
-  .dp-tornado {
-    position: absolute;
-    left: -100px;
-    top: 35%;
-    font-size: 90px;
-    animation: dpTornado 1.3s forwards;
-  }
-
-  @keyframes dpTornado {
-    to {
-      left: 110%;
-      transform: rotate(720deg);
-      opacity: 0;
-    }
-  }
-
-  .dp-boom {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    font-size: 110px;
-    animation: dpBoom 0.9s forwards;
-  }
-
-  @keyframes dpBoom {
-    to {
-      transform: scale(1.8);
-      opacity: 0;
-    }
-  }
-</style>
-
-
-<div class="damage-program-v2">
-
-  <h2>⚠️ DAMAGE PROGRAM™</h2>
-  <div class="dp-subtitle">V2 CODEBOOK</div>
-
-  <div class="dp-score">
-    <div id="dp-score-number" class="dp-score-number">0</div>
-    <div class="dp-score-label">POINTS</div>
+  <!-- SCORE -->
+  <div id="dp-score-box">
+    <div id="dp-score">0</div>
+    <div>POINTS</div>
   </div>
 
+  <!-- CATEGORIES WILL GO HERE -->
+  <div id="dp-categories"></div>
 
-  <!-- TORNADO -->
-  <div class="dp-group">
-
-    <button class="dp-dropdown" onclick="dpToggle(this)">
-      <span>🌪️ TORNADO</span>
-      <span class="dp-arrow">▼</span>
-    </button>
-
-    <div class="dp-items">
-
-      <button class="dp-event" onclick="dpAdd('NADO',1,'tornado')">
-        NADO
-        <span class="dp-points">+1 · Tornado</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('PDS',3,'flash')">
-        PDS
-        <span class="dp-points">+3 · PDS</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('DSTW',3,'flash')">
-        DSTW
-        <span class="dp-points">+3 · Destructive STW</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('TE',10,'flash')">
-        TE
-        <span class="dp-points">+10 · Tornado Emergency</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('NADO-H',7,'tornado')">
-        NADO-H
-        <span class="dp-points">+7 · Tornado hits house</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('TE-H',15,'tornado')">
-        TE-H
-        <span class="dp-points">+15 · TE hits house</span>
-      </button>
-
-    </div>
-  </div>
-
-
-  <!-- NUKE -->
-  <div class="dp-group">
-
-    <button class="dp-dropdown" onclick="dpToggle(this)">
-      <span>☢️ NUKE</span>
-      <span class="dp-arrow">▼</span>
-    </button>
-
-    <div class="dp-items">
-
-      <button class="dp-event" onclick="dpAdd('NW',50,'boom')">
-        NW
-        <span class="dp-points">+50 · Nuke Watch</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('NUKE',75,'boom')">
-        NUKE
-        <span class="dp-points">+75 · Nuke announced</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('N10',75,'boom')">
-        N10
-        <span class="dp-points">+75 · 10-minute warning</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('PINK',75,'boom')">
-        PINK
-        <span class="dp-points">+75 · Pink/purple text</span>
-      </button>
-
-    </div>
-  </div>
-
-
-  <!-- OTHER -->
-  <div class="dp-group">
-
-    <button class="dp-dropdown" onclick="dpToggle(this)">
-      <span>🌩️ OTHER</span>
-      <span class="dp-arrow">▼</span>
-    </button>
-
-    <div class="dp-items">
-
-      <button class="dp-event" onclick="dpAdd('FW',1,'rain')">
-        FW
-        <span class="dp-points">+1 · Flood Watch</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('SFW',5,'rain')">
-        SFW
-        <span class="dp-points">+5 · Flood Warning</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('FLD',10,'rain')">
-        FLD
-        <span class="dp-points">+10 · Flood</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('FE',20,'rain')">
-        FE
-        <span class="dp-points">+20 · Flood Emergency</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('TWS',10,'wind')">
-        TWS
-        <span class="dp-points">+10 · Tropical Weather Statement</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('HW',25,'wind')">
-        HW
-        <span class="dp-points">+25 · Hurricane Watch</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('HUR',50,'wind')">
-        HUR
-        <span class="dp-points">+50 · Hurricane</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('HWN',0,'flash')">
-        HWN
-        <span class="dp-points">+0 · Hurricane Warning</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('EWW',20,'wind')">
-        EWW
-        <span class="dp-points">+20 · Extreme Wind Warning</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('PO',7,'flash')">
-        PO
-        <span class="dp-points">+7 · Power Outage</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('PR',25,'flash')">
-        PR
-        <span class="dp-points">+25 · Power Restoration</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('RED',5,'flash')">
-        RED
-        <span class="dp-points">+5 · Red server text</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('1IN',1,'hail')">
-        1" HAIL
-        <span class="dp-points">+1</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('3IN',3,'hail')">
-        3" HAIL
-        <span class="dp-points">+3</span>
-      </button>
-
-      <button class="dp-event" onclick="dpAdd('4IN',4,'hail')">
-        4" HAIL
-        <span class="dp-points">+4</span>
-      </button>
-
-    </div>
+  <!-- EVENT HISTORY -->
+  <div id="dp-history">
+    <h2>📋 EVENT HISTORY</h2>
+    <div id="dp-history-list"></div>
   </div>
 
 </div>
 
-
+<!-- VISUAL EFFECTS -->
 <div id="dp-effects"></div>
 
+<script>
+<script>
+/* =========================================
+   DAMAGE PROGRAM™ V3
+   EVENT DATABASE + CATEGORY ENGINE
+   ========================================= */
+
+const damageEvents = {
+
+  "🌪️ TORNADO": [
+    { code: "NADO",   points: 1,  effect: "tornado" },
+    { code: "PDS",    points: 3,  effect: "pds" },
+    { code: "DSTW",   points: 3,  effect: "dstw" },
+    { code: "TE",     points: 10, effect: "te" },
+    { code: "NADO-H", points: 7,  effect: "nado-house" },
+    { code: "TE-H",   points: 15, effect: "te-house" }
+  ],
+
+  "☢️ NUKE": [
+    { code: "NW",    points: 50, effect: "nuke-watch" },
+    { code: "NUKE",  points: 75, effect: "nuke" },
+    { code: "N10",   points: 75, effect: "nuke-10" },
+    { code: "PINK",  points: 75, effect: "pink" }
+  ],
+
+  "🌊 FLOOD": [
+    { code: "FW",  points: 1,  effect: "flood-watch" },
+    { code: "SFW", points: 5,  effect: "flood-warning" },
+    { code: "FLD", points: 10, effect: "flood" },
+    { code: "FE",  points: 20, effect: "flood-emergency" }
+  ],
+
+  "🌀 HURRICANE": [
+    { code: "TWS", points: 10, effect: "tws" },
+    { code: "HW",  points: 25, effect: "hurricane-watch" },
+    { code: "HUR", points: 50, effect: "hurricane" },
+    { code: "HWN", points: 0,  effect: "hurricane-warning" }
+  ],
+
+  "🧊 HAIL": [
+    { code: "1 IN HAIL", points: 1, effect: "hail", size: 1 },
+    { code: "2 IN HAIL", points: 2, effect: "hail", size: 2 },
+    { code: "3 IN HAIL", points: 3, effect: "hail", size: 3 },
+    { code: "4 IN HAIL", points: 4, effect: "hail", size: 4 },
+    { code: "5 IN HAIL", points: 5, effect: "hail", size: 5 },
+    { code: "6 IN HAIL", points: 6, effect: "hail", size: 6 },
+    { code: "7 IN HAIL", points: 7, effect: "hail", size: 7 },
+    { code: "8 IN HAIL", points: 8, effect: "hail", size: 8 }
+  ],
+
+  "💨 OTHER": [
+    { code: "EWW", points: 20, effect: "eww" },
+    { code: "PO",  points: 7,  effect: "power-outage" },
+    { code: "PR",  points: 25, effect: "power-restore" },
+    { code: "RED", points: 5,  effect: "red" }
+  ]
+
+};
+
+
+/* =========================================
+   SCORE
+   ========================================= */
+
+let damageScore = 0;
+
+
+/* =========================================
+   BUILD CATEGORIES
+   ========================================= */
+
+const categoryContainer =
+  document.getElementById("dp-categories");
+
+
+for (const categoryName in damageEvents) {
+
+  const category = document.createElement("div");
+
+  category.className = "dp-category";
+
+
+  const header = document.createElement("button");
+
+  header.className = "dp-category-header";
+
+  header.innerHTML = `
+    <span>${categoryName}</span>
+    <span>▼</span>
+  `;
+
+
+  const eventContainer = document.createElement("div");
+
+  eventContainer.className = "dp-event-container";
+
+
+  header.addEventListener("click", () => {
+
+    eventContainer.classList.toggle("open");
+
+  });
+
+
+  category.appendChild(header);
+
+  category.appendChild(eventContainer);
+
+  categoryContainer.appendChild(category);
+
+
+  /* =======================================
+     CREATE EVENT BUTTONS
+     ======================================= */
+
+  damageEvents[categoryName].forEach(event => {
+
+    const button = document.createElement("button");
+
+    button.className = "dp-event-button";
+
+
+    button.innerHTML = `
+      <strong>${event.code}</strong>
+      <span>+${event.points}</span>
+    `;
+
+
+    button.addEventListener("click", () => {
+
+      activateDamageEvent(event);
+
+    });
+
+
+    eventContainer.appendChild(button);
+
+  });
+
+}
+
+
+/* =========================================
+   ACTIVATE EVENT
+   ========================================= */
+
+function activateDamageEvent(event) {
+
+  damageScore += event.points;
+
+  document.getElementById("dp-score").textContent =
+    damageScore;
+
+
+  addEventToHistory(event);
+
+
+  /*
+    Effects will be connected here
+    in the next core.
+  */
+
+  if (typeof playDamageEffect === "function") {
+
+    playDamageEffect(event);
+
+  }
+
+}
+
+
+/* =========================================
+   EVENT HISTORY
+   ========================================= */
+
+function addEventToHistory(event) {
+
+  const history =
+    document.getElementById("dp-history-list");
+
+
+  const entry =
+    document.createElement("div");
+
+
+  entry.className = "dp-history-entry";
+
+
+  entry.innerHTML = `
+    <strong>${event.code}</strong>
+    <span>+${event.points}</span>
+  `;
+
+
+  history.prepend(entry);
+
+}
+</script>
+
+<style>
+/* =========================================================
+   DAMAGE PROGRAM™ V3 — VISUAL SYSTEM
+   ========================================================= */
+
+#damage-program {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  border-radius: 18px;
+  background: #181818;
+  color: white;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+#damage-program h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+.dp-subtitle {
+  opacity: 0.65;
+  margin-top: 5px;
+}
+
+#dp-score-box {
+  margin: 20px auto;
+  padding: 18px;
+  max-width: 250px;
+  border-radius: 15px;
+  background: #252525;
+  text-align: center;
+  font-weight: bold;
+}
+
+#dp-score {
+  font-size: 48px;
+  margin-bottom: 5px;
+}
+
+/* =========================================================
+   CATEGORY DROPDOWNS
+   ========================================================= */
+
+.dp-category {
+  margin: 10px 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #242424;
+}
+
+.dp-category-header {
+  width: 100%;
+  border: none;
+  padding: 16px;
+  background: #303030;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dp-category-header:hover {
+  background: #3b3b3b;
+}
+
+.dp-event-container {
+  display: none;
+  padding: 8px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dp-event-container.open {
+  display: flex;
+}
+
+.dp-event-button {
+  position: relative;
+  min-width: 130px;
+  flex: 1;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: #414141;
+  color: white;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition:
+    transform 0.15s,
+    background 0.15s;
+}
+
+.dp-event-button:hover {
+  background: #505050;
+  transform: scale(1.03);
+}
+
+.dp-event-button:active {
+  transform: scale(0.95);
+}
+
+/* =========================================================
+   EVENT HISTORY
+   ========================================================= */
+
+#dp-history {
+  margin-top: 25px;
+  padding: 15px;
+  border-radius: 14px;
+  background: #202020;
+}
+
+#dp-history h2 {
+  margin-top: 0;
+}
+
+#dp-history-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.dp-history-entry {
+  padding: 9px;
+  margin: 5px 0;
+  border-radius: 8px;
+  background: #303030;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+/* =========================================================
+   EFFECT CONTAINER
+   ========================================================= */
+
+#dp-effects {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 99999;
+  overflow: hidden;
+}
+
+/* =========================================================
+   SCREEN FLASH
+   ========================================================= */
+
+.dp-flash {
+  position: absolute;
+  inset: 0;
+  background: white;
+  opacity: 0;
+  animation: dpFlash 0.35s ease-out;
+}
+
+@keyframes dpFlash {
+  0%   { opacity: 0; }
+  20%  { opacity: 0.8; }
+  100% { opacity: 0; }
+}
+
+/* =========================================================
+   TORNADO
+   ========================================================= */
+
+.dp-tornado {
+  position: absolute;
+  width: 150px;
+  height: 300px;
+  left: -200px;
+  bottom: 8%;
+
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(180,180,180,0.15) 15%,
+      rgba(110,110,110,0.55) 45%,
+      rgba(55,55,55,0.9) 100%
+    );
+
+  clip-path: polygon(
+    45% 0%,
+    58% 0%,
+    68% 15%,
+    74% 35%,
+    70% 55%,
+    62% 72%,
+    52% 100%,
+    38% 100%,
+    45% 72%,
+    35% 55%,
+    29% 35%,
+    34% 15%
+  );
+
+  filter: blur(1px);
+  animation: dpTornadoMove 3s linear forwards;
+}
+
+.dp-tornado::before,
+.dp-tornado::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  border-radius: 50%;
+
+  border-left: 8px solid rgba(255,255,255,0.25);
+  border-right: 8px solid rgba(0,0,0,0.25);
+
+  animation: dpTornadoSpin 0.35s linear infinite;
+}
+
+.dp-tornado::after {
+  animation-duration: 0.55s;
+  transform: rotate(180deg);
+}
+
+@keyframes dpTornadoMove {
+  from {
+    left: -200px;
+  }
+
+  to {
+    left: calc(100% + 200px);
+  }
+}
+
+@keyframes dpTornadoSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Bigger tornadoes */
+
+.dp-tornado.pds {
+  width: 210px;
+  height: 370px;
+  animation-duration: 3.2s;
+}
+
+.dp-tornado.te {
+  width: 270px;
+  height: 450px;
+  animation-duration: 3.5s;
+}
+
+/* =========================================================
+   WIND PARTICLES
+   ========================================================= */
+
+.dp-wind {
+  position: absolute;
+  width: 100px;
+  height: 3px;
+  background: rgba(255,255,255,0.65);
+  border-radius: 50%;
+  animation: dpWindMove 1s linear forwards;
+}
+
+@keyframes dpWindMove {
+  from {
+    transform: translateX(-150px);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(calc(100vw + 150px));
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   BUTTON PICKUP
+   ========================================================= */
+
+.dp-button-picked {
+  position: relative;
+  z-index: 100000;
+
+  animation:
+    dpButtonFlying 3s ease-in-out forwards;
+}
+
+@keyframes dpButtonFlying {
+  0% {
+    transform:
+      translate(0,0)
+      rotate(0deg);
+  }
+
+  20% {
+    transform:
+      translate(80px,-100px)
+      rotate(120deg);
+  }
+
+  45% {
+    transform:
+      translate(180px,-40px)
+      rotate(260deg);
+  }
+
+  70% {
+    transform:
+      translate(100px,120px)
+      rotate(390deg);
+  }
+
+  100% {
+    transform:
+      translate(0,0)
+      rotate(0deg);
+  }
+}
+
+/* =========================================================
+   HOUSE HIT
+   ========================================================= */
+
+.dp-house-hit {
+  animation: dpHouseShake 0.8s ease-in-out 3;
+}
+
+@keyframes dpHouseShake {
+  0%   { transform: translate(0); }
+  20%  { transform: translate(-7px, 3px); }
+  40%  { transform: translate(8px, -3px); }
+  60%  { transform: translate(-5px, 2px); }
+  80%  { transform: translate(5px, -2px); }
+  100% { transform: translate(0); }
+}
+
+/* =========================================================
+   FLOOD
+   ========================================================= */
+
+.dp-flood-water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  height: 0%;
+
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(70,150,220,0.65),
+      rgba(25,85,150,0.9)
+    );
+
+  border-top: 4px solid rgba(190,230,255,0.7);
+
+  transition:
+    height 2.5s cubic-bezier(.2,.8,.2,1);
+
+  overflow: hidden;
+}
+
+.dp-flood-water::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -5%;
+  width: 110%;
+  height: 25px;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      rgba(255,255,255,0.25) 30px,
+      transparent 60px
+    );
+
+  animation: dpWaterWaves 1.5s linear infinite;
+}
+
+@keyframes dpWaterWaves {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-60px);
+  }
+}
+
+/* =========================================================
+   RAIN
+   ========================================================= */
+
+.dp-rain {
+  position: absolute;
+  width: 2px;
+  height: 25px;
+  background: rgba(180,220,255,0.65);
+
+  animation: dpRainFall 0.7s linear forwards;
+}
+
+@keyframes dpRainFall {
+  from {
+    transform: translateY(-40px) rotate(15deg);
+  }
+
+  to {
+    transform: translateY(110vh) rotate(15deg);
+  }
+}
+
+/* =========================================================
+   HAIL
+   ========================================================= */
+
+.dp-hail {
+  position: absolute;
+  top: -30px;
+
+  border-radius: 50%;
+
+  background: rgba(235,245,255,0.95);
+  box-shadow: 0 0 5px rgba(255,255,255,0.8);
+
+  animation:
+    dpHailFall 0.9s linear forwards;
+}
+
+@keyframes dpHailFall {
+  from {
+    transform: translateY(-40px) rotate(0deg);
+  }
+
+  to {
+    transform: translateY(110vh) rotate(360deg);
+  }
+}
+
+/* =========================================================
+   HURRICANE
+   ========================================================= */
+
+.dp-hurricane {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%,-50%);
+
+  border-radius: 50%;
+
+  border:
+    12px solid rgba(190,220,255,0.3);
+
+  box-shadow:
+    0 0 50px rgba(120,180,255,0.3),
+    inset 0 0 50px rgba(120,180,255,0.25);
+
+  animation: dpHurricaneSpin 2s linear forwards;
+}
+
+@keyframes dpHurricaneSpin {
+  from {
+    transform:
+      translate(-50%,-50%)
+      rotate(0deg)
+      scale(0.3);
+
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  to {
+    transform:
+      translate(-50%,-50%)
+      rotate(720deg)
+      scale(1.4);
+
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   NUKE
+   ========================================================= */
+
+.dp-nuke-object {
+  position: absolute;
+
+  top: -100px;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  font-size: 70px;
+
+  animation:
+    dpNukeDrop 1.2s cubic-bezier(.7,0,.8,1) forwards;
+}
+
+@keyframes dpNukeDrop {
+  from {
+    top: -100px;
+  }
+
+  to {
+    top: 52%;
+  }
+}
+
+.dp-explosion {
+  position: absolute;
+
+  left: 50%;
+  top: 52%;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      white 0%,
+      yellow 20%,
+      orange 45%,
+      red 65%,
+      transparent 75%
+    );
+
+  transform: translate(-50%,-50%);
+
+  animation:
+    dpExplosion 1.3s ease-out forwards;
+}
+
+@keyframes dpExplosion {
+  from {
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+  }
+
+  to {
+    width: 900px;
+    height: 900px;
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   PAGE SHAKE
+   ========================================================= */
+
+.dp-page-shake {
+  animation: dpPageShake 0.7s ease-in-out;
+}
+
+@keyframes dpPageShake {
+  0%   { transform: translate(0,0); }
+  10%  { transform: translate(-8px,4px); }
+  20%  { transform: translate(8px,-5px); }
+  30%  { transform: translate(-6px,-4px); }
+  40%  { transform: translate(7px,5px); }
+  50%  { transform: translate(-5px,2px); }
+  60%  { transform: translate(5px,-3px); }
+  70%  { transform: translate(-3px,3px); }
+  100% { transform: translate(0,0); }
+}
+
+/* =========================================================
+   POWER OUTAGE
+   ========================================================= */
+
+html.dp-blackout {
+  background: #030303 !important;
+}
+
+html.dp-blackout body {
+  background: #030303 !important;
+}
+
+html.dp-blackout #damage-program {
+  filter: brightness(0.04);
+}
+
+.dp-power-flicker {
+  animation: dpPowerFlicker 1.5s linear forwards;
+}
+
+@keyframes dpPowerFlicker {
+  0%   { filter: brightness(1); }
+  10%  { filter: brightness(0.2); }
+  20%  { filter: brightness(1); }
+  30%  { filter: brightness(0.1); }
+  40%  { filter: brightness(0.8); }
+  50%  { filter: brightness(0.15); }
+  65%  { filter: brightness(1); }
+  75%  { filter: brightness(0.1); }
+  100% { filter: brightness(0.04); }
+}
+
+/* =========================================================
+   WARNING OVERLAY
+   ========================================================= */
+
+.dp-warning {
+  position: absolute;
+
+  top: 30%;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  padding: 20px 35px;
+
+  border-radius: 12px;
+
+  background: rgba(150,0,0,0.9);
+
+  color: white;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  text-align: center;
+
+  animation:
+    dpWarning 2s ease-in-out forwards;
+}
+
+@keyframes dpWarning {
+  0%   { opacity: 0; transform: translateX(-50%) scale(0.7); }
+  20%  { opacity: 1; transform: translateX(-50%) scale(1); }
+  80%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) scale(1.1); }
+}
+
+/* =========================================================
+   PINK / PURPLE NUKE TEXT
+   ========================================================= */
+
+.dp-pink {
+  position: absolute;
+
+  top: 25%;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  color: #ff66ff;
+
+  font-size: 34px;
+  font-weight: bold;
+
+  text-shadow:
+    0 0 10px #ff00ff,
+    0 0 30px #ff00ff;
+
+  animation: dpPink 2s ease-out forwards;
+}
+
+@keyframes dpPink {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+  }
+
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) scale(1.2);
+  }
+}
+</style>
+
 
 <script>
+/* =========================================================
+   DAMAGE PROGRAM™ V3
+   EFFECT ENGINE
+   ========================================================= */
 
-let dpScore = 0;
+const dpEffects =
+  document.getElementById("dp-effects");
 
 
-function dpToggle(button) {
+/* =========================================================
+   MAIN EFFECT ROUTER
+   ========================================================= */
 
-  button.parentElement.classList.toggle("open");
+function playDamageEffect(event) {
 
+  switch (event.effect) {
+
+    case "tornado":
+      tornadoEffect(1);
+      break;
+
+    case "pds":
+      tornadoEffect(3);
+      break;
+
+    case "dstw":
+      tornadoEffect(3);
+      break;
+
+    case "te":
+      tornadoEffect(10);
+      break;
+
+    case "nado-house":
+      tornadoHouseEffect(7);
+      break;
+
+    case "te-house":
+      tornadoHouseEffect(15);
+      break;
+
+    case "nuke-watch":
+      warningEffect("☢️ NUKE WATCH");
+      break;
+
+    case "nuke":
+      nukeEffect();
+      break;
+
+    case "nuke-10":
+      warningEffect("☢️ 10-MINUTE NUKE WARNING");
+      break;
+
+    case "pink":
+      pinkEffect();
+      break;
+
+    case "flood-watch":
+      floodEffect(10);
+      break;
+
+    case "flood-warning":
+      floodEffect(25);
+      break;
+
+    case "flood":
+      floodEffect(50);
+      break;
+
+    case "flood-emergency":
+      floodEffect(70);
+      break;
+
+    case "tws":
+      hurricaneEffect();
+      break;
+
+    case "hurricane-watch":
+      hurricaneEffect();
+      break;
+
+    case "hurricane":
+      hurricaneEffect();
+      break;
+
+    case "hurricane-warning":
+      hurricaneEffect();
+      break;
+
+    case "hail":
+      hailEffect(event.size);
+      break;
+
+    case "eww":
+      ewwEffect();
+      break;
+
+    case "power-outage":
+      powerOutageEffect();
+      break;
+
+    case "power-restore":
+      powerRestoreEffect();
+      break;
+
+    case "red":
+      redEffect();
+      break;
+  }
 }
 
 
-function dpAdd(code, points, effect) {
+/* =========================================================
+   TORNADO
+   ========================================================= */
 
-  dpScore += points;
+function tornadoEffect(points) {
 
-  document.getElementById("dp-score-number").textContent = dpScore;
+  const tornado =
+    document.createElement("div");
 
-  dpPlayEffect(effect);
+  tornado.className = "dp-tornado";
 
+  if (points >= 3)
+    tornado.classList.add("pds");
+
+  if (points >= 10)
+    tornado.classList.add("te");
+
+  dpEffects.appendChild(tornado);
+
+
+  /* Pick up exactly as many buttons
+     as the event is worth */
+
+  const buttons =
+    Array.from(
+      document.querySelectorAll(".dp-event-button")
+    );
+
+
+  const count =
+    Math.min(points, buttons.length);
+
+
+  const selected =
+    buttons
+      .sort(() => Math.random() - 0.5)
+      .slice(0, count);
+
+
+  selected.forEach((button, index) => {
+
+    setTimeout(() => {
+
+      button.classList.add(
+        "dp-button-picked"
+      );
+
+    }, index * 80);
+
+  });
+
+
+  createWindParticles(points * 3);
+
+
+  setTimeout(() => {
+
+    selected.forEach(button => {
+
+      button.classList.remove(
+        "dp-button-picked"
+      );
+
+    });
+
+    tornado.remove();
+
+  }, 3100);
 }
 
 
-function dpPlayEffect(type) {
+/* =========================================================
+   TORNADO + HOUSE
+   ========================================================= */
 
-  const box = document.getElementById("dp-effects");
+function tornadoHouseEffect(points) {
 
-  box.innerHTML = "";
-
-
-  if (type === "rain") {
-
-    for (let i = 0; i < 35; i++) {
-
-      const x = document.createElement("i");
-
-      x.className = "dp-rain";
-
-      x.style.left = Math.random() * 100 + "%";
-
-      x.style.animationDelay = Math.random() * 0.3 + "s";
-
-      box.appendChild(x);
-
-    }
-
-  }
+  tornadoEffect(points);
 
 
-  if (type === "hail") {
+  /*
+    Look for an existing house element.
+    If your website has one, give it the
+    class "damage-house".
+  */
 
-    for (let i = 0; i < 35; i++) {
+  const house =
+    document.querySelector(".damage-house");
 
-      const x = document.createElement("i");
 
-      x.className = "dp-hail";
+  if (house) {
 
-      x.style.left = Math.random() * 100 + "%";
+    setTimeout(() => {
 
-      x.style.animationDelay = Math.random() * 0.3 + "s";
+      house.classList.add(
+        "dp-house-hit"
+      );
 
-      box.appendChild(x);
+      setTimeout(() => {
 
-    }
+        house.classList.remove(
+          "dp-house-hit"
+        );
+
+      }, 2500);
+
+    }, 1200);
 
   }
+}
 
 
-  if (type === "wind") {
+/* =========================================================
+   WIND PARTICLES
+   ========================================================= */
 
-    for (let i = 0; i < 9; i++) {
+function createWindParticles(amount) {
 
-      const x = document.createElement("i");
+  for (let i = 0; i < amount; i++) {
 
-      x.className = "dp-wind";
+    const wind =
+      document.createElement("div");
 
-      x.style.top = (10 + i * 10) + "%";
+    wind.className = "dp-wind";
 
-      x.style.animationDelay = Math.random() * 0.3 + "s";
+    wind.style.top =
+      Math.random() * 90 + "%";
 
-      box.appendChild(x);
+    wind.style.animationDelay =
+      Math.random() * 0.8 + "s";
 
-    }
+    dpEffects.appendChild(wind);
 
+
+    setTimeout(() => {
+      wind.remove();
+    }, 1500);
   }
+}
 
 
-  if (type === "flash") {
+/* =========================================================
+   FLOOD
+   ========================================================= */
 
-    const x = document.createElement("i");
+function floodEffect(height) {
 
-    x.className = "dp-flash";
+  const water =
+    document.createElement("div");
 
-    box.appendChild(x);
+  water.className =
+    "dp-flood-water";
 
+  dpEffects.appendChild(water);
+
+
+  /* Rain */
+
+  createRain(
+    height >= 50 ? 80 : 45
+  );
+
+
+  requestAnimationFrame(() => {
+
+    water.style.height =
+      height + "%";
+
+  });
+
+
+  /*
+    Leave the water visible for a while,
+    then slowly remove it.
+  */
+
+  const duration =
+    height >= 70 ? 6000 : 4500;
+
+
+  setTimeout(() => {
+
+    water.style.height = "0%";
+
+    setTimeout(() => {
+
+      water.remove();
+
+    }, 2500);
+
+  }, duration);
+}
+
+
+/* =========================================================
+   RAIN
+   ========================================================= */
+
+function createRain(amount) {
+
+  for (let i = 0; i < amount; i++) {
+
+    const drop =
+      document.createElement("div");
+
+    drop.className =
+      "dp-rain";
+
+    drop.style.left =
+      Math.random() * 100 + "%";
+
+    drop.style.animationDelay =
+      Math.random() * 1 + "s";
+
+    dpEffects.appendChild(drop);
+
+
+    setTimeout(() => {
+
+      drop.remove();
+
+    }, 1800);
   }
+}
 
 
-  if (type === "tornado") {
+/* =========================================================
+   HAIL
+   ========================================================= */
 
-    const x = document.createElement("i");
+function hailEffect(size) {
 
-    x.className = "dp-tornado";
+  /*
+    Visual size grows with hail size.
+    1 inch = small
+    8 inch = VERY large
+  */
 
-    x.textContent = "🌪️";
+  const hailCount =
+    Math.min(45, 15 + size * 3);
 
-    box.appendChild(x);
 
+  for (let i = 0; i < hailCount; i++) {
+
+    const hail =
+      document.createElement("div");
+
+    hail.className =
+      "dp-hail";
+
+
+    const pixelSize =
+      6 + size * 2;
+
+
+    hail.style.width =
+      pixelSize + "px";
+
+    hail.style.height =
+      pixelSize + "px";
+
+
+    hail.style.left =
+      Math.random() * 100 + "%";
+
+
+    hail.style.animationDuration =
+      (0.55 + Math.random() * 0.5) + "s";
+
+
+    dpEffects.appendChild(hail);
+
+
+    setTimeout(() => {
+
+      hail.remove();
+
+    }, 1500);
   }
+}
 
 
-  if (type === "boom") {
+/* =========================================================
+   HURRICANE
+   ========================================================= */
 
-    const x = document.createElement("i");
+function hurricaneEffect() {
 
-    x.className = "dp-boom";
+  const storm =
+    document.createElement("div");
 
-    x.textContent = "☢️💥";
+  storm.className =
+    "dp-hurricane";
 
-    box.appendChild(x);
-
-  }
+  dpEffects.appendChild(storm);
 
 
-  setTimeout(function() {
+  createRain(100);
 
-    box.innerHTML = "";
+
+  setTimeout(() => {
+
+    storm.remove();
+
+  }, 2200);
+}
+
+
+/* =========================================================
+   NUKE
+   ========================================================= */
+
+function nukeEffect() {
+
+  const nuke =
+    document.createElement("div");
+
+  nuke.className =
+    "dp-nuke-object";
+
+  nuke.textContent = "☢️";
+
+  dpEffects.appendChild(nuke);
+
+
+  setTimeout(() => {
+
+    nuke.remove();
+
+    createExplosion();
+
+  }, 1200);
+}
+
+
+/* =========================================================
+   EXPLOSION
+   ========================================================= */
+
+function createExplosion() {
+
+  const explosion =
+    document.createElement("div");
+
+  explosion.className =
+    "dp-explosion";
+
+  dpEffects.appendChild(explosion);
+
+
+  document.documentElement
+    .classList.add("dp-page-shake");
+
+
+  setTimeout(() => {
+
+    document.documentElement
+      .classList.remove("dp-page-shake");
+
+  }, 800);
+
+
+  setTimeout(() => {
+
+    explosion.remove();
 
   }, 1500);
-
 }
 
+
+/* =========================================================
+   NUKE WATCH / N10
+   ========================================================= */
+
+function warningEffect(text) {
+
+  const warning =
+    document.createElement("div");
+
+  warning.className =
+    "dp-warning";
+
+  warning.textContent =
+    text;
+
+  dpEffects.appendChild(warning);
+
+
+  setTimeout(() => {
+
+    warning.remove();
+
+  }, 2200);
+}
+
+
+/* =========================================================
+   PINK NUKE
+   ========================================================= */
+
+function pinkEffect() {
+
+  const pink =
+    document.createElement("div");
+
+  pink.className =
+    "dp-pink";
+
+  pink.textContent =
+    "☢️ NUKE ALERT ☢️";
+
+  dpEffects.appendChild(pink);
+
+
+  setTimeout(() => {
+
+    pink.remove();
+
+  }, 2200);
+}
+
+
+/* =========================================================
+   EXTREME WIND WARNING
+   ========================================================= */
+
+function ewwEffect() {
+
+  /*
+    Whisps of wind crossing the screen.
+  */
+
+  for (let i = 0; i < 18; i++) {
+
+    const wind =
+      document.createElement("div");
+
+    wind.className =
+      "dp-wind";
+
+
+    wind.style.top =
+      Math.random() * 100 + "%";
+
+
+    wind.style.width =
+      (60 + Math.random() * 150) + "px";
+
+
+    wind.style.animationDuration =
+      (0.5 + Math.random() * 0.6) + "s";
+
+
+    dpEffects.appendChild(wind);
+
+
+    setTimeout(() => {
+
+      wind.remove();
+
+    }, 1300);
+  }
+}
+
+
+/* =========================================================
+   POWER OUTAGE
+   ========================================================= */
+
+function powerOutageEffect() {
+
+  /*
+    Flicker first...
+    then VERY DARK.
+  */
+
+  document.documentElement
+    .classList.add("dp-power-flicker");
+
+
+  setTimeout(() => {
+
+    document.documentElement
+      .classList.remove("dp-power-flicker");
+
+    document.documentElement
+      .classList.add("dp-blackout");
+
+  }, 1500);
+}
+
+
+/* =========================================================
+   POWER RESTORATION
+   ========================================================= */
+
+function powerRestoreEffect() {
+
+  document.documentElement
+    .classList.remove("dp-blackout");
+
+
+  document.documentElement
+    .classList.add("dp-flash");
+
+
+  setTimeout(() => {
+
+    document.documentElement
+      .classList.remove("dp-flash");
+
+  }, 500);
+}
+
+
+/* =========================================================
+   RED SERVER TEXT
+   ========================================================= */
+
+function redEffect() {
+
+  const red =
+    document.createElement("div");
+
+  red.className =
+    "dp-warning";
+
+  red.style.background =
+    "rgba(180,0,0,0.95)";
+
+  red.textContent =
+    "RED SERVER TEXT";
+
+  dpEffects.appendChild(red);
+
+
+  setTimeout(() => {
+
+    red.remove();
+
+  }, 2200);
+}
+
+
+/* =========================================================
+   SAFETY: MAKE SURE POWER RESTORATION WORKS
+   ========================================================= */
+
+window.playDamageEffect =
+  playDamageEffect;
+
 </script>
-</body>
-</html>
+
