@@ -2,786 +2,2477 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
 
-<title>Damage Program™</title>
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
+
+<meta name="theme-color" content="#080b14">
+
+<title>Damage Program™ — Ultimate Control Center</title>
 
 <style>
 
+/* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET — MEGA CORE
+   VANILLA HTML / CSS / JAVASCRIPT
+   ============================================================ */
+
+/* ============================================================
+   001 — ROOT
+   ============================================================ */
+
+:root {
+
+    --background:
+        #070910;
+
+    --background-2:
+        #0b0f1c;
+
+    --panel:
+        rgba(17, 22, 40, 0.82);
+
+    --panel-solid:
+        #111628;
+
+    --panel-light:
+        rgba(255,255,255,0.055);
+
+    --border:
+        rgba(255,255,255,0.11);
+
+    --border-bright:
+        rgba(255,255,255,0.20);
+
+    --text:
+        #f5f7ff;
+
+    --muted:
+        #9da8c4;
+
+    --cyan:
+        #54dcff;
+
+    --blue:
+        #4287ff;
+
+    --purple:
+        #a56cff;
+
+    --pink:
+        #ff5fd5;
+
+    --red:
+        #ff405b;
+
+    --red-dark:
+        #7d1729;
+
+    --orange:
+        #ff9d42;
+
+    --yellow:
+        #ffd85a;
+
+    --green:
+        #50e49a;
+
+    --water:
+        #238fff;
+
+    --water-dark:
+        #0752b8;
+
+    --shadow:
+        0 25px 80px rgba(0,0,0,0.42);
+
+    --radius:
+        22px;
+
+    --small-radius:
+        14px;
+
+    --transition:
+        180ms ease;
+
+}
+
+
+/* ============================================================
+   002 — UNIVERSAL
+   ============================================================ */
+
 * {
-  box-sizing: border-box;
+
+    box-sizing:
+        border-box;
+
+    -webkit-tap-highlight-color:
+        transparent;
+
 }
 
-html,
-body {
-  margin: 0;
-  min-height: 100%;
-  font-family: Arial, sans-serif;
-  background: #111;
-  color: white;
+
+html {
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    min-height:
+        100%;
+
+    background:
+        var(--background);
+
 }
 
+
 body {
-  padding: 18px;
-  transition: background 0.2s;
+
+    margin:
+        0;
+
+    padding:
+        0;
+
+    min-height:
+        100vh;
+
+    color:
+        var(--text);
+
+    background:
+        var(--background);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        system-ui,
+        sans-serif;
+
+    overflow-x:
+        hidden;
+
 }
+
+
+button {
+
+    font:
+        inherit;
+
+}
+
+
+button:focus-visible {
+
+    outline:
+        2px solid var(--cyan);
+
+    outline-offset:
+        2px;
+
+}
+
+
+/* ============================================================
+   003 — BACKGROUND
+   ============================================================ */
+
+body::before {
+
+    content:
+        "";
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    z-index:
+        -10;
+
+    background:
+
+        radial-gradient(
+            circle at 12% 8%,
+            rgba(84,220,255,0.13),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 88% 18%,
+            rgba(255,95,213,0.12),
+            transparent 30%
+        ),
+
+        radial-gradient(
+            circle at 50% 100%,
+            rgba(165,108,255,0.10),
+            transparent 40%
+        );
+
+}
+
+
+body::after {
+
+    content:
+        "";
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    pointer-events:
+        none;
+
+    z-index:
+        -9;
+
+    opacity:
+        0.12;
+
+    background-image:
+        linear-gradient(
+            rgba(255,255,255,0.035) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        100% 4px;
+
+}
+
+
+/* ============================================================
+   004 — APP
+   ============================================================ */
 
 #app {
-  width: 100%;
-  max-width: 850px;
-  margin: auto;
-}
 
-/* ==============================
-   HEADER
-   ============================== */
+    width:
+        min(1200px, 100%);
 
-h1 {
-  margin: 0;
-  font-size: 32px;
-}
+    margin:
+        0 auto;
 
-.subtitle {
-  margin-top: 5px;
-  opacity: 0.6;
-}
-
-/* ==============================
-   SCORE
-   ============================== */
-
-#scoreBox {
-  margin: 20px auto;
-  padding: 20px;
-  max-width: 280px;
-
-  text-align: center;
-
-  border-radius: 18px;
-
-  background: #242424;
-}
-
-#score {
-  font-size: 56px;
-  font-weight: bold;
-}
-
-/* ==============================
-   OPEN EVENTS
-   ============================== */
-
-#openEvents {
-  width: 100%;
-  min-height: 70px;
-
-  border: 0;
-  border-radius: 17px;
-
-  background: #303030;
-  color: white;
-
-  font-size: 21px;
-  font-weight: bold;
-
-  cursor: pointer;
-
-  touch-action: manipulation;
-}
-
-/* ==============================
-   EVENT PANEL
-   ============================== */
-
-#eventPanel {
-  display: none;
-  margin-top: 12px;
-}
-
-#eventPanel.open {
-  display: block;
-}
-
-/* ==============================
-   CATEGORY
-   ============================== */
-
-.category {
-  margin-bottom: 10px;
-
-  border-radius: 16px;
-
-  overflow: hidden;
-
-  background: #202020;
-}
-
-.categoryButton {
-  width: 100%;
-  min-height: 65px;
-
-  border: 0;
-
-  background: #303030;
-  color: white;
-
-  text-align: left;
-
-  padding: 15px;
-
-  font-size: 20px;
-  font-weight: bold;
-
-  cursor: pointer;
-
-  touch-action: manipulation;
-}
-
-.categoryButton:active {
-  transform: scale(0.98);
-}
-
-/* ==============================
-   EVENTS
-   ============================== */
-
-.events {
-  display: none;
-
-  padding: 10px;
-
-  grid-template-columns: 1fr 1fr;
-
-  gap: 9px;
-}
-
-.events.open {
-  display: grid;
-}
-
-.eventButton {
-  min-height: 68px;
-
-  border: 0;
-  border-radius: 13px;
-
-  background: #414141;
-  color: white;
-
-  cursor: pointer;
-
-  font-size: 17px;
-  font-weight: bold;
-
-  touch-action: manipulation;
-}
-
-.eventButton small {
-  opacity: 0.75;
-}
-
-.eventButton:active {
-  transform: scale(0.94);
-}
-
-/* ==============================
-   HISTORY
-   ============================== */
-
-#historyBox {
-  margin-top: 25px;
-
-  padding: 15px;
-
-  border-radius: 16px;
-
-  background: #202020;
-}
-
-#historyBox h2 {
-  margin-top: 0;
-}
-
-#history {
-  max-height: 300px;
-
-  overflow-y: auto;
-}
-
-.historyItem {
-  display: flex;
-
-  justify-content: space-between;
-
-  padding: 10px;
-
-  margin-bottom: 6px;
-
-  border-radius: 9px;
-
-  background: #303030;
-}
-
-/* ==============================
-   RESET BUTTONS
-   ============================== */
-
-.resetButton {
-  width: 100%;
-
-  min-height: 58px;
-
-  margin-top: 9px;
-
-  border: 0;
-
-  border-radius: 13px;
-
-  background: #444;
-
-  color: white;
-
-  font-size: 17px;
-  font-weight: bold;
-
-  cursor: pointer;
-}
-
-#resetEverything {
-  background: #700000;
-}
-
-/* ==============================
-   EFFECT LAYER
-   ============================== */
-
-#effects {
-  position: fixed;
-
-  inset: 0;
-
-  pointer-events: none;
-
-  overflow: hidden;
-
-  z-index: 99999;
-}
-
-/* ==============================
-   WIND
-   ============================== */
-
-.wind {
-  position: absolute;
-
-  width: 100px;
-  height: 3px;
-
-  border-radius: 50%;
-
-  background: rgba(255,255,255,0.65);
-
-  animation: wind 1s linear forwards;
-}
-
-@keyframes wind {
-
-  from {
-    transform: translateX(-150px);
-    opacity: 0;
-  }
-
-  20% {
-    opacity: 1;
-  }
-
-  to {
-    transform: translateX(110vw);
-    opacity: 0;
-  }
+    padding:
+        16px;
 
 }
 
-/* ==============================
-   TORNADO
-   ============================== */
-
-.tornado {
-
-  position: absolute;
-
-  left: -250px;
-  bottom: 5%;
-
-  width: 170px;
-  height: 330px;
-
-  background:
-    linear-gradient(
-      to bottom,
-      transparent,
-      rgba(130,130,130,0.5),
-      rgba(50,50,50,0.9)
-    );
-
-  clip-path: polygon(
-    44% 0,
-    58% 0,
-    68% 20%,
-    73% 40%,
-    65% 60%,
-    53% 78%,
-    48% 100%,
-    38% 100%,
-    43% 78%,
-    31% 60%,
-    27% 40%,
-    34% 20%
-  );
-
-  animation: tornadoMove 3s linear forwards;
-
-}
-
-.tornado.big {
-  width: 240px;
-  height: 420px;
-}
-
-@keyframes tornadoMove {
-
-  from {
-    left: -250px;
-  }
-
-  to {
-    left: 110vw;
-  }
-
-}
-
-/* ==============================
-   BUTTON PICKUP
-   ============================== */
-
-.flying {
-
-  animation: flying 3s ease-in-out forwards;
-
-}
-
-@keyframes flying {
-
-  0% {
-    transform: translate(0,0) rotate(0);
-  }
-
-  20% {
-    transform: translate(100px,-100px) rotate(120deg);
-  }
-
-  50% {
-    transform: translate(200px,-20px) rotate(240deg);
-  }
-
-  75% {
-    transform: translate(100px,100px) rotate(360deg);
-  }
-
-  100% {
-    transform: translate(0,0) rotate(0);
-  }
-
-}
-
-/* ==============================
-   FLOOD
-   ============================== */
-
-.flood {
-
-  position: absolute;
-
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  height: 0;
-
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(80,160,230,0.7),
-      rgba(20,80,150,0.95)
-    );
-
-  border-top: 4px solid rgba(200,240,255,0.8);
-
-  transition: height 2.5s ease;
-
-}
-
-.flood::before {
-
-  content: "";
-
-  position: absolute;
-
-  left: -10%;
-
-  top: -10px;
-
-  width: 120%;
-  height: 20px;
-
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0 25px,
-      rgba(255,255,255,0.25) 25px 45px,
-      transparent 45px 70px
-    );
-
-  animation: waves 1.4s linear infinite;
-
-}
-
-@keyframes waves {
-
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-70px);
-  }
-
-}
-
-/* ==============================
-   RAIN
-   ============================== */
-
-.rain {
-
-  position: absolute;
-
-  width: 2px;
-  height: 25px;
-
-  background: rgba(180,220,255,0.7);
-
-  animation: rain 0.7s linear forwards;
-
-}
-
-@keyframes rain {
-
-  from {
-    transform: translateY(-50px) rotate(15deg);
-  }
-
-  to {
-    transform: translateY(110vh) rotate(15deg);
-  }
-
-}
-
-/* ==============================
-   HAIL
-   ============================== */
-
-.hail {
-
-  position: absolute;
-
-  top: -30px;
-
-  border-radius: 50%;
-
-  background: white;
-
-  box-shadow: 0 0 5px white;
-
-  animation: hail 1s linear forwards;
-
-}
-
-@keyframes hail {
-
-  from {
-    transform: translateY(-40px);
-  }
-
-  to {
-    transform: translateY(110vh) rotate(360deg);
-  }
-
-}
-
-/* ==============================
-   HURRICANE
-   ============================== */
-
-.hurricane {
-
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  width: 500px;
-  height: 500px;
-
-  border: 12px solid rgba(170,210,255,0.35);
-
-  border-radius: 50%;
-
-  transform: translate(-50%,-50%);
-
-  animation: hurricane 2.5s linear forwards;
-
-}
-
-@keyframes hurricane {
-
-  from {
-    transform:
-      translate(-50%,-50%)
-      scale(.2)
-      rotate(0);
-
-    opacity: 0;
-  }
-
-  20% {
-    opacity: 1;
-  }
-
-  to {
-    transform:
-      translate(-50%,-50%)
-      scale(1.5)
-      rotate(720deg);
-
-    opacity: 0;
-  }
-
-}
-
-/* ==============================
-   NUKE
-   ============================== */
-
-.nuke {
-
-  position: absolute;
-
-  top: -100px;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  font-size: 70px;
-
-  animation: nukeDrop 1.2s forwards;
-
-}
-
-@keyframes nukeDrop {
-
-  to {
-    top: 50%;
-  }
-
-}
-
-/* ==============================
-   EXPLOSION
-   ============================== */
-
-.explosion {
-
-  position: absolute;
-
-  left: 50%;
-  top: 50%;
-
-  width: 40px;
-  height: 40px;
-
-  transform: translate(-50%,-50%);
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      white 0%,
-      yellow 20%,
-      orange 45%,
-      red 65%,
-      transparent 75%
-    );
-
-  animation: explosion 1.4s forwards;
-
-}
-
-@keyframes explosion {
-
-  to {
-
-    width: 900px;
-    height: 900px;
-
-    opacity: 0;
-
-  }
-
-}
-
-/* ==============================
-   SHAKE
-   ============================== */
-
-.shake {
-
-  animation: shake .7s;
-
-}
-
-@keyframes shake {
-
-  0% { transform: translate(0); }
-
-  20% { transform: translate(-8px,4px); }
-
-  40% { transform: translate(8px,-4px); }
-
-  60% { transform: translate(-6px,3px); }
-
-  80% { transform: translate(6px,-3px); }
-
-  100% { transform: translate(0); }
-
-}
-
-/* ==============================
-   POWER OUTAGE
-   ============================== */
-
-body.blackout {
-
-  background: #020202;
-
-}
-
-body.blackout #app {
-
-  filter: brightness(.04);
-
-}
-
-.flicker {
-
-  animation: flicker 1.5s forwards;
-
-}
-
-@keyframes flicker {
-
-  0% { filter: brightness(1); }
-
-  10% { filter: brightness(.2); }
-
-  20% { filter: brightness(1); }
-
-  30% { filter: brightness(.1); }
-
-  40% { filter: brightness(.8); }
-
-  50% { filter: brightness(.15); }
-
-  70% { filter: brightness(1); }
-
-  100% { filter: brightness(.03); }
-
-}
-
-/* ==============================
-   WARNING
-   ============================== */
-
-.warning {
-
-  position: absolute;
-
-  top: 30%;
-  left: 50%;
-
-  transform: translateX(-50%);
-
-  padding: 20px;
-
-  border-radius: 12px;
-
-  background: rgba(160,0,0,.95);
-
-  color: white;
-
-  font-size: 25px;
-  font-weight: bold;
-
-  text-align: center;
-
-  animation: warning 2s forwards;
-
-}
-
-@keyframes warning {
-
-  0% {
-    opacity: 0;
-    transform: translateX(-50%) scale(.7);
-  }
-
-  20% {
-    opacity: 1;
-    transform: translateX(-50%) scale(1);
-  }
-
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-  }
-
-}
-
-/* ==============================
-   MOBILE / IPAD
-   ============================== */
 
 @media (max-width: 600px) {
 
-  body {
-    padding: 12px;
-  }
+    #app {
 
-  .events {
-    grid-template-columns: 1fr;
-  }
+        padding:
+            10px;
 
-  .eventButton {
-    min-height: 72px;
-    font-size: 18px;
-  }
+    }
 
 }
+
+
+/* ============================================================
+   005 — GLASS
+   ============================================================ */
+
+.glass {
+
+    background:
+        var(--panel);
+
+    border:
+        1px solid var(--border);
+
+    box-shadow:
+        var(--shadow);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+}
+
+
+/* ============================================================
+   006 — HEADER
+   ============================================================ */
+
+.topbar {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        18px;
+
+    border-radius:
+        var(--radius);
+
+}
+
+
+.brand {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+
+}
+
+
+.logo {
+
+    width:
+        54px;
+
+    height:
+        54px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        17px;
+
+    font-size:
+        28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #17243e,
+            #241633
+        );
+
+    box-shadow:
+        inset 0 0 25px rgba(84,220,255,0.10);
+
+}
+
+
+.title-main {
+
+    margin:
+        0;
+
+    font-size:
+        clamp(23px, 5vw, 36px);
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -0.045em;
+
+}
+
+
+.title-sub {
+
+    margin-top:
+        6px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    letter-spacing:
+        0.14em;
+
+    font-weight:
+        700;
+
+}
+
+
+.system-status {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+    white-space:
+        nowrap;
+
+}
+
+
+.system-dot {
+
+    width:
+        9px;
+
+    height:
+        9px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        0 0 15px var(--green);
+
+}
+
+
+/* ============================================================
+   007 — LAYOUT
+   ============================================================ */
+
+.main-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        minmax(0, 1.2fr)
+        minmax(280px, 0.8fr);
+
+    gap:
+        16px;
+
+    margin-top:
+        16px;
+
+}
+
+
+@media (max-width: 850px) {
+
+    .main-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+    .system-status {
+
+        display:
+            none;
+
+    }
+
+}
+
+
+/* ============================================================
+   008 — CARDS
+   ============================================================ */
+
+.card {
+
+    padding:
+        18px;
+
+    border-radius:
+        var(--radius);
+
+}
+
+
+.card + .card {
+
+    margin-top:
+        16px;
+
+}
+
+
+/* ============================================================
+   009 — SCORE
+   ============================================================ */
+
+.score-card {
+
+    text-align:
+        center;
+
+    padding:
+        28px 18px;
+
+}
+
+
+.score-label {
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    font-weight:
+        850;
+
+    letter-spacing:
+        0.20em;
+
+}
+
+
+.score-number {
+
+    margin:
+        9px 0;
+
+    font-size:
+        clamp(55px, 13vw, 105px);
+
+    line-height:
+        0.95;
+
+    font-weight:
+        950;
+
+    letter-spacing:
+        -0.07em;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            var(--pink),
+            var(--purple)
+        );
+
+    -webkit-background-clip:
+        text;
+
+    background-clip:
+        text;
+
+    color:
+        transparent;
+
+}
+
+
+.score-meta {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        8px;
+
+}
+
+
+.pill {
+
+    padding:
+        7px 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        999px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    background:
+        rgba(255,255,255,0.025);
+
+}
+
+
+/* ============================================================
+   010 — SECTION TITLE
+   ============================================================ */
+
+.section-title {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        10px;
+
+    margin:
+        2px 2px 12px;
+
+}
+
+
+.section-title h2 {
+
+    margin:
+        0;
+
+    font-size:
+        16px;
+
+    letter-spacing:
+        -0.02em;
+
+}
+
+
+.section-title span {
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+}
+
+
+/* ============================================================
+   011 — CATEGORY CONTAINER
+   ============================================================ */
+
+.categories {
+
+    display:
+        grid;
+
+    gap:
+        10px;
+
+}
+
+
+.category {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        18px;
+
+    background:
+        rgba(7,10,20,0.55);
+
+}
+
+
+.category-header {
+
+    width:
+        100%;
+
+    border:
+        0;
+
+    color:
+        var(--text);
+
+    background:
+        transparent;
+
+    padding:
+        16px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    text-align:
+        left;
+
+    cursor:
+        pointer;
+
+    touch-action:
+        manipulation;
+
+}
+
+
+.category-header:active {
+
+    background:
+        rgba(255,255,255,0.035);
+
+}
+
+
+.category-left {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+}
+
+
+.category-icon {
+
+    width:
+        38px;
+
+    height:
+        38px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    font-size:
+        23px;
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+}
+
+
+.category-name {
+
+    display:
+        block;
+
+    font-weight:
+        900;
+
+}
+
+
+.category-description {
+
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+}
+
+
+.category-arrow {
+
+    color:
+        var(--muted);
+
+    font-size:
+        20px;
+
+    transition:
+        transform var(--transition);
+
+}
+
+
+.category.open .category-arrow {
+
+    transform:
+        rotate(180deg);
+
+}
+
+
+/* ============================================================
+   012 — EVENT GRID
+   ============================================================ */
+
+.event-grid {
+
+    display:
+        none;
+
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+    gap:
+        9px;
+
+    padding:
+        0 10px 10px;
+
+}
+
+
+.category.open .event-grid {
+
+    display:
+        grid;
+
+}
+
+
+@media (max-width: 540px) {
+
+    .event-grid {
+
+        grid-template-columns:
+            1fr;
+
+    }
+
+}
+
+
+/* ============================================================
+   013 — EVENT BUTTON
+   ============================================================ */
+
+.event-button {
+
+    position:
+        relative;
+
+    min-height:
+        80px;
+
+    padding:
+        13px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        15px;
+
+    color:
+        var(--text);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.065),
+            rgba(255,255,255,0.018)
+        );
+
+    text-align:
+        left;
+
+    cursor:
+        pointer;
+
+    transition:
+        transform var(--transition),
+        border-color var(--transition),
+        background var(--transition);
+
+    overflow:
+        hidden;
+
+    touch-action:
+        manipulation;
+
+}
+
+
+.event-button::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    background:
+        linear-gradient(
+            120deg,
+            transparent,
+            rgba(255,255,255,0.07),
+            transparent
+        );
+
+    transform:
+        translateX(-120%);
+
+    transition:
+        transform 500ms ease;
+
+}
+
+
+.event-button:hover::after {
+
+    transform:
+        translateX(120%);
+
+}
+
+
+.event-button:hover {
+
+    transform:
+        translateY(-2px);
+
+    border-color:
+        var(--border-bright);
+
+}
+
+
+.event-button:active {
+
+    transform:
+        scale(0.975);
+
+}
+
+
+.event-code {
+
+    display:
+        block;
+
+    font-size:
+        14px;
+
+    font-weight:
+        950;
+
+}
+
+
+.event-description {
+
+    display:
+        block;
+
+    margin-top:
+        4px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.35;
+
+}
+
+
+.event-points {
+
+    display:
+        inline-block;
+
+    margin-top:
+        5px;
+
+    color:
+        var(--yellow);
+
+    font-size:
+        11px;
+
+    font-weight:
+        900;
+
+}
+
+
+/* ============================================================
+   014 — HISTORY
+   ============================================================ */
+
+.history {
+
+    max-height:
+        410px;
+
+    overflow:
+        auto;
+
+}
+
+
+.history-empty {
+
+    padding:
+        38px 10px;
+
+    color:
+        var(--muted);
+
+    text-align:
+        center;
+
+    font-size:
+        13px;
+
+}
+
+
+.history-row {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        12px;
+
+    margin-bottom:
+        7px;
+
+    padding:
+        11px 12px;
+
+    border:
+        1px solid rgba(255,255,255,0.055);
+
+    border-radius:
+        13px;
+
+    background:
+        rgba(255,255,255,0.035);
+
+    font-size:
+        12px;
+
+}
+
+
+.history-points {
+
+    color:
+        var(--yellow);
+
+    font-weight:
+        900;
+
+    white-space:
+        nowrap;
+
+}
+
+
+/* ============================================================
+   015 — CONTROLS
+   ============================================================ */
+
+.control-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+    gap:
+        9px;
+
+}
+
+
+.control-button {
+
+    min-height:
+        48px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    color:
+        var(--text);
+
+    background:
+        #151b2c;
+
+    cursor:
+        pointer;
+
+    touch-action:
+        manipulation;
+
+}
+
+
+.control-button:active {
+
+    transform:
+        scale(0.97);
+
+}
+
+
+.control-restore {
+
+    background:
+        rgba(16,43,34,0.95);
+
+    border-color:
+        rgba(80,228,154,0.25);
+
+}
+
+
+.control-danger {
+
+    background:
+        rgba(53,18,29,0.95);
+
+    border-color:
+        rgba(255,64,91,0.25);
+
+}
+
+
+/* ============================================================
+   016 — EFFECT LAYER
+   ============================================================ */
+
+#effect-layer {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        10000;
+
+    overflow:
+        hidden;
+
+    pointer-events:
+        none;
+
+}
+
+
+/* ============================================================
+   017 — TOAST
+   ============================================================ */
+
+#toast {
+
+    position:
+        fixed;
+
+    left:
+        50%;
+
+    bottom:
+        22px;
+
+    z-index:
+        30000;
+
+    max-width:
+        calc(100vw - 30px);
+
+    padding:
+        13px 18px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        14px;
+
+    background:
+        rgba(13,17,29,0.95);
+
+    box-shadow:
+        var(--shadow);
+
+    color:
+        var(--text);
+
+    font-size:
+        13px;
+
+    font-weight:
+        900;
+
+    text-align:
+        center;
+
+    opacity:
+        0;
+
+    transform:
+        translate(-50%, 20px);
+
+    transition:
+        opacity 220ms ease,
+        transform 220ms ease;
+
+}
+
+
+#toast.visible {
+
+    opacity:
+        1;
+
+    transform:
+        translate(-50%, 0);
+
+}
+
+
+/* ============================================================
+   018 — CRITICAL TEXT
+   ============================================================ */
+
+.critical-alert {
+
+    position:
+        fixed;
+
+    left:
+        50%;
+
+    top:
+        14%;
+
+    z-index:
+        20000;
+
+    width:
+        min(900px, 92vw);
+
+    transform:
+        translateX(-50%);
+
+    text-align:
+        center;
+
+    color:
+        var(--red);
+
+    text-shadow:
+        0 0 8px rgba(255,64,91,0.8),
+        0 0 30px rgba(255,64,91,0.55);
+
+    animation:
+        critical-in-out 2.7s ease forwards;
+
+}
+
+
+.critical-alert-title {
+
+    display:
+        block;
+
+    font-size:
+        clamp(24px, 7vw, 54px);
+
+    font-weight:
+        1000;
+
+    letter-spacing:
+        0.025em;
+
+}
+
+
+.critical-alert-sub {
+
+    display:
+        block;
+
+    margin-top:
+        7px;
+
+    color:
+        #ff9eac;
+
+    font-size:
+        12px;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        0.12em;
+
+}
+
+
+@keyframes critical-in-out {
+
+    0% {
+
+        opacity:
+            0;
+
+        transform:
+            translate(-50%, -15px)
+            scale(0.90);
+
+    }
+
+    12% {
+
+        opacity:
+            1;
+
+        transform:
+            translate(-50%, 0)
+            scale(1);
+
+    }
+
+    72% {
+
+        opacity:
+            1;
+
+        transform:
+            translate(-50%, 0)
+            scale(1);
+
+    }
+
+    100% {
+
+        opacity:
+            0;
+
+        transform:
+            translate(-50%, -8px)
+            scale(1.04);
+
+    }
+
+}
+
+
+/* ============================================================
+   019 — PINK / PURPLE ALERT
+   ============================================================ */
+
+.pink-purple-alert {
+
+    color:
+        var(--pink);
+
+    text-shadow:
+        0 0 10px rgba(255,95,213,0.75),
+        0 0 35px rgba(165,108,255,0.60);
+
+}
+
+
+.pink-purple-alert .critical-alert-title {
+
+    background:
+        linear-gradient(
+            90deg,
+            #ff73dc,
+            #a56cff,
+            #ff73dc
+        );
+
+    background-size:
+        200% auto;
+
+    -webkit-background-clip:
+        text;
+
+    background-clip:
+        text;
+
+    color:
+        transparent;
+
+    animation:
+        pink-gradient 1.6s linear infinite;
+
+}
+
+
+@keyframes pink-gradient {
+
+    to {
+
+        background-position:
+            200% center;
+
+    }
+
+}
+
+
+/* ============================================================
+   020 — WIND
+   ============================================================ */
+
+.wind-gust {
+
+    position:
+        absolute;
+
+    left:
+        -220px;
+
+    height:
+        3px;
+
+    border-radius:
+        999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(220,245,255,0.95),
+            transparent
+        );
+
+    box-shadow:
+        0 0 9px rgba(110,205,255,0.8);
+
+    transform:
+        skewX(-25deg);
+
+    animation:
+        wind-gust 1s linear forwards;
+
+}
+
+
+@keyframes wind-gust {
+
+    0% {
+
+        transform:
+            translateX(-200px)
+            skewX(-25deg);
+
+        opacity:
+            0;
+
+    }
+
+    12% {
+
+        opacity:
+            1;
+
+    }
+
+    100% {
+
+        transform:
+            translateX(120vw)
+            skewX(-25deg);
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/* ============================================================
+   021 — DEBRIS
+   ============================================================ */
+
+.wind-debris {
+
+    position:
+        absolute;
+
+    left:
+        -80px;
+
+    font-size:
+        19px;
+
+    animation:
+        debris-fly 1.45s cubic-bezier(.2,.8,.2,1) forwards;
+
+}
+
+
+@keyframes debris-fly {
+
+    0% {
+
+        transform:
+            translateX(-100px)
+            rotate(0deg);
+
+        opacity:
+            0;
+
+    }
+
+    15% {
+
+        opacity:
+            1;
+
+    }
+
+    100% {
+
+        transform:
+            translate(
+                115vw,
+                var(--debris-y)
+            )
+            rotate(720deg);
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/* ============================================================
+   022 — SCREEN SHAKE
+   ============================================================ */
+
+.screen-shake {
+
+    animation:
+        screen-shake 700ms ease;
+
+}
+
+
+@keyframes screen-shake {
+
+    0%, 100% {
+
+        transform:
+            translate(0,0);
+
+    }
+
+    15% {
+
+        transform:
+            translate(-7px,4px);
+
+    }
+
+    30% {
+
+        transform:
+            translate(7px,-5px);
+
+    }
+
+    45% {
+
+        transform:
+            translate(-6px,-3px);
+
+    }
+
+    60% {
+
+        transform:
+            translate(5px,4px);
+
+    }
+
+    75% {
+
+        transform:
+            translate(-3px,-2px);
+
+    }
+
+}
+
+
+/* ============================================================
+   023 — FLOOD
+   ============================================================ */
+
+.flood-layer {
+
+    position:
+        absolute;
+
+    left:
+        0;
+
+    right:
+        0;
+
+    bottom:
+        0;
+
+    height:
+        0;
+
+    overflow:
+        visible;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(76,188,255,0.68),
+            rgba(7,67,150,0.97)
+        );
+
+    border-top:
+        3px solid rgba(204,244,255,0.8);
+
+    box-shadow:
+        0 -12px 35px rgba(54,169,255,0.25);
+
+    transition:
+        height 2.8s cubic-bezier(.2,.8,.2,1);
+
+}
+
+
+.flood-wave {
+
+    position:
+        absolute;
+
+    left:
+        -10%;
+
+    top:
+        -12px;
+
+    width:
+        120%;
+
+    height:
+        24px;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 20px,
+            rgba(255,255,255,0.25) 20px 45px,
+            transparent 45px 75px
+        );
+
+    animation:
+        flood-wave 900ms linear infinite;
+
+}
+
+
+@keyframes flood-wave {
+
+    to {
+
+        transform:
+            translateX(-75px);
+
+    }
+
+}
+
+
+/* ============================================================
+   024 — RAIN
+   ============================================================ */
+
+.rain-drop {
+
+    position:
+        absolute;
+
+    top:
+        -45px;
+
+    width:
+        2px;
+
+    height:
+        30px;
+
+    background:
+        rgba(195,228,255,0.75);
+
+    animation:
+        rain-drop 800ms linear forwards;
+
+}
+
+
+@keyframes rain-drop {
+
+    to {
+
+        transform:
+            translateY(120vh)
+            rotate(13deg);
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/* ============================================================
+   025 — HAIL
+   ============================================================ */
+
+.hailstone {
+
+    position:
+        absolute;
+
+    top:
+        -50px;
+
+    border-radius:
+        50%;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 0 9px rgba(255,255,255,0.85);
+
+    animation:
+        hail-fall 900ms linear forwards;
+
+}
+
+
+@keyframes hail-fall {
+
+    to {
+
+        transform:
+            translateY(120vh)
+            rotate(450deg);
+
+        opacity:
+            0.15;
+
+    }
+
+}
+
+
+/* ============================================================
+   026 — TORNADO
+   ============================================================ */
+
+.tornado {
+
+    position:
+        absolute;
+
+    left:
+        -300px;
+
+    bottom:
+        4%;
+
+    width:
+        210px;
+
+    height:
+        400px;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(150,160,185,0.22)
+        );
+
+    animation:
+        tornado-cross 3.4s linear forwards;
+
+}
+
+
+.tornado.large {
+
+    width:
+        280px;
+
+    height:
+        500px;
+
+}
+
+
+.tornado-funnel {
+
+    position:
+        absolute;
+
+    inset:
+        0;
+
+    background:
+
+        radial-gradient(
+            ellipse at 50% 10%,
+            rgba(244,247,255,0.28),
+            transparent 34%
+        ),
+
+        radial-gradient(
+            ellipse at 50% 43%,
+            rgba(75,80,99,0.86),
+            rgba(25,28,39,0.97) 58%,
+            transparent 73%
+        );
+
+    clip-path:
+        polygon(
+            27% 0,
+            73% 0,
+            84% 18%,
+            69% 44%,
+            60% 67%,
+            54% 100%,
+            46% 100%,
+            40% 67%,
+            31% 44%,
+            16% 18%
+        );
+
+    animation:
+        tornado-wobble 420ms linear infinite alternate;
+
+}
+
+
+.tornado-dust {
+
+    position:
+        absolute;
+
+    left:
+        29%;
+
+    bottom:
+        -5px;
+
+    width:
+        42%;
+
+    height:
+        20px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(185,180,155,0.35);
+
+    filter:
+        blur(7px);
+
+}
+
+
+@keyframes tornado-wobble {
+
+    from {
+
+        transform:
+            rotate(-2deg)
+            scaleX(0.98);
+
+    }
+
+    to {
+
+        transform:
+            rotate(2deg)
+            scaleX(1.03);
+
+    }
+
+}
+
+
+@keyframes tornado-cross {
+
+    from {
+
+        left:
+            -320px;
+
+    }
+
+    to {
+
+        left:
+            110vw;
+
+    }
+
+}
+
+
+/* ============================================================
+   027 — HURRICANE
+   ============================================================ */
+
+.hurricane {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        min(84vw, 780px);
+
+    aspect-ratio:
+        1;
+
+    transform:
+        translate(-50%,-50%)
+        scale(0.25);
+
+    border-radius:
+        50%;
+
+    background:
+
+        conic-gradient(
+            from 0deg,
+            transparent 0 7%,
+            rgba(74,180,255,0.25) 10%,
+            transparent 17%,
+            rgba(157,106,255,0.24) 25%,
+            transparent 34%,
+            rgba(70,180,255,0.25) 43%,
+            transparent 52%,
+            rgba(255,255,255,0.12) 59%,
+            transparent 69%
+        );
+
+    box-shadow:
+        inset 0 0 100px rgba(80,170,255,0.14);
+
+    animation:
+        hurricane-spin 4.2s linear forwards;
+
+}
+
+
+.hurricane-eye {
+
+    position:
+        absolute;
+
+    inset:
+        37%;
+
+    border-radius:
+        50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(220,238,255,0.95) 0 5%,
+            rgba(220,238,255,0.14) 36%,
+            transparent 72%
+        );
+
+    box-shadow:
+        0 0 40px rgba(205,230,255,0.22);
+
+}
+
+
+@keyframes hurricane-spin {
+
+    0% {
+
+        opacity:
+            0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(0.20)
+            rotate(0deg);
+
+    }
+
+    18% {
+
+        opacity:
+            1;
+
+    }
+
+    100% {
+
+        opacity:
+            0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.28)
+            rotate(1080deg);
+
+    }
+
+}
+
+
+/* ============================================================
+   028 — NUKE SIMULATION
+   ============================================================ */
+
+.nuke-object {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        -100px;
+
+    transform:
+        translateX(-50%);
+
+    font-size:
+        72px;
+
+    filter:
+        drop-shadow(
+            0 0 18px
+            rgba(255,210,80,0.55)
+        );
+
+    animation:
+        nuke-drop 1.15s
+        cubic-bezier(.7,0,.9,.25)
+        forwards;
+
+}
+
+
+@keyframes nuke-drop {
+
+    to {
+
+        top:
+            50%;
+
+    }
+
+}
+
+
+.nuke-explosion {
+
+    position:
+        absolute;
+
+    left:
+        50%;
+
+    top:
+        50%;
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    border-radius:
+        50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    background:
+
+        radial-gradient(
+            circle,
+            #ffffff 0 5%,
+            #fff3a0 15%,
+            #ffb52d 34%,
+            #ff4b35 53%,
+            transparent 72%
+        );
+
+    animation:
+        nuke-boom 1.5s ease-out forwards;
+
+}
+
+
+@keyframes nuke-boom {
+
+    to {
+
+        width:
+            105vmax;
+
+        height:
+            105vmax;
+
+        opacity:
+            0;
+
+    }
+
+}
+
+
+/* ============================================================
+   029 — POWER OUTAGE
+   ============================================================ */
+
+body.power-out {
+
+    filter:
+        brightness(0.045);
+
+}
+
+
+body.power-out #effect-layer {
+
+    filter:
+        brightness(0.55);
+
+}
+
+
+.power-message {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    color:
+        #aeb4c5;
+
+    font-size:
+        clamp(18px,5vw,34px);
+
+    font-weight:
+        950;
+
+    text-align:
+        center;
+
+}
+
+
+.power-flicker {
+
+    animation:
+        power-flicker 500ms steps(5,end);
+
+}
+
+
+@keyframes power-flicker {
+
+    0%,
+    100% {
+
+        filter:
+            brightness(1);
+
+    }
+
+    20% {
+
+        filter:
+            brightness(0.5);
+
+    }
+
+    40% {
+
+        filter:
+            brightness(1.4);
+
+    }
+
+    60% {
+
+        filter:
+            brightness(0.35);
+
+    }
+
+    80% {
+
+        filter:
+            brightness(0.75);
+
+    }
+
+}
+
+
+/* ============================================================
+   030 — BUTTON PHYSICS
+   ============================================================ */
+
+.flying-button {
+
+    position:
+        relative;
+
+    z-index:
+        100;
+
+    animation:
+        button-fly 1.8s
+        cubic-bezier(.2,.8,.2,1)
+        forwards;
+
+}
+
+
+@keyframes button-fly {
+
+    0% {
+
+        transform:
+            translate(0,0)
+            rotate(0deg);
+
+    }
+
+    35% {
+
+        transform:
+            translate(
+                calc(var(--fly-x) * 0.45),
+                calc(var(--fly-y) * 0.45)
+            )
+            rotate(12deg);
+
+    }
+
+    100% {
+
+        transform:
+            translate(
+                var(--fly-x),
+                var(--fly-y)
+            )
+            rotate(360deg);
+
+    }
+
+}
+
+
+/* ============================================================
+   031 — RED CRITICAL PULSE
+   ============================================================ */
+
+.critical-pulse {
+
+    animation:
+        critical-pulse 600ms ease;
+
+}
+
+
+@keyframes critical-pulse {
+
+    0%,
+    100% {
+
+        box-shadow:
+            none;
+
+    }
+
+    50% {
+
+        box-shadow:
+            inset 0 0 0 9999px rgba(255,0,40,0.035);
+
+    }
+
+}
+
+
+/* ============================================================
+   032 — MOBILE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .topbar {
+
+        padding:
+            14px;
+
+    }
+
+    .logo {
+
+        width:
+            46px;
+
+        height:
+            46px;
+
+        font-size:
+            23px;
+
+    }
+
+    .title-main {
+
+        font-size:
+            22px;
+
+    }
+
+    .title-sub {
+
+        font-size:
+            9px;
+
+    }
+
+    .card {
+
+        padding:
+            14px;
+
+    }
+
+    .score-card {
+
+        padding:
+            24px 14px;
+
+    }
+
+}
+
+
+/* ============================================================
+   END OF INITIAL STYLE CORE
+   ============================================================ */
 
 </style>
 </head>
@@ -790,1211 +2481,2614 @@ body.blackout #app {
 
 <div id="app">
 
-  <h1>⚠️ DAMAGE PROGRAM™</h1>
+    <header class="topbar glass">
 
-  <div class="subtitle">
-    V4 • DISASTER CONTROL
-  </div>
+        <div class="brand">
 
+            <div class="logo">
+                ⚠️
+            </div>
 
-  <!-- SCORE -->
+            <div>
 
-  <div id="scoreBox">
+                <h1 class="title-main">
+                    DAMAGE PROGRAM™
+                </h1>
 
-    <div id="score">0</div>
+                <div class="title-sub">
+                    ULTIMATE DISASTER CONTROL CENTER
+                </div>
 
-    <div>POINTS</div>
+            </div>
 
-  </div>
+        </div>
 
+        <div class="system-status">
 
-  <!-- OPEN EVENTS -->
+            <span class="system-dot"></span>
 
-  <button id="openEvents">
-    ⚠️ OPEN EVENTS ▼
-  </button>
+            SYSTEM ONLINE
 
+        </div>
 
-  <!-- EVENTS -->
-
-  <div id="eventPanel"></div>
-
-
-  <!-- HISTORY -->
-
-  <div id="historyBox">
-
-    <h2>📋 EVENT HISTORY</h2>
-
-    <div id="history"></div>
-
-  </div>
+    </header>
 
 
-  <!-- RESET -->
-
-  <button
-    id="resetScore"
-    class="resetButton">
-
-    🔄 RESET SCORE
-
-  </button>
+    <div class="main-grid">
 
 
-  <button
-    id="clearHistory"
-    class="resetButton">
-
-    🗑️ CLEAR HISTORY
-
-  </button>
+        <main>
 
 
-  <button
-    id="resetEverything"
-    class="resetButton">
+            <section class="card glass score-card">
 
-    💥 RESET EVERYTHING
+                <div class="score-label">
+                    CURRENT SCORE
+                </div>
 
-  </button>
+                <div
+                    id="score"
+                    class="score-number"
+                >
+                    0
+                </div>
+
+                <div class="score-meta">
+
+                    <span
+                        id="event-count"
+                        class="pill"
+                    >
+                        0 events
+                    </span>
+
+                    <span class="pill">
+                        SIMULATION MODE
+                    </span>
+
+                    <span
+                        id="achievement-pill"
+                        class="pill"
+                    >
+                        0 / 100
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <section
+                class="card glass"
+                style="margin-top:16px;"
+            >
+
+                <div class="section-title">
+
+                    <h2>
+                        EVENT CENTER
+                    </h2>
+
+                    <span>
+                        Tap a category
+                    </span>
+
+                </div>
+
+                <div
+                    id="categories"
+                    class="categories"
+                ></div>
+
+            </section>
+
+
+        </main>
+
+
+        <aside>
+
+
+            <section class="card glass">
+
+                <div class="section-title">
+
+                    <h2>
+                        EVENT HISTORY
+                    </h2>
+
+                    <span id="history-count">
+                        0
+                    </span>
+
+                </div>
+
+                <div
+                    id="history"
+                    class="history"
+                >
+
+                    <div class="history-empty">
+                        No events yet.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section
+                class="card glass"
+                style="margin-top:16px;"
+            >
+
+                <div class="section-title">
+
+                    <h2>
+                        CONTROLS
+                    </h2>
+
+                    <span>
+                        Simulation tools
+                    </span>
+
+                </div>
+
+
+                <div class="control-grid">
+
+                    <button
+                        id="reset-score"
+                        class="control-button"
+                    >
+                        🔄 Reset Score
+                    </button>
+
+
+                    <button
+                        id="clear-history"
+                        class="control-button"
+                    >
+                        🗑️ Clear History
+                    </button>
+
+
+                    <button
+                        id="restore-power"
+                        class="control-button control-restore"
+                    >
+                        🔌 Restore Power
+                    </button>
+
+
+                    <button
+                        id="reset-everything"
+                        class="control-button control-danger"
+                    >
+                        💥 Reset Everything
+                    </button>
+
+                </div>
+
+            </section>
+
+
+        </aside>
+
+
+    </div>
 
 </div>
 
 
-<!-- EFFECTS -->
+<div id="effect-layer"></div>
 
-<div id="effects"></div>
+<div id="toast"></div>
 
 
 <script>
 
-/* =========================================================
-   DAMAGE PROGRAM™ V4
-   SINGLE CORE
-   ========================================================= */
+/* ============================================================
+   DAMAGE PROGRAM™
+   JAVASCRIPT CORE
+   ============================================================ */
 
 
-/* ==============================
-   SCORE
-   ============================== */
+/* ============================================================
+   033 — DOM REFERENCES
+   ============================================================ */
 
-let score = 0;
+const DOM = {
 
+    score:
+        document.getElementById("score"),
 
-/* ==============================
-   EVENT DATA
-   ============================== */
+    eventCount:
+        document.getElementById("event-count"),
 
-const events = {
+    achievementPill:
+        document.getElementById("achievement-pill"),
 
-  "🌪️ TORNADO": [
+    categories:
+        document.getElementById("categories"),
 
-    {
-      code: "NADO",
-      name: "Tornado",
-      points: 1
-    },
+    history:
+        document.getElementById("history"),
 
-    {
-      code: "PDS",
-      name: "PDS",
-      points: 3
-    },
+    historyCount:
+        document.getElementById("history-count"),
 
-    {
-      code: "DSTW",
-      name: "Destructive Severe Thunderstorm Warning",
-      points: 3
-    },
+    effectLayer:
+        document.getElementById("effect-layer"),
 
-    {
-      code: "TE",
-      name: "Tornado Emergency",
-      points: 10
-    },
+    toast:
+        document.getElementById("toast"),
 
-    {
-      code: "NADO-H",
-      name: "Tornado hits house",
-      points: 7
-    },
+    resetScore:
+        document.getElementById("reset-score"),
 
-    {
-      code: "TE-H",
-      name: "Tornado Emergency hits house",
-      points: 15
-    }
+    clearHistory:
+        document.getElementById("clear-history"),
 
-  ],
+    restorePower:
+        document.getElementById("restore-power"),
 
-
-  "🌊 FLOOD": [
-
-    {
-      code: "FW",
-      name: "Flood Watch",
-      points: 1
-    },
-
-    {
-      code: "SFW",
-      name: "Flood Warning",
-      points: 5
-    },
-
-    {
-      code: "FLD",
-      name: "Flood",
-      points: 10
-    },
-
-    {
-      code: "FE",
-      name: "Flood Emergency",
-      points: 20
-    }
-
-  ],
-
-
-  "🌀 HURRICANE": [
-
-    {
-      code: "TWS",
-      name: "Tropical Weather Statement",
-      points: 10
-    },
-
-    {
-      code: "HW",
-      name: "Hurricane Watch",
-      points: 25
-    },
-
-    {
-      code: "HUR",
-      name: "Hurricane",
-      points: 50
-    },
-
-    {
-      code: "HWN",
-      name: "Hurricane Warning",
-      points: 0
-    }
-
-  ],
-
-
-  "☢️ NUKE": [
-
-    {
-      code: "NW",
-      name: "Nuke Watch",
-      points: 50
-    },
-
-    {
-      code: "NUKE",
-      name: "Nuke announced",
-      points: 75
-    },
-
-    {
-      code: "N10",
-      name: "10-minute nuke warning",
-      points: 75
-    },
-
-    {
-      code: "PINK",
-      name: "Pink / purple nuke text",
-      points: 75
-    }
-
-  ],
-
-
-  "💨 WIND / POWER": [
-
-    {
-      code: "EWW",
-      name: "Extreme Wind Warning",
-      points: 20
-    },
-
-    {
-      code: "PO",
-      name: "Power Outage",
-      points: 7
-    },
-
-    {
-      code: "PR",
-      name: "Power Restoration",
-      points: 25
-    },
-
-    {
-      code: "RED",
-      name: "Red server text",
-      points: 5
-    }
-
-  ],
-
-
-  "🧊 HAIL": [
-
-    {
-      code: "1 IN",
-      name: "1 inch hail",
-      points: 1,
-      hail: 1
-    },
-
-    {
-      code: "2 IN",
-      name: "2 inch hail",
-      points: 2,
-      hail: 2
-    },
-
-    {
-      code: "3 IN",
-      name: "3 inch hail",
-      points: 3,
-      hail: 3
-    },
-
-    {
-      code: "4 IN",
-      name: "4 inch hail",
-      points: 4,
-      hail: 4
-    },
-
-    {
-      code: "5 IN",
-      name: "5 inch hail",
-      points: 5,
-      hail: 5
-    },
-
-    {
-      code: "6 IN",
-      name: "6 inch hail",
-      points: 6,
-      hail: 6
-    },
-
-    {
-      code: "7 IN",
-      name: "7 inch hail",
-      points: 7,
-      hail: 7
-    },
-
-    {
-      code: "8 IN",
-      name: "8 inch hail",
-      points: 8,
-      hail: 8
-    }
-
-  ]
+    resetEverything:
+        document.getElementById("reset-everything")
 
 };
 
 
-/* =========================================================
-   BUILD CATEGORIES
-   ========================================================= */
+/* ============================================================
+   034 — STATE
+   ============================================================ */
 
-const eventPanel =
-  document.getElementById("eventPanel");
+const STATE = {
 
+    score:
+        0,
 
-for (
-  const categoryName in events
-) {
+    events:
+        0,
 
-  const category =
-    document.createElement("div");
+    powerOut:
+        false,
 
-  category.className =
-    "category";
+    achievements:
+        new Set(),
 
+    history:
+        [],
 
-  const categoryButton =
-    document.createElement("button");
+    runningEffects:
+        new Set()
 
-  categoryButton.className =
-    "categoryButton";
-
-  categoryButton.textContent =
-    categoryName + " ▼";
+};
 
 
-  const eventList =
-    document.createElement("div");
+/* ============================================================
+   035 — EVENT DATA
+   ============================================================ */
 
-  eventList.className =
-    "events";
+const EVENT_DATA = {
+
+    Tornado: {
+
+        icon:
+            "🌪️",
+
+        description:
+            "Rotating funnel events",
+
+        events: [
+
+            {
+                code:
+                    "NADO",
+
+                name:
+                    "Tornado",
+
+                points:
+                    1,
+
+                type:
+                    "tornado",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "PDS",
+
+                name:
+                    "Particularly Dangerous Situation",
+
+                points:
+                    3,
+
+                type:
+                    "tornado",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "DSTW",
+
+                name:
+                    "Destructive Severe Thunderstorm",
+
+                points:
+                    3,
+
+                type:
+                    "wind",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "TE",
+
+                name:
+                    "Tornado Emergency",
+
+                points:
+                    10,
+
+                type:
+                    "tornado",
+
+                danger:
+                    true
+
+            },
+
+            {
+                code:
+                    "NADO-H",
+
+                name:
+                    "Tornado hits house",
+
+                points:
+                    7,
+
+                type:
+                    "tornado-house",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "TE-H",
+
+                name:
+                    "Tornado Emergency + house",
+
+                points:
+                    15,
+
+                type:
+                    "tornado-house",
+
+                danger:
+                    true
+
+            }
+
+        ]
+
+    },
 
 
-  categoryButton.onclick = () => {
+    Flood: {
 
-    const open =
-      eventList.classList.toggle("open");
+        icon:
+            "🌊",
 
-    categoryButton.textContent =
-      categoryName +
-      (open ? " ▲" : " ▼");
+        description:
+            "Rising-water events",
 
-  };
+        events: [
+
+            {
+                code:
+                    "FW",
+
+                name:
+                    "Flood Watch",
+
+                points:
+                    1,
+
+                type:
+                    "flood",
+
+                floodLevel:
+                    12,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "SFW",
+
+                name:
+                    "Flood Warning",
+
+                points:
+                    5,
+
+                type:
+                    "flood",
+
+                floodLevel:
+                    28,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "FLD",
+
+                name:
+                    "Flood",
+
+                points:
+                    10,
+
+                type:
+                    "flood",
+
+                floodLevel:
+                    50,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "FE",
+
+                name:
+                    "Flood Emergency",
+
+                points:
+                    20,
+
+                type:
+                    "flood",
+
+                floodLevel:
+                    76,
+
+                danger:
+                    true
+
+            }
+
+        ]
+
+    },
 
 
-  for (
-    const event of events[categoryName]
-  ) {
+    Hurricane: {
+
+        icon:
+            "🌀",
+
+        description:
+            "Spiral storm events",
+
+        events: [
+
+            {
+                code:
+                    "TWS",
+
+                name:
+                    "Tropical Weather Statement",
+
+                points:
+                    10,
+
+                type:
+                    "hurricane",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "HW",
+
+                name:
+                    "Hurricane Watch",
+
+                points:
+                    25,
+
+                type:
+                    "hurricane",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "HUR",
+
+                name:
+                    "Hurricane",
+
+                points:
+                    50,
+
+                type:
+                    "hurricane",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "HWN",
+
+                name:
+                    "Hurricane Warning",
+
+                points:
+                    60,
+
+                type:
+                    "hurricane",
+
+                danger:
+                    true
+
+            }
+
+        ]
+
+    },
+
+
+    Nuke: {
+
+        icon:
+            "☢️",
+
+        description:
+            "Fictional simulation events",
+
+        events: [
+
+            {
+                code:
+                    "NW",
+
+                name:
+                    "Nuclear Watch",
+
+                points:
+                    50,
+
+                type:
+                    "warning",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "NUKE",
+
+                name:
+                    "Nuclear Event",
+
+                points:
+                    75,
+
+                type:
+                    "nuke",
+
+                danger:
+                    true
+
+            },
+
+            {
+                code:
+                    "N10",
+
+                name:
+                    "10-minute Simulation Alert",
+
+                points:
+                    75,
+
+                type:
+                    "nuke",
+
+                danger:
+                    true
+
+            },
+
+            {
+                code:
+                    "PINK",
+
+                name:
+                    "Pink / Purple Alert",
+
+                points:
+                    75,
+
+                type:
+                    "pink",
+
+                danger:
+                    false
+
+            }
+
+        ]
+
+    },
+
+
+    "Wind / Power": {
+
+        icon:
+            "💨",
+
+        description:
+            "Extreme gusts and electrical events",
+
+        events: [
+
+            {
+                code:
+                    "EWW",
+
+                name:
+                    "Extreme Wind Warning",
+
+                points:
+                    20,
+
+                type:
+                    "eww",
+
+                danger:
+                    true
+
+            },
+
+            {
+                code:
+                    "PO",
+
+                name:
+                    "Power Outage",
+
+                points:
+                    7,
+
+                type:
+                    "power-out",
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "PR",
+
+                name:
+                    "Power Restoration",
+
+                points:
+                    25,
+
+                type:
+                    "power-restore",
+
+                danger:
+                    false
+
+            }
+
+        ]
+
+    },
+
+
+    Hail: {
+
+        icon:
+            "🧊",
+
+        description:
+            "Hail from 1 to 8 inches",
+
+        events: [
+
+            {
+                code:
+                    "1 IN",
+
+                name:
+                    "1 inch hail",
+
+                points:
+                    1,
+
+                type:
+                    "hail",
+
+                size:
+                    1,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "2 IN",
+
+                name:
+                    "2 inch hail",
+
+                points:
+                    2,
+
+                type:
+                    "hail",
+
+                size:
+                    2,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "3 IN",
+
+                name:
+                    "3 inch hail",
+
+                points:
+                    3,
+
+                type:
+                    "hail",
+
+                size:
+                    3,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "4 IN",
+
+                name:
+                    "4 inch hail",
+
+                points:
+                    4,
+
+                type:
+                    "hail",
+
+                size:
+                    4,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "5 IN",
+
+                name:
+                    "5 inch hail",
+
+                points:
+                    5,
+
+                type:
+                    "hail",
+
+                size:
+                    5,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "6 IN",
+
+                name:
+                    "6 inch hail",
+
+                points:
+                    6,
+
+                type:
+                    "hail",
+
+                size:
+                    6,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "7 IN",
+
+                name:
+                    "7 inch hail",
+
+                points:
+                    7,
+
+                type:
+                    "hail",
+
+                size:
+                    7,
+
+                danger:
+                    false
+
+            },
+
+            {
+                code:
+                    "8 IN",
+
+                name:
+                    "8 inch hail",
+
+                points:
+                    8,
+
+                type:
+                    "hail",
+
+                size:
+                    8,
+
+                danger:
+                    true
+
+            }
+
+        ]
+
+    }
+
+};
+
+
+/* ============================================================
+   036 — ACHIEVEMENTS
+   ============================================================ */
+
+const ACHIEVEMENTS = [
+
+    {
+        amount:
+            1,
+
+        title:
+            "FIRST ALERT",
+
+        description:
+            "Trigger your first event."
+
+    },
+
+    {
+        amount:
+            5,
+
+        title:
+            "GETTING STARTED",
+
+        description:
+            "Trigger 5 events."
+
+    },
+
+    {
+        amount:
+            10,
+
+        title:
+            "DISASTER REGULAR",
+
+        description:
+            "Trigger 10 events."
+
+    },
+
+    {
+        amount:
+            25,
+
+        title:
+            "STORM CHASER",
+
+        description:
+            "Trigger 25 events."
+
+    },
+
+    {
+        amount:
+            50,
+
+        title:
+            "CHAOS COORDINATOR",
+
+        description:
+            "Trigger 50 events."
+
+    },
+
+    {
+        amount:
+            75,
+
+        title:
+            "YOU AGAIN?!",
+
+        description:
+            "Trigger 75 events."
+
+    },
+
+    {
+        amount:
+            100,
+
+        title:
+            "DAMAGE PROGRAM LEGEND",
+
+        description:
+            "Trigger 100 events."
+
+    }
+
+];
+
+
+/* ============================================================
+   037 — BUILD CATEGORIES
+   ============================================================ */
+
+function buildCategories() {
+
+    DOM.categories.innerHTML =
+        "";
+
+    Object.entries(EVENT_DATA).forEach(
+        ([categoryName, categoryData]) => {
+
+            const category =
+                document.createElement("div");
+
+            category.className =
+                "category";
+
+
+            const header =
+                document.createElement("button");
+
+            header.className =
+                "category-header";
+
+            header.type =
+                "button";
+
+
+            header.innerHTML = `
+
+                <span class="category-left">
+
+                    <span class="category-icon">
+                        ${categoryData.icon}
+                    </span>
+
+                    <span>
+
+                        <span class="category-name">
+                            ${categoryName}
+                        </span>
+
+                        <span class="category-description">
+                            ${categoryData.description}
+                        </span>
+
+                    </span>
+
+                </span>
+
+                <span class="category-arrow">
+                    ⌄
+                </span>
+
+            `;
+
+
+            const eventGrid =
+                document.createElement("div");
+
+            eventGrid.className =
+                "event-grid";
+
+
+            header.addEventListener(
+                "click",
+                () => {
+
+                    category.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            categoryData.events.forEach(
+                eventData => {
+
+                    const button =
+                        createEventButton(
+                            eventData
+                        );
+
+                    eventGrid.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+
+            category.appendChild(
+                header
+            );
+
+            category.appendChild(
+                eventGrid
+            );
+
+            DOM.categories.appendChild(
+                category
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   038 — EVENT BUTTON
+   ============================================================ */
+
+function createEventButton(eventData) {
 
     const button =
-      document.createElement("button");
+        document.createElement("button");
+
+    button.type =
+        "button";
 
     button.className =
-      "eventButton";
+        "event-button";
 
 
     button.innerHTML = `
-      <strong>${event.code}</strong>
-      <br>
-      <small>
-        ${event.name}
-        <br>
-        +${event.points} points
-      </small>
+
+        <span class="event-code">
+            ${eventData.code}
+        </span>
+
+        <span class="event-description">
+            ${eventData.name}
+        </span>
+
+        <span class="event-points">
+            +${eventData.points} points
+        </span>
+
     `;
 
 
-    button.onclick = () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-      activateEvent(
-        event,
-        button
-      );
+            triggerEvent(
+                eventData,
+                button
+            );
 
-    };
-
-
-    eventList.appendChild(button);
-
-  }
+        }
+    );
 
 
-  category.appendChild(categoryButton);
-
-  category.appendChild(eventList);
-
-  eventPanel.appendChild(category);
+    return button;
 
 }
 
 
-/* =========================================================
-   OPEN EVENTS
-   ========================================================= */
-
-document
-  .getElementById("openEvents")
-  .onclick = () => {
-
-    const open =
-      eventPanel.classList.toggle("open");
-
-    document
-      .getElementById("openEvents")
-      .textContent =
-      open
-        ? "⚠️ CLOSE EVENTS ▲"
-        : "⚠️ OPEN EVENTS ▼";
-
-  };
-
-
-/* =========================================================
-   ACTIVATE EVENT
-   ========================================================= */
-
-function activateEvent(event, button) {
-
-  score += event.points;
-
-  document
-    .getElementById("score")
-    .textContent = score;
-
-
-  addHistory(event);
-
-
-  /* EFFECT */
-
-  if (event.hail) {
-
-    hailEffect(event.hail);
-
-  }
-
-  else if (event.code === "NADO") {
-
-    tornadoEffect(1, button);
-
-  }
-
-  else if (
-    event.code === "PDS" ||
-    event.code === "DSTW"
-  ) {
-
-    tornadoEffect(3, button);
-
-  }
-
-  else if (event.code === "TE") {
-
-    tornadoEffect(10, button);
-
-  }
-
-  else if (
-    event.code === "NADO-H" ||
-    event.code === "TE-H"
-  ) {
-
-    tornadoEffect(
-      event.points,
-      button
-    );
-
-    document.body.classList.add(
-      "shake"
-    );
-
-    setTimeout(() => {
-      document.body.classList.remove(
-        "shake"
-      );
-    }, 800);
-
-  }
-
-  else if (
-    event.code === "FW" ||
-    event.code === "SFW" ||
-    event.code === "FLD" ||
-    event.code === "FE"
-  ) {
-
-    const heights = {
-      FW: 10,
-      SFW: 25,
-      FLD: 50,
-      FE: 75
-    };
-
-    floodEffect(
-      heights[event.code]
-    );
-
-  }
-
-  else if (
-    event.code === "TWS" ||
-    event.code === "HW" ||
-    event.code === "HUR" ||
-    event.code === "HWN"
-  ) {
-
-    hurricaneEffect();
-
-  }
-
-  else if (event.code === "NW") {
-
-    warning("☢️ NUKE WATCH");
-
-  }
-
-  else if (event.code === "NUKE") {
-
-    nukeEffect();
-
-  }
-
-  else if (event.code === "N10") {
-
-    warning(
-      "☢️ 10-MINUTE NUKE WARNING"
-    );
-
-  }
-
-  else if (event.code === "PINK") {
-
-    warning(
-      "💜 ☢️ NUKE ALERT ☢️ 💜"
-    );
-
-  }
-
-  else if (event.code === "EWW") {
-
-    windEffect();
-
-  }
-
-  else if (event.code === "PO") {
-
-    powerOutage();
-
-  }
-
-  else if (event.code === "PR") {
-
-    powerRestore();
-
-  }
-
-  else if (event.code === "RED") {
-
-    warning(
-      "🔴 RED SERVER TEXT"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   HISTORY
-   ========================================================= */
-
-function addHistory(event) {
-
-  const item =
-    document.createElement("div");
-
-  item.className =
-    "historyItem";
-
-
-  item.innerHTML = `
-    <strong>${event.code}</strong>
-    <span>
-      +${event.points}
-    </span>
-  `;
-
-
-  document
-    .getElementById("history")
-    .prepend(item);
-
-}
-
-
-/* =========================================================
-   TORNADO
-   ========================================================= */
-
-function tornadoEffect(
-  pickupAmount,
-  sourceButton
+/* ============================================================
+   039 — TRIGGER EVENT
+   ============================================================ */
+
+function triggerEvent(
+    eventData,
+    sourceButton
 ) {
 
-  const tornado =
-    document.createElement("div");
+    STATE.score +=
+        eventData.points;
 
-  tornado.className =
-    "tornado";
+    STATE.events +=
+        1;
 
 
-  if (pickupAmount >= 3) {
+    STATE.history.unshift({
 
-    tornado.classList.add(
-      "big"
+        code:
+            eventData.code,
+
+        name:
+            eventData.name,
+
+        points:
+            eventData.points,
+
+        time:
+            new Date()
+
+    });
+
+
+    updateInterface();
+
+    addHistoryEntry(
+        eventData
     );
 
-  }
 
-
-  document
-    .getElementById("effects")
-    .appendChild(tornado);
-
-
-  /* PICK UP BUTTONS */
-
-  const buttons =
-    Array.from(
-      document.querySelectorAll(
-        ".eventButton"
-      )
+    runEventEffect(
+        eventData,
+        sourceButton
     );
 
 
-  const picked =
-    buttons
-      .sort(
-        () =>
-          Math.random() - .5
-      )
-      .slice(
-        0,
+    if (
+        eventData.danger ===
+        true
+    ) {
+
+        showCriticalAlert(
+            eventData
+        );
+
+    }
+
+
+    checkAchievements();
+
+}
+
+
+/* ============================================================
+   040 — INTERFACE UPDATE
+   ============================================================ */
+
+function updateInterface() {
+
+    DOM.score.textContent =
+        STATE.score.toLocaleString();
+
+    DOM.eventCount.textContent =
+        `${STATE.events} events`;
+
+    DOM.historyCount.textContent =
+        STATE.history.length;
+
+    DOM.achievementPill.textContent =
+        `${Math.min(STATE.events,100)} / 100`;
+
+}
+
+
+/* ============================================================
+   041 — HISTORY
+   ============================================================ */
+
+function addHistoryEntry(
+    eventData
+) {
+
+    const empty =
+        DOM.history.querySelector(
+            ".history-empty"
+        );
+
+
+    if (empty) {
+
+        DOM.history.innerHTML =
+            "";
+
+    }
+
+
+    const row =
+        document.createElement(
+            "div"
+        );
+
+    row.className =
+        "history-row";
+
+
+    row.innerHTML = `
+
+        <span>
+            <b>${eventData.code}</b>
+            —
+            ${eventData.name}
+        </span>
+
+        <span class="history-points">
+            +${eventData.points}
+        </span>
+
+    `;
+
+
+    DOM.history.prepend(
+        row
+    );
+
+}
+
+
+/* ============================================================
+   042 — CRITICAL ALERT
+   ============================================================ */
+
+function showCriticalAlert(
+    eventData
+) {
+
+    const alert =
+        document.createElement(
+            "div"
+        );
+
+    alert.className =
+        "critical-alert";
+
+
+    alert.innerHTML = `
+
+        <span class="critical-alert-title">
+            ⚠️ CRITICAL EVENT
+        </span>
+
+        <span class="critical-alert-sub">
+            ${eventData.name.toUpperCase()}
+        </span>
+
+    `;
+
+
+    DOM.effectLayer.appendChild(
+        alert
+    );
+
+
+    document.body.classList.add(
+        "critical-pulse"
+    );
+
+
+    setTimeout(
+        () => {
+
+            document.body.classList.remove(
+                "critical-pulse"
+            );
+
+        },
+        650
+    );
+
+
+    setTimeout(
+        () => {
+
+            alert.remove();
+
+        },
+        2800
+    );
+
+}
+
+
+/* ============================================================
+   043 — ACHIEVEMENTS
+   ============================================================ */
+
+function checkAchievements() {
+
+    ACHIEVEMENTS.forEach(
+        achievement => {
+
+            if (
+                STATE.events >=
+                achievement.amount
+            ) {
+
+                if (
+                    !STATE.achievements.has(
+                        achievement.amount
+                    )
+                ) {
+
+                    STATE.achievements.add(
+                        achievement.amount
+                    );
+
+                    showAchievement(
+                        achievement
+                    );
+
+                }
+
+            }
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   044 — ACHIEVEMENT POPUP
+   ============================================================ */
+
+function showAchievement(
+    achievement
+) {
+
+    const popup =
+        document.createElement(
+            "div"
+        );
+
+
+    popup.className =
+        "critical-alert pink-purple-alert";
+
+
+    popup.innerHTML = `
+
+        <span class="critical-alert-title">
+            🏆 ${achievement.title}
+        </span>
+
+        <span class="critical-alert-sub">
+            ${achievement.description}
+        </span>
+
+    `;
+
+
+    DOM.effectLayer.appendChild(
+        popup
+    );
+
+
+    setTimeout(
+        () => {
+
+            popup.remove();
+
+        },
+        3000
+    );
+
+}
+
+
+/* ============================================================
+   045 — EFFECT ROUTER
+   ============================================================ */
+
+function runEventEffect(
+    eventData,
+    sourceButton
+) {
+
+    switch (
+        eventData.type
+    ) {
+
+        case "tornado":
+
+            createTornado(
+                eventData,
+                false
+            );
+
+            break;
+
+
+        case "tornado-house":
+
+            createTornado(
+                eventData,
+                true
+            );
+
+            break;
+
+
+        case "wind":
+
+            createWind(
+                18
+            );
+
+            break;
+
+
+        case "eww":
+
+            createExtremeWind();
+
+            break;
+
+
+        case "flood":
+
+            createFlood(
+                eventData.floodLevel
+            );
+
+            break;
+
+
+        case "hurricane":
+
+            createHurricane();
+
+            break;
+
+
+        case "nuke":
+
+            createNuke();
+
+            break;
+
+
+        case "warning":
+
+            showToast(
+                "⚠️ Simulation warning triggered."
+            );
+
+            break;
+
+
+        case "pink":
+
+            createPinkPurpleAlert();
+
+            break;
+
+
+        case "power-out":
+
+            createPowerOutage();
+
+            break;
+
+
+        case "power-restore":
+
+            restorePower();
+
+            break;
+
+
+        case "hail":
+
+            createHail(
+                eventData.size
+            );
+
+            break;
+
+    }
+
+}
+
+
+/* ============================================================
+   046 — TORNADO
+   ============================================================ */
+
+function createTornado(
+    eventData,
+    hitsHouse
+) {
+
+    const tornado =
+        document.createElement(
+            "div"
+        );
+
+    tornado.className =
+        "tornado";
+
+
+    if (
+        eventData.points >=
+        3
+    ) {
+
+        tornado.classList.add(
+            "large"
+        );
+
+    }
+
+
+    const funnel =
+        document.createElement(
+            "div"
+        );
+
+    funnel.className =
+        "tornado-funnel";
+
+
+    const dust =
+        document.createElement(
+            "div"
+        );
+
+    dust.className =
+        "tornado-dust";
+
+
+    tornado.appendChild(
+        funnel
+    );
+
+    tornado.appendChild(
+        dust
+    );
+
+
+    DOM.effectLayer.appendChild(
+        tornado
+    );
+
+
+    createWind(
+        eventData.points >= 7
+            ? 28
+            : 14
+    );
+
+
+    if (
+        hitsHouse
+    ) {
+
+        showToast(
+            "🏠 SIMULATION: structure impact"
+        );
+
+    }
+
+
+    if (
+        eventData.points >= 7
+    ) {
+
+        createButtonChaos(
+            eventData.points
+        );
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            tornado.remove();
+
+        },
+        3500
+    );
+
+}
+
+
+/* ============================================================
+   047 — BUTTON CHAOS
+   ============================================================ */
+
+function createButtonChaos(
+    amount
+) {
+
+    const buttons =
+        Array.from(
+            document.querySelectorAll(
+                ".event-button"
+            )
+        );
+
+
+    const shuffled =
+        buttons.sort(
+            () =>
+                Math.random() - 0.5
+        );
+
+
+    const amountToMove =
         Math.min(
-          pickupAmount,
-          buttons.length
-        )
-      );
+            amount,
+            shuffled.length
+        );
 
 
-  picked.forEach(
-    (button, index) => {
+    for (
+        let i = 0;
+        i < amountToMove;
+        i++
+    ) {
 
-      setTimeout(() => {
+        const button =
+            shuffled[i];
+
+
+        const x =
+            Math.round(
+                (Math.random() * 260) - 130
+            );
+
+        const y =
+            Math.round(
+                (Math.random() * -180) - 40
+            );
+
+
+        button.style.setProperty(
+            "--fly-x",
+            `${x}px`
+        );
+
+
+        button.style.setProperty(
+            "--fly-y",
+            `${y}px`
+        );
+
 
         button.classList.add(
-          "flying"
+            "flying-button"
         );
 
-      }, index * 100);
 
-    }
-  );
+        setTimeout(
+            () => {
 
+                button.classList.remove(
+                    "flying-button"
+                );
 
-  windEffect();
-
-
-  setTimeout(() => {
-
-    picked.forEach(
-      button => {
-
-        button.classList.remove(
-          "flying"
+            },
+            1900
         );
 
-      }
-    );
-
-    tornado.remove();
-
-  }, 3200);
+    }
 
 }
 
 
-/* =========================================================
-   WIND
-   ========================================================= */
+/* ============================================================
+   048 — WIND
+   ============================================================ */
 
-function windEffect() {
+function createWind(
+    amount = 15
+) {
 
-  const effects =
-    document.getElementById(
-      "effects"
-    );
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
 
-
-  for (
-    let i = 0;
-    i < 15;
-    i++
-  ) {
-
-    const wind =
-      document.createElement(
-        "div"
-      );
-
-    wind.className =
-      "wind";
+        const gust =
+            document.createElement(
+                "div"
+            );
 
 
-    wind.style.top =
-      Math.random() * 100 +
-      "%";
+        gust.className =
+            "wind-gust";
 
 
-    wind.style.width =
-      60 +
-      Math.random() * 150 +
-      "px";
+        gust.style.top =
+            `${Math.random() * 100}%`;
 
 
-    effects.appendChild(
-      wind
-    );
+        gust.style.width =
+            `${60 + Math.random() * 190}px`;
 
 
-    setTimeout(
-      () => wind.remove(),
-      1300
-    );
-
-  }
-
-}
+        gust.style.animationDelay =
+            `${Math.random() * 0.45}s`;
 
 
-/* =========================================================
-   FLOOD
-   ========================================================= */
-
-function floodEffect(height) {
-
-  const effects =
-    document.getElementById(
-      "effects"
-    );
+        DOM.effectLayer.appendChild(
+            gust
+        );
 
 
-  const water =
-    document.createElement(
-      "div"
-    );
+        setTimeout(
+            () => {
 
-  water.className =
-    "flood";
+                gust.remove();
 
-
-  effects.appendChild(
-    water
-  );
-
-
-  rainEffect(
-    height >= 50
-      ? 45
-      : 25
-  );
-
-
-  requestAnimationFrame(
-    () => {
-
-      water.style.height =
-        height + "%";
+            },
+            1700
+        );
 
     }
-  );
-
-
-  setTimeout(() => {
-
-    water.style.height =
-      "0";
-
-    setTimeout(
-      () => water.remove(),
-      2500
-    );
-
-  }, 4500);
 
 }
 
 
-/* =========================================================
-   RAIN
-   ========================================================= */
+/* ============================================================
+   049 — EXTREME WIND
+   ============================================================ */
 
-function rainEffect(amount) {
+function createExtremeWind() {
 
-  const effects =
-    document.getElementById(
-      "effects"
+    createWind(
+        38
     );
 
 
-  for (
-    let i = 0;
-    i < amount;
-    i++
-  ) {
+    const debrisTypes = [
 
-    const drop =
-      document.createElement(
-        "div"
-      );
+        "🍃",
+        "🌿",
+        "📄",
+        "🪵",
+        "🍂"
 
-    drop.className =
-      "rain";
+    ];
 
 
-    drop.style.left =
-      Math.random() * 100 +
-      "%";
+    for (
+        let i = 0;
+        i < 15;
+        i++
+    ) {
+
+        const debris =
+            document.createElement(
+                "div"
+            );
 
 
-    drop.style.animationDelay =
-      Math.random() +
-      "s";
+        debris.className =
+            "wind-debris";
 
 
-    effects.appendChild(
-      drop
-    );
+        debris.textContent =
+            debrisTypes[
+                Math.floor(
+                    Math.random() *
+                    debrisTypes.length
+                )
+            ];
 
 
-    setTimeout(
-      () => drop.remove(),
-      1800
-    );
-
-  }
-
-}
+        debris.style.top =
+            `${Math.random() * 92}%`;
 
 
-/* =========================================================
-   HAIL
-   ========================================================= */
-
-function hailEffect(size) {
-
-  const effects =
-    document.getElementById(
-      "effects"
-    );
+        debris.style.setProperty(
+            "--debris-y",
+            `${Math.random() * 200 - 100}px`
+        );
 
 
-  /*
-    Bigger hail = bigger balls,
-    not an unlimited number
-    of objects.
-  */
-
-  const amount =
-    Math.min(
-      35,
-      10 + size * 2
-    );
+        debris.style.animationDelay =
+            `${Math.random() * 0.5}s`;
 
 
-  for (
-    let i = 0;
-    i < amount;
-    i++
-  ) {
-
-    const hail =
-      document.createElement(
-        "div"
-      );
-
-    hail.className =
-      "hail";
+        DOM.effectLayer.appendChild(
+            debris
+        );
 
 
-    const pixels =
-      5 + size * 2;
+        setTimeout(
+            () => {
+
+                debris.remove();
+
+            },
+            2200
+        );
+
+    }
 
 
-    hail.style.width =
-      pixels + "px";
-
-    hail.style.height =
-      pixels + "px";
-
-
-    hail.style.left =
-      Math.random() * 100 +
-      "%";
-
-
-    hail.style.animationDuration =
-      .6 +
-      Math.random() * .5 +
-      "s";
-
-
-    effects.appendChild(
-      hail
+    document.body.classList.add(
+        "screen-shake"
     );
 
 
     setTimeout(
-      () => hail.remove(),
-      1600
-    );
+        () => {
 
-  }
+            document.body.classList.remove(
+                "screen-shake"
+            );
+
+        },
+        800
+    );
 
 }
 
 
-/* =========================================================
-   HURRICANE
-   ========================================================= */
+/* ============================================================
+   050 — FLOOD
+   ============================================================ */
 
-function hurricaneEffect() {
+function createFlood(
+    targetHeight
+) {
 
-  const effects =
-    document.getElementById(
-      "effects"
+    const flood =
+        document.createElement(
+            "div"
+        );
+
+    flood.className =
+        "flood-layer";
+
+
+    const wave =
+        document.createElement(
+            "div"
+        );
+
+    wave.className =
+        "flood-wave";
+
+
+    flood.appendChild(
+        wave
     );
 
 
-  const storm =
-    document.createElement(
-      "div"
+    DOM.effectLayer.appendChild(
+        flood
     );
 
-  storm.className =
-    "hurricane";
+
+    requestAnimationFrame(
+        () => {
+
+            flood.style.height =
+                `${targetHeight}%`;
+
+        }
+    );
 
 
-  effects.appendChild(
-    storm
-  );
+    createRain(
+        targetHeight >= 45
+            ? 50
+            : 28
+    );
 
 
-  rainEffect(60);
+    setTimeout(
+        () => {
+
+            flood.style.height =
+                "0%";
 
 
-  setTimeout(
-    () => storm.remove(),
-    2800
-  );
+            setTimeout(
+                () => {
+
+                    flood.remove();
+
+                },
+                3100
+            );
+
+        },
+        4300
+    );
 
 }
 
 
-/* =========================================================
-   NUKE
-   ========================================================= */
+/* ============================================================
+   051 — RAIN
+   ============================================================ */
 
-function nukeEffect() {
+function createRain(
+    amount
+) {
 
-  const effects =
-    document.getElementById(
-      "effects"
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const drop =
+            document.createElement(
+                "div"
+            );
+
+
+        drop.className =
+            "rain-drop";
+
+
+        drop.style.left =
+            `${Math.random() * 100}%`;
+
+
+        drop.style.animationDelay =
+            `${Math.random() * 0.8}s`;
+
+
+        DOM.effectLayer.appendChild(
+            drop
+        );
+
+
+        setTimeout(
+            () => {
+
+                drop.remove();
+
+            },
+            1900
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   052 — HURRICANE
+   ============================================================ */
+
+function createHurricane() {
+
+    const hurricane =
+        document.createElement(
+            "div"
+        );
+
+    hurricane.className =
+        "hurricane";
+
+
+    const eye =
+        document.createElement(
+            "div"
+        );
+
+    eye.className =
+        "hurricane-eye";
+
+
+    hurricane.appendChild(
+        eye
     );
 
 
-  const nuke =
-    document.createElement(
-      "div"
+    DOM.effectLayer.appendChild(
+        hurricane
     );
 
-  nuke.className =
-    "nuke";
 
-  nuke.textContent =
-    "☢️";
-
-
-  effects.appendChild(
-    nuke
-  );
+    createRain(
+        65
+    );
 
 
-  setTimeout(() => {
+    setTimeout(
+        () => {
 
-    nuke.remove();
+            hurricane.remove();
 
+        },
+        4400
+    );
+
+}
+
+
+/* ============================================================
+   053 — HAIL
+   ============================================================ */
+
+function createHail(
+    size
+) {
+
+    const amount =
+        Math.min(
+            50,
+            12 + size * 4
+        );
+
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        const hail =
+            document.createElement(
+                "div"
+            );
+
+
+        hail.className =
+            "hailstone";
+
+
+        const pixelSize =
+            4 + size * 2.4;
+
+
+        hail.style.width =
+            `${pixelSize}px`;
+
+
+        hail.style.height =
+            `${pixelSize}px`;
+
+
+        hail.style.left =
+            `${Math.random() * 100}%`;
+
+
+        hail.style.animationDelay =
+            `${Math.random() * 0.55}s`;
+
+
+        DOM.effectLayer.appendChild(
+            hail
+        );
+
+
+        setTimeout(
+            () => {
+
+                hail.remove();
+
+            },
+            1900
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   054 — NUKE SIMULATION
+   ============================================================ */
+
+function createNuke() {
+
+    const object =
+        document.createElement(
+            "div"
+        );
+
+    object.className =
+        "nuke-object";
+
+    object.textContent =
+        "☢️";
+
+
+    DOM.effectLayer.appendChild(
+        object
+    );
+
+
+    setTimeout(
+        () => {
+
+            object.remove();
+
+            createNukeExplosion();
+
+        },
+        1200
+    );
+
+}
+
+
+/* ============================================================
+   055 — NUKE EXPLOSION
+   ============================================================ */
+
+function createNukeExplosion() {
 
     const explosion =
-      document.createElement(
-        "div"
-      );
+        document.createElement(
+            "div"
+        );
 
     explosion.className =
-      "explosion";
+        "nuke-explosion";
 
 
-    effects.appendChild(
-      explosion
+    DOM.effectLayer.appendChild(
+        explosion
     );
 
 
     document.body.classList.add(
-      "shake"
+        "screen-shake"
     );
-
-
-    setTimeout(() => {
-
-      document.body.classList.remove(
-        "shake"
-      );
-
-    }, 800);
 
 
     setTimeout(
-      () => explosion.remove(),
-      1500
+        () => {
+
+            document.body.classList.remove(
+                "screen-shake"
+            );
+
+        },
+        800
     );
 
-  }, 1200);
+
+    setTimeout(
+        () => {
+
+            explosion.remove();
+
+        },
+        1600
+    );
 
 }
 
 
-/* =========================================================
-   WARNING
-   ========================================================= */
+/* ============================================================
+   056 — PINK / PURPLE
+   ============================================================ */
 
-function warning(text) {
+function createPinkPurpleAlert() {
 
-  const element =
-    document.createElement(
-      "div"
+    const alert =
+        document.createElement(
+            "div"
+        );
+
+
+    alert.className =
+        "critical-alert pink-purple-alert";
+
+
+    alert.innerHTML = `
+
+        <span class="critical-alert-title">
+            💗💜 CHAOS ALERT 💜💗
+        </span>
+
+        <span class="critical-alert-sub">
+            FICTIONAL PINK / PURPLE SIMULATION EVENT
+        </span>
+
+    `;
+
+
+    DOM.effectLayer.appendChild(
+        alert
     );
 
-  element.className =
-    "warning";
 
-  element.textContent =
-    text;
+    setTimeout(
+        () => {
 
+            alert.remove();
 
-  document
-    .getElementById("effects")
-    .appendChild(
-      element
+        },
+        3100
     );
-
-
-  setTimeout(
-    () => element.remove(),
-    2200
-  );
 
 }
 
 
-/* =========================================================
-   POWER OUTAGE
-   ========================================================= */
+/* ============================================================
+   057 — POWER OUTAGE
+   ============================================================ */
 
-function powerOutage() {
+function createPowerOutage() {
 
-  document.body.classList.add(
-    "flicker"
-  );
+    if (
+        STATE.powerOut
+    ) {
+
+        showToast(
+            "⚡ POWER IS ALREADY OUT"
+        );
+
+        return;
+
+    }
 
 
-  setTimeout(() => {
+    STATE.powerOut =
+        true;
 
-    document.body.classList.remove(
-      "flicker"
-    );
 
     document.body.classList.add(
-      "blackout"
+        "power-flicker"
     );
 
-  }, 1500);
+
+    setTimeout(
+        () => {
+
+            document.body.classList.remove(
+                "power-flicker"
+            );
+
+            document.body.classList.add(
+                "power-out"
+            );
+
+        },
+        650
+    );
+
+
+    const message =
+        document.createElement(
+            "div"
+        );
+
+
+    message.className =
+        "power-message";
+
+
+    message.textContent =
+        "⚡ POWER OUTAGE — SIMULATION";
+
+
+    DOM.effectLayer.appendChild(
+        message
+    );
+
+
+    setTimeout(
+        () => {
+
+            message.remove();
+
+        },
+        2300
+    );
 
 }
 
 
-/* =========================================================
-   POWER RESTORATION
-   ========================================================= */
+/* ============================================================
+   058 — RESTORE POWER
+   ============================================================ */
 
-function powerRestore() {
+function restorePower() {
 
-  document.body.classList.remove(
-    "blackout"
-  );
+    STATE.powerOut =
+        false;
 
 
-  document.body.classList.remove(
-    "flicker"
-  );
+    document.body.classList.remove(
+        "power-out"
+    );
+
+
+    document.body.classList.remove(
+        "power-flicker"
+    );
+
+
+    showToast(
+        "🔌 POWER RESTORED"
+    );
 
 }
 
 
-/* =========================================================
-   RESET SCORE
-   ========================================================= */
+/* ============================================================
+   059 — TOAST
+   ============================================================ */
 
-document
-  .getElementById("resetScore")
-  .onclick = () => {
-
-    score = 0;
-
-    document
-      .getElementById("score")
-      .textContent = "0";
-
-  };
+let toastTimer =
+    null;
 
 
-/* =========================================================
-   CLEAR HISTORY
-   ========================================================= */
+function showToast(
+    message
+) {
 
-document
-  .getElementById("clearHistory")
-  .onclick = () => {
-
-    document
-      .getElementById("history")
-      .innerHTML = "";
-
-  };
+    DOM.toast.textContent =
+        message;
 
 
-/* =========================================================
-   RESET EVERYTHING
-   ========================================================= */
-
-document
-  .getElementById("resetEverything")
-  .onclick = () => {
-
-    score = 0;
-
-
-    document
-      .getElementById("score")
-      .textContent = "0";
-
-
-    document
-      .getElementById("history")
-      .innerHTML = "";
-
-
-    document
-      .getElementById("effects")
-      .innerHTML = "";
-
-
-    document.body.classList.remove(
-      "blackout"
+    DOM.toast.classList.add(
+        "visible"
     );
 
-    document.body.classList.remove(
-      "flicker"
+
+    clearTimeout(
+        toastTimer
     );
 
-    document.body.classList.remove(
-      "shake"
-    );
 
-  };
+    toastTimer =
+        setTimeout(
+            () => {
+
+                DOM.toast.classList.remove(
+                    "visible"
+                );
+
+            },
+            2200
+        );
+
+}
+
+
+/* ============================================================
+   060 — RESET SCORE
+   ============================================================ */
+
+DOM.resetScore.addEventListener(
+    "click",
+    () => {
+
+        STATE.score =
+            0;
+
+        updateInterface();
+
+        showToast(
+            "🔄 SCORE RESET"
+        );
+
+    }
+);
+
+
+/* ============================================================
+   061 — CLEAR HISTORY
+   ============================================================ */
+
+DOM.clearHistory.addEventListener(
+    "click",
+    () => {
+
+        STATE.history =
+            [];
+
+        STATE.events =
+            0;
+
+        STATE.achievements.clear();
+
+        DOM.history.innerHTML = `
+
+            <div class="history-empty">
+                No events yet.
+            </div>
+
+        `;
+
+        updateInterface();
+
+        showToast(
+            "🗑️ HISTORY CLEARED"
+        );
+
+    }
+);
+
+
+/* ============================================================
+   062 — RESTORE POWER BUTTON
+   ============================================================ */
+
+DOM.restorePower.addEventListener(
+    "click",
+    () => {
+
+        restorePower();
+
+    }
+);
+
+
+/* ============================================================
+   063 — FULL RESET
+   ============================================================ */
+
+DOM.resetEverything.addEventListener(
+    "click",
+    () => {
+
+        STATE.score =
+            0;
+
+        STATE.events =
+            0;
+
+        STATE.powerOut =
+            false;
+
+        STATE.history =
+            [];
+
+        STATE.achievements.clear();
+
+
+        DOM.history.innerHTML = `
+
+            <div class="history-empty">
+                No events yet.
+            </div>
+
+        `;
+
+
+        DOM.effectLayer.innerHTML =
+            "";
+
+
+        document.body.classList.remove(
+            "power-out",
+            "power-flicker",
+            "screen-shake",
+            "critical-pulse"
+        );
+
+
+        updateInterface();
+
+
+        showToast(
+            "💥 DAMAGE PROGRAM RESET"
+        );
+
+    }
+);
+
+
+/* ============================================================
+   064 — INITIALIZE
+   ============================================================ */
+
+buildCategories();
+
+updateInterface();
+
+
+/* ============================================================
+   065 — READY
+   ============================================================ */
+
+console.log(
+    "DAMAGE PROGRAM™ MEGA CORE ONLINE"
+);
+
+console.log(
+    "Factory reset complete."
+);
+
+console.log(
+    "Simulation mode active."
+);
 
 </script>
 
