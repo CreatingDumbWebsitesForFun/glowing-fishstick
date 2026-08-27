@@ -14167,7 +14167,7 @@ window.DamageProgram.events =
 
 
 window.DamageProgram.categories =
-    CATEGORIES;
+    EVENT_CATEGORIES;
 
 
 window.DamageProgram.state =
@@ -14224,8 +14224,7 @@ function runSelfTest() {
     const missing =
         requiredCodes.filter(
             code =>
-                !EVENT_MAP.has(
-                    code
+                  !EVENTS[code]
                 )
         );
 
