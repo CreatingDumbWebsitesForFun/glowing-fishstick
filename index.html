@@ -2586,6 +2586,2654 @@ console.log(
 /* ============================================================
    END PART 3
    ============================================================ */ 
+    /* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 4 — ACHIEVEMENTS & ADVANCED CONTROLS
+   ============================================================ */
+
+
+/* ============================================================
+   ACHIEVEMENT DATABASE
+   ============================================================ */
+
+const ACHIEVEMENTS = {
+
+    firstEvent: {
+        id: "first-event",
+        name: "First Damage",
+        description: "Trigger your first event.",
+        icon: "⚠️",
+        requirement: state =>
+            state.events >= 1
+    },
+
+    score10: {
+        id: "score-10",
+        name: "Getting Dangerous",
+        description: "Reach 10 points.",
+        icon: "🔥",
+        requirement: state =>
+            state.score >= 10
+    },
+
+    score50: {
+        id: "score-50",
+        name: "Severe Damage",
+        description: "Reach 50 points.",
+        icon: "💥",
+        requirement: state =>
+            state.score >= 50
+    },
+
+    score100: {
+        id: "score-100",
+        name: "Disaster Master",
+        description: "Reach 100 points.",
+        icon: "🏆",
+        requirement: state =>
+            state.score >= 100
+    },
+
+    score500: {
+        id: "score-500",
+        name: "ABSOLUTE CHAOS",
+        description: "Reach 500 points.",
+        icon: "🌪️",
+        requirement: state =>
+            state.score >= 500
+    },
+
+    events10: {
+        id: "events-10",
+        name: "Event Collector",
+        description: "Trigger 10 events.",
+        icon: "📋",
+        requirement: state =>
+            state.events >= 10
+    },
+
+    events25: {
+        id: "events-25",
+        name: "Event Machine",
+        description: "Trigger 25 events.",
+        icon: "⚙️",
+        requirement: state =>
+            state.events >= 25
+    },
+
+    tornado: {
+        id: "tornado",
+        name: "Twister",
+        description: "Trigger a tornado event.",
+        icon: "🌪️",
+        requirement: state =>
+            hasEvent("NADO")
+    },
+
+    emergency: {
+        id: "emergency",
+        name: "Emergency!",
+        description: "Trigger a Tornado Emergency.",
+        icon: "🚨",
+        requirement: state =>
+            hasEvent("TE")
+    },
+
+    flood: {
+        id: "flood",
+        name: "Water Damage",
+        description: "Trigger a flood event.",
+        icon: "🌊",
+        requirement: state =>
+            hasAnyEvent([
+                "FW",
+                "SFW",
+                "FLD",
+                "FE"
+            ])
+    },
+
+    power: {
+        id: "power",
+        name: "Lights Out",
+        description: "Trigger a power outage.",
+        icon: "⚡",
+        requirement: state =>
+            hasEvent("PO")
+    },
+
+    nuke: {
+        id: "nuke",
+        name: "Uh Oh.",
+        description: "Trigger a nuclear event.",
+        icon: "☢️",
+        requirement: state =>
+            hasAnyEvent([
+                "NW",
+                "NUKE",
+                "N10"
+            ])
+    },
+
+    house: {
+        id: "house",
+        name: "Not The House!",
+        description: "Trigger a house bonus.",
+        icon: "🏠",
+        requirement: state =>
+            hasAnyEvent([
+                "NADO-H",
+                "TE-H"
+            ])
+    },
+
+    red: {
+        id: "red",
+        name: "RED ALERT",
+        description: "Trigger red server text.",
+        icon: "🟥",
+        requirement: state =>
+            hasEvent("RED")
+    },
+
+    pink: {
+        id: "pink",
+        name: "PINK CHAOS",
+        description: "Trigger purple/pink nuke text.",
+        icon: "🩷",
+        requirement: state =>
+            hasEvent("PINK")
+    }
+
+};
+
+
+/* ============================================================
+   ACHIEVEMENT STATE
+   ============================================================ */
+
+if (
+    !Array.isArray(
+        STATE.achievements
+    )
+) {
+
+    STATE.achievements = [];
+
+}
+
+
+/* ============================================================
+   EVENT SEARCH HELPERS
+   ============================================================ */
+
+function hasEvent(
+    code
+) {
+
+    return STATE.history.some(
+        event =>
+            event.code === code
+    );
+
+}
+
+
+function hasAnyEvent(
+    codes
+) {
+
+    return codes.some(
+        code =>
+            hasEvent(code)
+    );
+
+}
+
+
+/* ============================================================
+   ACHIEVEMENT POPUP
+   ============================================================ */
+
+function showAchievement(
+    achievement
+) {
+
+    const container =
+        getEffectContainer();
+
+
+    const popup =
+        document.createElement("div");
+
+
+    popup.className =
+        "achievement-popup";
+
+
+    popup.innerHTML = `
+
+        <div class="achievement-icon">
+            ${achievement.icon}
+        </div>
+
+        <div class="achievement-content">
+
+            <div class="achievement-label">
+                ACHIEVEMENT UNLOCKED
+            </div>
+
+            <div class="achievement-name">
+                ${achievement.name}
+            </div>
+
+            <div class="achievement-description">
+                ${achievement.description}
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        popup
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            popup.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            popup.classList.remove(
+                "visible"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    popup.remove();
+
+                },
+                400
+            );
+
+        },
+        3500
+    );
+
+}
+
+
+/* ============================================================
+   CHECK ACHIEVEMENTS
+   ============================================================ */
+
+function checkAchievements() {
+
+    let changed =
+        false;
+
+
+    Object.values(
+        ACHIEVEMENTS
+    ).forEach(
+        achievement => {
+
+            if (
+                STATE.achievements.includes(
+                    achievement.id
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            let unlocked =
+                false;
+
+
+            try {
+
+                unlocked =
+                    achievement.requirement(
+                        STATE
+                    );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Achievement error:",
+                    achievement.id,
+                    error
+                );
+
+            }
+
+
+            if (!unlocked) {
+                return;
+            }
+
+
+            STATE.achievements.push(
+                achievement.id
+            );
+
+
+            showAchievement(
+                achievement
+            );
+
+
+            changed =
+                true;
+
+        }
+    );
+
+
+    if (changed) {
+        saveState();
+    }
+
+}
+
+
+/* ============================================================
+   ACHIEVEMENT PANEL
+   ============================================================ */
+
+function createAchievementPanel() {
+
+    if (
+        document.getElementById(
+            "achievement-panel"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const section =
+        document.createElement("section");
+
+
+    section.id =
+        "achievement-panel";
+
+
+    section.className =
+        "panel card";
+
+
+    section.style.marginTop =
+        "16px";
+
+
+    section.innerHTML = `
+
+        <div class="section-title">
+
+            <h2>
+                🏆 ACHIEVEMENTS
+            </h2>
+
+            <span id="achievement-count">
+                0 / 0
+            </span>
+
+        </div>
+
+        <div id="achievement-list">
+        </div>
+
+    `;
+
+
+    const aside =
+        document.querySelector(
+            "aside"
+        );
+
+
+    if (aside) {
+
+        aside.appendChild(
+            section
+        );
+
+    }
+
+
+    renderAchievements();
+
+}
+
+
+/* ============================================================
+   RENDER ACHIEVEMENTS
+   ============================================================ */
+
+function renderAchievements() {
+
+    const list =
+        document.getElementById(
+            "achievement-list"
+        );
+
+
+    const count =
+        document.getElementById(
+            "achievement-count"
+        );
+
+
+    if (!list) {
+        return;
+    }
+
+
+    const all =
+        Object.values(
+            ACHIEVEMENTS
+        );
+
+
+    const unlocked =
+        all.filter(
+            achievement =>
+                STATE.achievements.includes(
+                    achievement.id
+                )
+        );
+
+
+    if (count) {
+
+        count.textContent =
+            `${unlocked.length} / ${all.length}`;
+
+    }
+
+
+    list.innerHTML =
+        all.map(
+            achievement => {
+
+                const isUnlocked =
+                    STATE.achievements.includes(
+                        achievement.id
+                    );
+
+
+                return `
+
+                    <div
+                        class="
+                            achievement-row
+                            ${isUnlocked
+                                ? "unlocked"
+                                : "locked"}
+                        "
+                    >
+
+                        <div class="achievement-small-icon">
+                            ${
+                                isUnlocked
+                                    ? achievement.icon
+                                    : "🔒"
+                            }
+                        </div>
+
+                        <div>
+
+                            <div class="achievement-row-name">
+                                ${achievement.name}
+                            </div>
+
+                            <div class="achievement-row-description">
+                                ${achievement.description}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* ============================================================
+   RESET ACHIEVEMENTS
+   ============================================================ */
+
+function resetAchievements() {
+
+    STATE.achievements =
+        [];
+
+
+    renderAchievements();
+
+    saveState();
+
+
+    console.log(
+        "Achievements reset."
+    );
+
+}
+
+
+/* ============================================================
+   ADVANCED CONTROL
+   ============================================================ */
+
+function exportState() {
+
+    const data =
+        JSON.stringify(
+            STATE,
+            null,
+            2
+        );
+
+
+    try {
+
+        navigator.clipboard.writeText(
+            data
+        );
+
+
+        showTemporaryMessage(
+            "STATE COPIED 📋"
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not copy state.",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   TEMPORARY MESSAGE
+   ============================================================ */
+
+function showTemporaryMessage(
+    message
+) {
+
+    const element =
+        document.createElement("div");
+
+
+    element.className =
+        "temporary-message";
+
+
+    element.textContent =
+        message;
+
+
+    document.body.appendChild(
+        element
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            element.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            element.classList.remove(
+                "visible"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    element.remove();
+
+                },
+                300
+            );
+
+        },
+        1800
+    );
+
+}
+
+
+/* ============================================================
+   EVENT COUNT ANALYSIS
+   ============================================================ */
+
+function getEventStatistics() {
+
+    const statistics = {};
+
+
+    STATE.history.forEach(
+        event => {
+
+            if (
+                !statistics[event.code]
+            ) {
+
+                statistics[event.code] =
+                    0;
+
+            }
+
+
+            statistics[event.code] +=
+                1;
+
+        }
+    );
+
+
+    return statistics;
+
+}
+
+
+/* ============================================================
+   MOST COMMON EVENT
+   ============================================================ */
+
+function getMostCommonEvent() {
+
+    const statistics =
+        getEventStatistics();
+
+
+    const entries =
+        Object.entries(
+            statistics
+        );
+
+
+    if (
+        entries.length === 0
+    ) {
+
+        return null;
+
+    }
+
+
+    entries.sort(
+        (
+            a,
+            b
+        ) =>
+            b[1] - a[1]
+    );
+
+
+    return {
+
+        code:
+            entries[0][0],
+
+        count:
+            entries[0][1]
+
+    };
+
+}
+
+
+/* ============================================================
+   TOTAL POSSIBLE EVENT TYPES
+   ============================================================ */
+
+function getEventTypeCount() {
+
+    return Object.keys(
+        EVENTS
+    ).length;
+
+}
+
+
+/* ============================================================
+   ADVANCED API
+   ============================================================ */
+
+window.DamageProgram =
+    window.DamageProgram || {};
+
+
+window.DamageProgram.getStatistics =
+    getEventStatistics;
+
+
+window.DamageProgram.getMostCommonEvent =
+    getMostCommonEvent;
+
+
+window.DamageProgram.getEventTypeCount =
+    getEventTypeCount;
+
+
+window.DamageProgram.resetAchievements =
+    resetAchievements;
+
+
+window.DamageProgram.exportState =
+    exportState;
+
+
+/* ============================================================
+   INITIALIZE ACHIEVEMENTS
+   ============================================================ */
+
+createAchievementPanel();
+
+checkAchievements();
+
+renderAchievements();
+
+
+/* ============================================================
+   PART 4 ONLINE
+   ============================================================ */
+
+console.log(
+    "PART 4 — ACHIEVEMENTS & ADVANCED CONTROLS ONLINE"
+);
+
+
+/* ============================================================
+   END PART 4
+   ============================================================ *//* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 4 — ACHIEVEMENTS & ADVANCED CONTROLS
+   ============================================================ */
+
+
+/* ============================================================
+   ACHIEVEMENT DATABASE
+   ============================================================ */
+
+const ACHIEVEMENTS = {
+
+    firstEvent: {
+        id: "first-event",
+        name: "First Damage",
+        description: "Trigger your first event.",
+        icon: "⚠️",
+        requirement: state =>
+            state.events >= 1
+    },
+
+    score10: {
+        id: "score-10",
+        name: "Getting Dangerous",
+        description: "Reach 10 points.",
+        icon: "🔥",
+        requirement: state =>
+            state.score >= 10
+    },
+
+    score50: {
+        id: "score-50",
+        name: "Severe Damage",
+        description: "Reach 50 points.",
+        icon: "💥",
+        requirement: state =>
+            state.score >= 50
+    },
+
+    score100: {
+        id: "score-100",
+        name: "Disaster Master",
+        description: "Reach 100 points.",
+        icon: "🏆",
+        requirement: state =>
+            state.score >= 100
+    },
+
+    score500: {
+        id: "score-500",
+        name: "ABSOLUTE CHAOS",
+        description: "Reach 500 points.",
+        icon: "🌪️",
+        requirement: state =>
+            state.score >= 500
+    },
+
+    events10: {
+        id: "events-10",
+        name: "Event Collector",
+        description: "Trigger 10 events.",
+        icon: "📋",
+        requirement: state =>
+            state.events >= 10
+    },
+
+    events25: {
+        id: "events-25",
+        name: "Event Machine",
+        description: "Trigger 25 events.",
+        icon: "⚙️",
+        requirement: state =>
+            state.events >= 25
+    },
+
+    tornado: {
+        id: "tornado",
+        name: "Twister",
+        description: "Trigger a tornado event.",
+        icon: "🌪️",
+        requirement: state =>
+            hasEvent("NADO")
+    },
+
+    emergency: {
+        id: "emergency",
+        name: "Emergency!",
+        description: "Trigger a Tornado Emergency.",
+        icon: "🚨",
+        requirement: state =>
+            hasEvent("TE")
+    },
+
+    flood: {
+        id: "flood",
+        name: "Water Damage",
+        description: "Trigger a flood event.",
+        icon: "🌊",
+        requirement: state =>
+            hasAnyEvent([
+                "FW",
+                "SFW",
+                "FLD",
+                "FE"
+            ])
+    },
+
+    power: {
+        id: "power",
+        name: "Lights Out",
+        description: "Trigger a power outage.",
+        icon: "⚡",
+        requirement: state =>
+            hasEvent("PO")
+    },
+
+    nuke: {
+        id: "nuke",
+        name: "Uh Oh.",
+        description: "Trigger a nuclear event.",
+        icon: "☢️",
+        requirement: state =>
+            hasAnyEvent([
+                "NW",
+                "NUKE",
+                "N10"
+            ])
+    },
+
+    house: {
+        id: "house",
+        name: "Not The House!",
+        description: "Trigger a house bonus.",
+        icon: "🏠",
+        requirement: state =>
+            hasAnyEvent([
+                "NADO-H",
+                "TE-H"
+            ])
+    },
+
+    red: {
+        id: "red",
+        name: "RED ALERT",
+        description: "Trigger red server text.",
+        icon: "🟥",
+        requirement: state =>
+            hasEvent("RED")
+    },
+
+    pink: {
+        id: "pink",
+        name: "PINK CHAOS",
+        description: "Trigger purple/pink nuke text.",
+        icon: "🩷",
+        requirement: state =>
+            hasEvent("PINK")
+    }
+
+};
+
+
+/* ============================================================
+   ACHIEVEMENT STATE
+   ============================================================ */
+
+if (
+    !Array.isArray(
+        STATE.achievements
+    )
+) {
+
+    STATE.achievements = [];
+
+}
+
+
+/* ============================================================
+   EVENT SEARCH HELPERS
+   ============================================================ */
+
+function hasEvent(
+    code
+) {
+
+    return STATE.history.some(
+        event =>
+            event.code === code
+    );
+
+}
+
+
+function hasAnyEvent(
+    codes
+) {
+
+    return codes.some(
+        code =>
+            hasEvent(code)
+    );
+
+}
+
+
+/* ============================================================
+   ACHIEVEMENT POPUP
+   ============================================================ */
+
+function showAchievement(
+    achievement
+) {
+
+    const container =
+        getEffectContainer();
+
+
+    const popup =
+        document.createElement("div");
+
+
+    popup.className =
+        "achievement-popup";
+
+
+    popup.innerHTML = `
+
+        <div class="achievement-icon">
+            ${achievement.icon}
+        </div>
+
+        <div class="achievement-content">
+
+            <div class="achievement-label">
+                ACHIEVEMENT UNLOCKED
+            </div>
+
+            <div class="achievement-name">
+                ${achievement.name}
+            </div>
+
+            <div class="achievement-description">
+                ${achievement.description}
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        popup
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            popup.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            popup.classList.remove(
+                "visible"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    popup.remove();
+
+                },
+                400
+            );
+
+        },
+        3500
+    );
+
+}
+
+
+/* ============================================================
+   CHECK ACHIEVEMENTS
+   ============================================================ */
+
+function checkAchievements() {
+
+    let changed =
+        false;
+
+
+    Object.values(
+        ACHIEVEMENTS
+    ).forEach(
+        achievement => {
+
+            if (
+                STATE.achievements.includes(
+                    achievement.id
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            let unlocked =
+                false;
+
+
+            try {
+
+                unlocked =
+                    achievement.requirement(
+                        STATE
+                    );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Achievement error:",
+                    achievement.id,
+                    error
+                );
+
+            }
+
+
+            if (!unlocked) {
+                return;
+            }
+
+
+            STATE.achievements.push(
+                achievement.id
+            );
+
+
+            showAchievement(
+                achievement
+            );
+
+
+            changed =
+                true;
+
+        }
+    );
+
+
+    if (changed) {
+        saveState();
+    }
+
+}
+
+
+/* ============================================================
+   ACHIEVEMENT PANEL
+   ============================================================ */
+
+function createAchievementPanel() {
+
+    if (
+        document.getElementById(
+            "achievement-panel"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    const section =
+        document.createElement("section");
+
+
+    section.id =
+        "achievement-panel";
+
+
+    section.className =
+        "panel card";
+
+
+    section.style.marginTop =
+        "16px";
+
+
+    section.innerHTML = `
+
+        <div class="section-title">
+
+            <h2>
+                🏆 ACHIEVEMENTS
+            </h2>
+
+            <span id="achievement-count">
+                0 / 0
+            </span>
+
+        </div>
+
+        <div id="achievement-list">
+        </div>
+
+    `;
+
+
+    const aside =
+        document.querySelector(
+            "aside"
+        );
+
+
+    if (aside) {
+
+        aside.appendChild(
+            section
+        );
+
+    }
+
+
+    renderAchievements();
+
+}
+
+
+/* ============================================================
+   RENDER ACHIEVEMENTS
+   ============================================================ */
+
+function renderAchievements() {
+
+    const list =
+        document.getElementById(
+            "achievement-list"
+        );
+
+
+    const count =
+        document.getElementById(
+            "achievement-count"
+        );
+
+
+    if (!list) {
+        return;
+    }
+
+
+    const all =
+        Object.values(
+            ACHIEVEMENTS
+        );
+
+
+    const unlocked =
+        all.filter(
+            achievement =>
+                STATE.achievements.includes(
+                    achievement.id
+                )
+        );
+
+
+    if (count) {
+
+        count.textContent =
+            `${unlocked.length} / ${all.length}`;
+
+    }
+
+
+    list.innerHTML =
+        all.map(
+            achievement => {
+
+                const isUnlocked =
+                    STATE.achievements.includes(
+                        achievement.id
+                    );
+
+
+                return `
+
+                    <div
+                        class="
+                            achievement-row
+                            ${isUnlocked
+                                ? "unlocked"
+                                : "locked"}
+                        "
+                    >
+
+                        <div class="achievement-small-icon">
+                            ${
+                                isUnlocked
+                                    ? achievement.icon
+                                    : "🔒"
+                            }
+                        </div>
+
+                        <div>
+
+                            <div class="achievement-row-name">
+                                ${achievement.name}
+                            </div>
+
+                            <div class="achievement-row-description">
+                                ${achievement.description}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        ).join("");
+
+}
+
+
+/* ============================================================
+   RESET ACHIEVEMENTS
+   ============================================================ */
+
+function resetAchievements() {
+
+    STATE.achievements =
+        [];
+
+
+    renderAchievements();
+
+    saveState();
+
+
+    console.log(
+        "Achievements reset."
+    );
+
+}
+
+
+/* ============================================================
+   ADVANCED CONTROL
+   ============================================================ */
+
+function exportState() {
+
+    const data =
+        JSON.stringify(
+            STATE,
+            null,
+            2
+        );
+
+
+    try {
+
+        navigator.clipboard.writeText(
+            data
+        );
+
+
+        showTemporaryMessage(
+            "STATE COPIED 📋"
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not copy state.",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   TEMPORARY MESSAGE
+   ============================================================ */
+
+function showTemporaryMessage(
+    message
+) {
+
+    const element =
+        document.createElement("div");
+
+
+    element.className =
+        "temporary-message";
+
+
+    element.textContent =
+        message;
+
+
+    document.body.appendChild(
+        element
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            element.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            element.classList.remove(
+                "visible"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    element.remove();
+
+                },
+                300
+            );
+
+        },
+        1800
+    );
+
+}
+
+
+/* ============================================================
+   EVENT COUNT ANALYSIS
+   ============================================================ */
+
+function getEventStatistics() {
+
+    const statistics = {};
+
+
+    STATE.history.forEach(
+        event => {
+
+            if (
+                !statistics[event.code]
+            ) {
+
+                statistics[event.code] =
+                    0;
+
+            }
+
+
+            statistics[event.code] +=
+                1;
+
+        }
+    );
+
+
+    return statistics;
+
+}
+
+
+/* ============================================================
+   MOST COMMON EVENT
+   ============================================================ */
+
+function getMostCommonEvent() {
+
+    const statistics =
+        getEventStatistics();
+
+
+    const entries =
+        Object.entries(
+            statistics
+        );
+
+
+    if (
+        entries.length === 0
+    ) {
+
+        return null;
+
+    }
+
+
+    entries.sort(
+        (
+            a,
+            b
+        ) =>
+            b[1] - a[1]
+    );
+
+
+    return {
+
+        code:
+            entries[0][0],
+
+        count:
+            entries[0][1]
+
+    };
+
+}
+
+
+/* ============================================================
+   TOTAL POSSIBLE EVENT TYPES
+   ============================================================ */
+
+function getEventTypeCount() {
+
+    return Object.keys(
+        EVENTS
+    ).length;
+
+}
+
+
+/* ============================================================
+   ADVANCED API
+   ============================================================ */
+
+window.DamageProgram =
+    window.DamageProgram || {};
+
+
+window.DamageProgram.getStatistics =
+    getEventStatistics;
+
+
+window.DamageProgram.getMostCommonEvent =
+    getMostCommonEvent;
+
+
+window.DamageProgram.getEventTypeCount =
+    getEventTypeCount;
+
+
+window.DamageProgram.resetAchievements =
+    resetAchievements;
+
+
+window.DamageProgram.exportState =
+    exportState;
+
+
+/* ============================================================
+   INITIALIZE ACHIEVEMENTS
+   ============================================================ */
+
+createAchievementPanel();
+
+checkAchievements();
+
+renderAchievements();
+
+
+/* ============================================================
+   PART 4 ONLINE
+   ============================================================ */
+
+console.log(
+    "PART 4 — ACHIEVEMENTS & ADVANCED CONTROLS ONLINE"
+);
+
+
+/* ============================================================
+   END PART 4
+   ============================================================ */
+    /* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 5 — RADIO + EXTREME EVENT EFFECTS + FINAL SYSTEM
+   ============================================================ */
+
+
+/* ============================================================
+   📻 EMERGENCY RADIO
+   ============================================================ */
+
+const RADIO = {
+
+    title:
+        "EMERGENCY RADIO",
+
+    code:
+        "STANDBY",
+
+    message:
+        "No active warnings.",
+
+    severity:
+        "normal",
+
+    time:
+        null
+
+};
+
+
+/* ============================================================
+   RADIO DOM
+   ============================================================ */
+
+function createRadio() {
+
+    const radio =
+        document.createElement("section");
+
+    radio.id =
+        "emergency-radio";
+
+    radio.className =
+        "panel emergency-radio";
+
+
+    radio.innerHTML = `
+
+        <div class="radio-header">
+
+            <div class="radio-title">
+                📻 EMERGENCY RADIO
+            </div>
+
+            <div
+                id="radio-status"
+                class="radio-status"
+            >
+                ● STANDBY
+            </div>
+
+        </div>
+
+
+        <div
+            id="radio-screen"
+            class="radio-screen"
+        >
+
+            <div
+                id="radio-code"
+                class="radio-code"
+            >
+                STANDBY
+            </div>
+
+            <div
+                id="radio-message"
+                class="radio-message"
+            >
+                No active warnings.
+            </div>
+
+            <div
+                id="radio-time"
+                class="radio-time"
+            >
+                SYSTEM READY
+            </div>
+
+        </div>
+
+    `;
+
+
+    const app =
+        document.getElementById("app");
+
+
+    if (app) {
+
+        app.insertBefore(
+            radio,
+            app.children[1]
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   RADIO EFFECT DATA
+   ============================================================ */
+
+const RADIO_MESSAGES = {
+
+    NADO: {
+        message:
+            "TORNADO WARNING — dangerous weather detected.",
+        severity:
+            "warning"
+    },
+
+    PDS: {
+        message:
+            "PARTICULARLY DANGEROUS SITUATION.",
+        severity:
+            "extreme"
+    },
+
+    DSTW: {
+        message:
+            "DESTRUCTIVE SEVERE THUNDERSTORM WARNING.",
+        severity:
+            "extreme"
+    },
+
+    TE: {
+        message:
+            "TORNADO EMERGENCY — extreme danger.",
+        severity:
+            "emergency"
+    },
+
+    FW: {
+        message:
+            "FLOOD WATCH — flooding is possible.",
+        severity:
+            "warning"
+    },
+
+    SFW: {
+        message:
+            "FLOOD WARNING — flooding is occurring or imminent.",
+        severity:
+            "warning"
+    },
+
+    FLD: {
+        message:
+            "FLOOD — significant flooding is occurring.",
+        severity:
+            "extreme"
+    },
+
+    FE: {
+        message:
+            "FLOOD EMERGENCY — life-threatening flooding.",
+        severity:
+            "emergency"
+    },
+
+    EWW: {
+        message:
+            "EXTREME WIND WARNING — extremely dangerous winds.",
+        severity:
+            "emergency"
+    },
+
+    PO: {
+        message:
+            "POWER OUTAGE — electrical service interrupted.",
+        severity:
+            "warning"
+    },
+
+    PR: {
+        message:
+            "POWER RESTORATION — electrical service restored.",
+        severity:
+            "normal"
+    },
+
+    NW: {
+        message:
+            "NUKE WATCH — nuclear emergency status detected.",
+        severity:
+            "nuclear"
+    },
+
+    NUKE: {
+        message:
+            "NUCLEAR EMERGENCY ANNOUNCEMENT.",
+        severity:
+            "nuclear"
+    },
+
+    N10: {
+        message:
+            "10-MINUTE NUCLEAR WARNING.",
+        severity:
+            "nuclear"
+    },
+
+    "NADO-H": {
+        message:
+            "TORNADO HOUSE IMPACT — HOUSE BONUS ACTIVE.",
+        severity:
+            "emergency"
+    },
+
+    "TE-H": {
+        message:
+            "TORNADO EMERGENCY HOUSE IMPACT.",
+        severity:
+            "nuclear"
+    },
+
+    RED: {
+        message:
+            "RED SERVER TEXT DETECTED.",
+        severity:
+            "red"
+    },
+
+    PINK: {
+        message:
+            "PURPLE/PINK NUKE TEXT DETECTED.",
+        severity:
+            "pink"
+    }
+
+};
+
+
+/* ============================================================
+   UPDATE RADIO
+   ============================================================ */
+
+function updateRadio(
+    eventCode
+) {
+
+    const data =
+        RADIO_MESSAGES[eventCode];
+
+
+    if (!data) {
+
+        return;
+
+    }
+
+
+    RADIO.code =
+        eventCode;
+
+    RADIO.message =
+        data.message;
+
+    RADIO.severity =
+        data.severity;
+
+    RADIO.time =
+        new Date();
+
+
+    const code =
+        document.getElementById(
+            "radio-code"
+        );
+
+    const message =
+        document.getElementById(
+            "radio-message"
+        );
+
+    const time =
+        document.getElementById(
+            "radio-time"
+        );
+
+    const status =
+        document.getElementById(
+            "radio-status"
+        );
+
+    const screen =
+        document.getElementById(
+            "radio-screen"
+        );
+
+
+    if (
+        code
+    ) {
+
+        code.textContent =
+            eventCode;
+
+    }
+
+
+    if (
+        message
+    ) {
+
+        message.textContent =
+            data.message;
+
+    }
+
+
+    if (
+        time
+    ) {
+
+        time.textContent =
+            `RECEIVED • ${
+                RADIO.time.toLocaleTimeString()
+            }`;
+
+    }
+
+
+    if (
+        status
+    ) {
+
+        status.textContent =
+            "● RECEIVING";
+
+    }
+
+
+    if (
+        screen
+    ) {
+
+        screen.className =
+            `radio-screen ${data.severity}`;
+
+    }
+
+
+    radioPulse();
+
+}
+
+
+/* ============================================================
+   RADIO PULSE
+   ============================================================ */
+
+function radioPulse() {
+
+    const radio =
+        document.getElementById(
+            "emergency-radio"
+        );
+
+
+    if (!radio) {
+
+        return;
+
+    }
+
+
+    radio.classList.remove(
+        "radio-pulse"
+    );
+
+
+    void radio.offsetWidth;
+
+
+    radio.classList.add(
+        "radio-pulse"
+    );
+
+}
+
+
+/* ============================================================
+   EXTREME EVENT EFFECTS
+   ============================================================ */
+
+function extremeEffect(
+    eventCode
+) {
+
+    document.body.classList.remove(
+        "effect-warning",
+        "effect-extreme",
+        "effect-emergency",
+        "effect-nuclear",
+        "effect-pink"
+    );
+
+
+    let effect =
+        null;
+
+
+    if (
+        eventCode === "PDS" ||
+        eventCode === "DSTW" ||
+        eventCode === "FLD"
+    ) {
+
+        effect =
+            "effect-extreme";
+
+    }
+
+
+    if (
+        eventCode === "TE" ||
+        eventCode === "FE" ||
+        eventCode === "EWW" ||
+        eventCode === "NADO-H" ||
+        eventCode === "TE-H"
+    ) {
+
+        effect =
+            "effect-emergency";
+
+    }
+
+
+    if (
+        eventCode === "NW" ||
+        eventCode === "NUKE" ||
+        eventCode === "N10"
+    ) {
+
+        effect =
+            "effect-nuclear";
+
+    }
+
+
+    if (
+        eventCode === "PINK"
+    ) {
+
+        effect =
+            "effect-pink";
+
+    }
+
+
+    if (effect) {
+
+        document.body.classList.add(
+            effect
+        );
+
+    }
+
+
+    setTimeout(
+        () => {
+
+            document.body.classList.remove(
+                "effect-extreme",
+                "effect-emergency",
+                "effect-nuclear",
+                "effect-pink"
+            );
+
+        },
+        1200
+    );
+
+}
+
+
+/* ============================================================
+   OVERRIDE EVENT TRIGGER
+   ============================================================ */
+
+const originalTriggerEvent =
+    triggerEvent;
+
+
+triggerEvent =
+    function(
+        eventCode
+    ) {
+
+        originalTriggerEvent(
+            eventCode
+        );
+
+
+        updateRadio(
+            eventCode
+        );
+
+
+        extremeEffect(
+            eventCode
+        );
+
+    };
+
+
+/* ============================================================
+   RADIO CSS
+   ============================================================ */
+
+const radioStyle =
+    document.createElement("style");
+
+
+radioStyle.textContent = `
+
+    .emergency-radio {
+
+        margin-top: 16px;
+
+        padding: 16px;
+
+        overflow: hidden;
+
+    }
+
+
+    .radio-header {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-bottom: 10px;
+
+    }
+
+
+    .radio-title {
+
+        font-size: 13px;
+
+        font-weight: 950;
+
+        letter-spacing: 0.08em;
+
+    }
+
+
+    .radio-status {
+
+        color: var(--green);
+
+        font-size: 9px;
+
+        font-weight: 900;
+
+        letter-spacing: 0.1em;
+
+    }
+
+
+    .radio-screen {
+
+        min-height: 105px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        padding: 16px;
+
+        border:
+
+            1px solid var(--border);
+
+        border-radius: 15px;
+
+        background:
+
+            rgba(0,0,0,0.30);
+
+        transition:
+
+            0.25s ease;
+
+    }
+
+
+    .radio-code {
+
+        font-size: 20px;
+
+        font-weight: 950;
+
+        letter-spacing: 0.04em;
+
+    }
+
+
+    .radio-message {
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        line-height: 1.5;
+
+    }
+
+
+    .radio-time {
+
+        color: var(--muted);
+
+        font-size: 8px;
+
+        font-weight: 800;
+
+        letter-spacing: 0.12em;
+
+    }
+
+
+    .radio-screen.warning {
+
+        border-color:
+
+            rgba(255,214,90,0.45);
+
+    }
+
+
+    .radio-screen.extreme {
+
+        border-color:
+
+            rgba(255,156,66,0.65);
+
+    }
+
+
+    .radio-screen.emergency {
+
+        border-color:
+
+            rgba(255,64,91,0.75);
+
+    }
+
+
+    .radio-screen.nuclear {
+
+        border-color:
+
+            rgba(166,108,255,0.8);
+
+    }
+
+
+    .radio-screen.pink {
+
+        border-color:
+
+            rgba(255,95,213,0.8);
+
+    }
+
+
+    .radio-pulse {
+
+        animation:
+
+            radioPulse 0.55s ease;
+
+    }
+
+
+    @keyframes radioPulse {
+
+        0% {
+
+            transform:
+                scale(1);
+
+        }
+
+        40% {
+
+            transform:
+                scale(1.012);
+
+        }
+
+        100% {
+
+            transform:
+                scale(1);
+
+        }
+
+    }
+
+
+    body.effect-extreme
+    .emergency-radio {
+
+        animation:
+            radioWarning 0.35s ease;
+
+    }
+
+
+    body.effect-emergency
+    .emergency-radio {
+
+        animation:
+            radioEmergency 0.25s ease 2;
+
+    }
+
+
+    body.effect-nuclear
+    .emergency-radio {
+
+        animation:
+            radioNuclear 0.4s ease 2;
+
+    }
+
+
+    body.effect-pink
+    .emergency-radio {
+
+        animation:
+            radioPink 0.45s ease 2;
+
+    }
+
+
+    @keyframes radioWarning {
+
+        50% {
+
+            transform:
+                translateX(3px);
+
+        }
+
+    }
+
+
+    @keyframes radioEmergency {
+
+        50% {
+
+            transform:
+                translateX(-4px);
+
+        }
+
+    }
+
+
+    @keyframes radioNuclear {
+
+        50% {
+
+            transform:
+                scale(1.015);
+
+        }
+
+    }
+
+
+    @keyframes radioPink {
+
+        50% {
+
+            transform:
+                scale(1.015);
+
+        }
+
+    }
+
+`;
+
+
+document.head.appendChild(
+    radioStyle
+);
+
+
+/* ============================================================
+   INITIALIZE RADIO
+   ============================================================ */
+
+createRadio();
+
+
+/* ============================================================
+   FINAL STATE NORMALIZATION
+   ============================================================ */
+
+function normalizeState() {
+
+    if (
+        typeof STATE.score !==
+        "number"
+    ) {
+
+        STATE.score =
+            0;
+
+    }
+
+
+    if (
+        typeof STATE.events !==
+        "number"
+    ) {
+
+        STATE.events =
+            0;
+
+    }
+
+
+    if (
+        !Array.isArray(
+            STATE.history
+        )
+    ) {
+
+        STATE.history =
+            [];
+
+    }
+
+
+    if (
+        typeof STATE.powerOut !==
+        "boolean"
+    ) {
+
+        STATE.powerOut =
+            false;
+
+    }
+
+}
+
+
+/* ============================================================
+   FINAL INITIALIZATION
+   ============================================================ */
+
+normalizeState();
+
+renderCategories();
+
+renderHistory();
+
+updateInterface();
+
+
+/* ============================================================
+   FINAL CONSOLE
+   ============================================================ */
+
+console.log(
+    "===================================="
+);
+
+console.log(
+    " DAMAGE PROGRAM™"
+);
+
+console.log(
+    " FACTORY RESET COMPLETE"
+);
+
+console.log(
+    " EVENT DATABASE: ONLINE"
+);
+
+console.log(
+    " EVENT CENTER: ONLINE"
+);
+
+console.log(
+    " EMERGENCY RADIO: ONLINE"
+);
+
+console.log(
+    " EXTREME EFFECTS: ONLINE"
+);
+
+console.log(
+    " NO METEOR EVENTS: VERIFIED"
+);
+
+console.log(
+    "===================================="
+);
+
+
+/* ============================================================
+   FINAL API
+   ============================================================ */
+
+window.DamageProgram = {
+
+    events:
+        EVENTS,
+
+    categories:
+        EVENT_CATEGORIES,
+
+    state:
+        STATE,
+
+    radio:
+        RADIO,
+
+    trigger:
+        triggerEvent,
+
+    reset:
+        resetEverything,
+
+    clearHistory:
+        clearHistory
+
+};
+
+
+/* ============================================================
+   SELF TEST
+   ============================================================ */
+
+function runSelfTest() {
+
+    const required =
+        [
+
+            "NADO",
+            "PDS",
+            "DSTW",
+            "TE",
+
+            "FW",
+            "SFW",
+            "FLD",
+            "FE",
+
+            "EWW",
+            "PO",
+            "PR",
+
+            "NW",
+            "NUKE",
+            "N10",
+
+            "NADO-H",
+            "TE-H",
+
+            "RED",
+            "PINK"
+
+        ];
+
+
+    const missing =
+        required.filter(
+            code =>
+                !EVENTS[code]
+        );
+
+
+    if (
+        missing.length > 0
+    ) {
+
+        console.error(
+            "SELF TEST FAILED",
+            missing
+        );
+
+        return false;
+
+    }
+
+
+    console.log(
+        "SELF TEST PASSED:",
+        required.length,
+        "EVENTS"
+    );
+
+
+    return true;
+
+}
+
+
+runSelfTest();
+
+
+/* ============================================================
+   END PART 5
+   ============================================================ */
     
    </script>
 </body>
