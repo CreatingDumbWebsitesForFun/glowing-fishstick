@@ -1,1 +1,1856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>DAMAGE PROGRAM™</title>
+
+<style>
+
+/* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 1 — FOUNDATION
+   ============================================================ */
+
+:root {
+    --bg: #060812;
+    --panel: #101625;
+    --panel-2: #151c2e;
+    --border: rgba(255,255,255,0.10);
+
+    --text: #f5f7ff;
+    --muted: #8995b0;
+
+    --cyan: #54ddff;
+    --blue: #4389ff;
+    --purple: #a66cff;
+    --pink: #ff5fd5;
+    --red: #ff405b;
+    --orange: #ff9c42;
+    --yellow: #ffd65a;
+    --green: #50e49a;
+
+    --radius: 20px;
+}
+
+/* ============================================================
+   RESET
+   ============================================================ */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--bg);
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    color: var(--text);
+    background:
+        radial-gradient(
+            circle at 10% 0%,
+            rgba(84,221,255,0.10),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 90% 0%,
+            rgba(255,95,213,0.08),
+            transparent 30%
+        ),
+        var(--bg);
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+}
+
+/* ============================================================
+   APP
+   ============================================================ */
+
+#app {
+    width: min(1200px, 100%);
+    min-height: 100vh;
+
+    margin: 0 auto;
+    padding: 18px;
+}
+
+/* ============================================================
+   GLASS PANELS
+   ============================================================ */
+
+.panel {
+    background: rgba(16,22,37,0.88);
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.35);
+
+    backdrop-filter: blur(18px);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 18px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+}
+
+.logo {
+    width: 56px;
+    height: 56px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #17253f,
+            #21142f
+        );
+
+    border: 1px solid var(--border);
+
+    font-size: 28px;
+}
+
+.title {
+    margin: 0;
+
+    font-size: clamp(24px, 6vw, 40px);
+    font-weight: 950;
+
+    letter-spacing: -0.05em;
+}
+
+.subtitle {
+    margin-top: 6px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.16em;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 9px;
+    height: 9px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow:
+        0 0 16px rgba(80,228,154,0.9);
+}
+
+/* ============================================================
+   MAIN GRID
+   ============================================================ */
+
+.main-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1.2fr)
+        minmax(300px, 0.8fr);
+
+    gap: 16px;
+
+    margin-top: 16px;
+}
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+
+.card {
+    padding: 18px;
+}
+
+.card + .card {
+    margin-top: 16px;
+}
+
+/* ============================================================
+   SCORE
+   ============================================================ */
+
+.score-card {
+    text-align: center;
+
+    padding: 30px 18px;
+}
+
+.score-label {
+    color: var(--muted);
+
+    font-size: 10px;
+    font-weight: 900;
+
+    letter-spacing: 0.22em;
+}
+
+.score {
+    margin: 10px 0;
+
+    font-size: clamp(60px, 13vw, 110px);
+    font-weight: 950;
+
+    line-height: 0.9;
+
+    letter-spacing: -0.07em;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--cyan),
+            var(--pink),
+            var(--purple)
+        );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    color: transparent;
+}
+
+.score-meta {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+.pill {
+    padding: 7px 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 999px;
+
+    color: var(--muted);
+
+    background: rgba(255,255,255,0.03);
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+/* ============================================================
+   SECTION TITLE
+   ============================================================ */
+
+.section-title {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 12px;
+}
+
+.section-title h2 {
+    margin: 0;
+
+    font-size: 17px;
+    font-weight: 900;
+}
+
+.section-title span {
+    color: var(--muted);
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* ============================================================
+   EVENT CENTER
+   ============================================================ */
+
+.categories {
+    display: grid;
+
+    gap: 10px;
+}
+
+.category {
+    overflow: hidden;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 17px;
+
+    background:
+        rgba(5,8,17,0.55);
+}
+
+.category-header {
+    width: 100%;
+
+    min-height: 66px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 13px;
+
+    color: var(--text);
+
+    background: transparent;
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.category-header:hover {
+    background:
+        rgba(255,255,255,0.04);
+}
+
+.category-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 12px;
+
+    background:
+        rgba(255,255,255,0.05);
+
+    font-size: 22px;
+}
+
+.category-name {
+    font-size: 14px;
+    font-weight: 900;
+}
+
+.category-description {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.category-arrow {
+    color: var(--muted);
+
+    font-size: 18px;
+}
+
+/* ============================================================
+   EVENT LIST
+   ============================================================ */
+
+.event-list {
+    display: none;
+
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+    gap: 9px;
+
+    padding: 0 10px 10px;
+}
+
+.category.open .event-list {
+    display: grid;
+}
+
+.event-button {
+    min-height: 78px;
+
+    padding: 12px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    color: var(--text);
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.06),
+            rgba(255,255,255,0.02)
+        );
+
+    text-align: left;
+
+    cursor: pointer;
+}
+
+.event-button:hover {
+    border-color:
+        rgba(255,255,255,0.22);
+
+    background:
+        rgba(255,255,255,0.08);
+}
+
+.event-code {
+    display: block;
+
+    font-size: 14px;
+    font-weight: 950;
+}
+
+.event-description {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.event-points {
+    display: block;
+
+    margin-top: 7px;
+
+    color: var(--yellow);
+
+    font-size: 10px;
+    font-weight: 900;
+}
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+
+.history {
+    max-height: 450px;
+
+    overflow-y: auto;
+}
+
+.history-empty {
+    padding: 40px 10px;
+
+    color: var(--muted);
+
+    text-align: center;
+
+    font-size: 12px;
+}
+
+.history-row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 7px;
+
+    padding: 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,0.03);
+}
+
+.history-code {
+    font-weight: 950;
+}
+
+.history-name {
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.history-points {
+    color: var(--yellow);
+
+    font-weight: 950;
+}
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+.controls {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0,1fr));
+
+    gap: 9px;
+}
+
+.control-button {
+    min-height: 50px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 14px;
+
+    color: var(--text);
+
+    background:
+        var(--panel-2);
+
+    cursor: pointer;
+}
+
+.control-button:hover {
+    background:
+        #1b2439;
+}
+
+.danger {
+    border-color:
+        rgba(255,64,91,0.25);
+
+    background:
+        rgba(70,20,32,0.8);
+}
+
+/* ============================================================
+   MOBILE
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 600px) {
+
+    #app {
+        padding: 10px;
+    }
+
+    header {
+        padding: 14px;
+    }
+
+    .logo {
+        width: 47px;
+        height: 47px;
+
+        font-size: 23px;
+    }
+
+    .title {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 8px;
+    }
+
+    .status {
+        display: none;
+    }
+
+}
+
+@media (max-width: 540px) {
+
+    .event-list {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="app">
+
+    <!-- ======================================================
+         HEADER
+         ====================================================== -->
+
+    <header class="panel">
+
+        <div class="brand">
+
+            <div class="logo">
+                ⚠️
+            </div>
+
+            <div>
+
+                <h1 class="title">
+                    DAMAGE PROGRAM™
+                </h1>
+
+                <div class="subtitle">
+                    ULTIMATE DISASTER CONTROL CENTER
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="status">
+
+            <span class="status-dot"></span>
+
+            <span>
+                SYSTEM ONLINE
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- ======================================================
+         MAIN
+         ====================================================== -->
+
+    <div class="main-grid">
+
+
+        <!-- ==================================================
+             LEFT
+             ================================================== -->
+
+        <main>
+
+            <!-- SCORE -->
+
+            <section class="panel card score-card">
+
+                <div class="score-label">
+                    CURRENT SCORE
+                </div>
+
+                <div
+                    id="score"
+                    class="score"
+                >
+                    0
+                </div>
+
+                <div class="score-meta">
+
+                    <span
+                        id="event-count"
+                        class="pill"
+                    >
+                        0 events
+                    </span>
+
+                    <span class="pill">
+                        SIMULATION MODE
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- EVENT CENTER -->
+
+            <section
+                class="panel card"
+                style="margin-top:16px;"
+            >
+
+                <div class="section-title">
+
+                    <h2>
+                        EVENT CENTER
+                    </h2>
+
+                    <span>
+                        Tap a category
+                    </span>
+
+                </div>
+
+                <div
+                    id="categories"
+                    class="categories"
+                >
+
+                    <!-- JS WILL FILL THIS -->
+
+                </div>
+
+            </section>
+
+        </main>
+
+
+        <!-- ==================================================
+             RIGHT
+             ================================================== -->
+
+        <aside>
+
+            <!-- HISTORY -->
+
+            <section class="panel card">
+
+                <div class="section-title">
+
+                    <h2>
+                        EVENT HISTORY
+                    </h2>
+
+                    <span id="history-count">
+                        0
+                    </span>
+
+                </div>
+
+                <div
+                    id="history"
+                    class="history"
+                >
+
+                    <div class="history-empty">
+                        No events yet.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CONTROLS -->
+
+            <section
+                class="panel card"
+                style="margin-top:16px;"
+            >
+
+                <div class="section-title">
+
+                    <h2>
+                        CONTROLS
+                    </h2>
+
+                    <span>
+                        Simulation tools
+                    </span>
+
+                </div>
+
+                <div class="controls">
+
+                    <button
+                        id="reset-score"
+                        class="control-button"
+                    >
+                        🔄 Reset Score
+                    </button>
+
+                    <button
+                        id="clear-history"
+                        class="control-button"
+                    >
+                        🗑️ Clear History
+                    </button>
+
+                    <button
+                        id="restore-power"
+                        class="control-button"
+                    >
+                        🔌 Restore Power
+                    </button>
+
+                    <button
+                        id="reset-everything"
+                        class="control-button danger"
+                    >
+                        💥 Reset Everything
+                    </button>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 1 — APPLICATION FOUNDATION
+   ============================================================ */
+
+
+/* ============================================================
+   STATE
+   ============================================================ */
+
+const STATE = {
+
+    score: 0,
+
+    events: 0,
+
+    history: [],
+
+    powerOut: false
+
+};
+
+
+/* ============================================================
+   APPLICATION
+   ============================================================ */
+
+const APP = {
+
+    storageKey:
+        "damage-program-factory-reset"
+
+};
+
+
+/* ============================================================
+   DOM
+   ============================================================ */
+
+const DOM = {
+
+    score:
+        document.getElementById("score"),
+
+    eventCount:
+        document.getElementById("event-count"),
+
+    categories:
+        document.getElementById("categories"),
+
+    history:
+        document.getElementById("history"),
+
+    historyCount:
+        document.getElementById("history-count"),
+
+    resetScore:
+        document.getElementById("reset-score"),
+
+    clearHistory:
+        document.getElementById("clear-history"),
+
+    restorePower:
+        document.getElementById("restore-power"),
+
+    resetEverything:
+        document.getElementById("reset-everything")
+
+};
+
+
+/* ============================================================
+   BASIC UPDATE FUNCTIONS
+   ============================================================ */
+
+function updateScore() {
+
+    DOM.score.textContent =
+        STATE.score.toLocaleString();
+
+}
+
+
+function updateEventCount() {
+
+    DOM.eventCount.textContent =
+        `${STATE.events} events`;
+
+}
+
+
+function updateHistoryCount() {
+
+    DOM.historyCount.textContent =
+        STATE.history.length;
+
+}
+
+
+function updateInterface() {
+
+    updateScore();
+
+    updateEventCount();
+
+    updateHistoryCount();
+
+}
+
+
+/* ============================================================
+   HISTORY
+   ============================================================ */
+
+function renderHistory() {
+
+    if (
+        STATE.history.length === 0
+    ) {
+
+        DOM.history.innerHTML = `
+            <div class="history-empty">
+                No events yet.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    DOM.history.innerHTML =
+        STATE.history
+            .map(event => {
+
+                return `
+                    <div class="history-row">
+
+                        <div>
+
+                            <div class="history-code">
+                                ${event.code}
+                            </div>
+
+                            <div class="history-name">
+                                ${event.name}
+                            </div>
+
+                        </div>
+
+                        <div class="history-points">
+                            +${event.points}
+                        </div>
+
+                    </div>
+                `;
+
+            })
+            .join("");
+
+}
+
+
+/* ============================================================
+   SAVE
+   ============================================================ */
+
+function saveState() {
+
+    localStorage.setItem(
+        APP.storageKey,
+        JSON.stringify(STATE)
+    );
+
+}
+
+
+/* ============================================================
+   LOAD
+   ============================================================ */
+
+function loadState() {
+
+    try {
+
+        const saved =
+            localStorage.getItem(
+                APP.storageKey
+            );
+
+        if (!saved) {
+            return;
+        }
+
+        const data =
+            JSON.parse(saved);
+
+        if (
+            typeof data.score ===
+            "number"
+        ) {
+
+            STATE.score =
+                data.score;
+
+        }
+
+        if (
+            typeof data.events ===
+            "number"
+        ) {
+
+            STATE.events =
+                data.events;
+
+        }
+
+        if (
+            Array.isArray(data.history)
+        ) {
+
+            STATE.history =
+                data.history;
+
+        }
+
+        if (
+            typeof data.powerOut ===
+            "boolean"
+        ) {
+
+            STATE.powerOut =
+                data.powerOut;
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            "Could not load saved state.",
+            error
+        );
+
+    }
+
+}
+
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+
+function resetScore() {
+
+    STATE.score = 0;
+
+    updateInterface();
+
+    saveState();
+
+}
+
+
+function clearHistory() {
+
+    STATE.history = [];
+
+    STATE.events = 0;
+
+    renderHistory();
+
+    updateInterface();
+
+    saveState();
+
+}
+
+
+function restorePower() {
+
+    STATE.powerOut = false;
+
+    saveState();
+
+}
+
+
+function resetEverything() {
+
+    STATE.score = 0;
+
+    STATE.events = 0;
+
+    STATE.history = [];
+
+    STATE.powerOut = false;
+
+    renderHistory();
+
+    updateInterface();
+
+    saveState();
+
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+DOM.resetScore.addEventListener(
+    "click",
+    resetScore
+);
+
+
+DOM.clearHistory.addEventListener(
+    "click",
+    clearHistory
+);
+
+
+DOM.restorePower.addEventListener(
+    "click",
+    restorePower
+);
+
+
+DOM.resetEverything.addEventListener(
+    "click",
+    resetEverything
+);
+
+
+/* ============================================================
+   STARTUP
+   ============================================================ */
+
+loadState();
+
+renderHistory();
+
+updateInterface();
+
+
+console.log(
+    "DAMAGE PROGRAM™ FACTORY RESET"
+);
+
+console.log(
+    "PART 1 ONLINE"
+);
+/* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 2 — EVENT DATABASE
+   ============================================================ */
+
+
+/* ============================================================
+   EVENT DATABASE
+   ============================================================ */
+
+const EVENTS = {
+
+    /* ========================================================
+       🌪️ TORNADO
+       ======================================================== */
+
+    NADO: {
+        code: "NADO",
+        name: "Tornado",
+        points: 1,
+        category: "tornado"
+    },
+
+    PDS: {
+        code: "PDS",
+        name: "PDS",
+        points: 3,
+        category: "tornado"
+    },
+
+    DSTW: {
+        code: "DSTW",
+        name: "Destructive Severe Thunderstorm Warning",
+        points: 3,
+        category: "tornado"
+    },
+
+    TE: {
+        code: "TE",
+        name: "Tornado Emergency",
+        points: 10,
+        category: "tornado"
+    },
+
+
+    /* ========================================================
+       🌊 FLOOD
+       ======================================================== */
+
+    FW: {
+        code: "FW",
+        name: "Flood Watch",
+        points: 1,
+        category: "flood"
+    },
+
+    SFW: {
+        code: "SFW",
+        name: "Flood Warning",
+        points: 5,
+        category: "flood"
+    },
+
+    FLD: {
+        code: "FLD",
+        name: "Flood",
+        points: 10,
+        category: "flood"
+    },
+
+    FE: {
+        code: "FE",
+        name: "Flood Emergency",
+        points: 20,
+        category: "flood"
+    },
+
+
+    /* ========================================================
+       💨 WIND / POWER
+       ======================================================== */
+
+    EWW: {
+        code: "EWW",
+        name: "Extreme Wind Warning",
+        points: 20,
+        category: "wind"
+    },
+
+    PO: {
+        code: "PO",
+        name: "Power Outage",
+        points: 7,
+        category: "wind"
+    },
+
+    PR: {
+        code: "PR",
+        name: "Power Restoration",
+        points: 10,
+        category: "wind"
+    },
+
+
+    /* ========================================================
+       ☢️ NUKE
+       ======================================================== */
+
+    NW: {
+        code: "NW",
+        name: "Nuke Watch",
+        points: 50,
+        category: "nuke"
+    },
+
+    NUKE: {
+        code: "NUKE",
+        name: "Nuke announced",
+        points: 75,
+        category: "nuke"
+    },
+
+    N10: {
+        code: "N10",
+        name: "10-minute nuke warning",
+        points: 75,
+        category: "nuke"
+    },
+
+
+    /* ========================================================
+       🏠 HOUSE BONUSES
+       ======================================================== */
+
+    "NADO-H": {
+        code: "NADO-H",
+        name: "Tornado hits house",
+        points: 7,
+        category: "house"
+    },
+
+    "TE-H": {
+        code: "TE-H",
+        name: "Tornado Emergency hits house",
+        points: 15,
+        category: "house"
+    },
+
+
+    /* ========================================================
+       🟥 SPECIAL TEXT
+       ======================================================== */
+
+    RED: {
+        code: "RED",
+        name: "Red server text",
+        points: 5,
+        category: "special"
+    },
+
+    PINK: {
+        code: "PINK",
+        name: "Purple/pink nuke text",
+        points: 75,
+        category: "special"
+    }
+
+};
+
+
+/* ============================================================
+   CATEGORY DATABASE
+   ============================================================ */
+
+const EVENT_CATEGORIES = {
+
+    tornado: {
+
+        name: "Tornado",
+        icon: "🌪️",
+        description:
+            "Tornado and severe weather events",
+
+        events: [
+            "NADO",
+            "PDS",
+            "DSTW",
+            "TE"
+        ]
+
+    },
+
+
+    flood: {
+
+        name: "Flood",
+        icon: "🌊",
+        description:
+            "Flood watches, warnings and emergencies",
+
+        events: [
+            "FW",
+            "SFW",
+            "FLD",
+            "FE"
+        ]
+
+    },
+
+
+    wind: {
+
+        name: "Wind & Power",
+        icon: "💨",
+        description:
+            "Extreme wind and electrical events",
+
+        events: [
+            "EWW",
+            "PO",
+            "PR"
+        ]
+
+    },
+
+
+    nuke: {
+
+        name: "Nuke",
+        icon: "☢️",
+        description:
+            "Nuclear warning events",
+
+        events: [
+            "NW",
+            "NUKE",
+            "N10"
+        ]
+
+    },
+
+
+    house: {
+
+        name: "House Bonuses",
+        icon: "🏠",
+        description:
+            "Events that affect the house",
+
+        events: [
+            "NADO-H",
+            "TE-H"
+        ]
+
+    },
+
+
+    special: {
+
+        name: "Special Text",
+        icon: "🚨",
+        description:
+            "Special server text events",
+
+        events: [
+            "RED",
+            "PINK"
+        ]
+
+    }
+
+};
+
+
+/* ============================================================
+   RENDER EVENT BUTTON
+   ============================================================ */
+
+function createEventButton(event) {
+
+    const button =
+        document.createElement("button");
+
+    button.type =
+        "button";
+
+    button.className =
+        "event-button";
+
+
+    button.innerHTML = `
+
+        <span class="event-code">
+            ${event.code}
+        </span>
+
+        <span class="event-description">
+            ${event.name}
+        </span>
+
+        <span class="event-points">
+            +${event.points}
+        </span>
+
+    `;
+
+
+    button.addEventListener(
+        "click",
+        () => {
+
+            triggerEvent(event.code);
+
+        }
+    );
+
+
+    return button;
+
+}
+
+
+/* ============================================================
+   RENDER CATEGORY
+   ============================================================ */
+
+function createCategory(
+    categoryKey,
+    category
+) {
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "category";
+
+
+    const header =
+        document.createElement("button");
+
+    header.type =
+        "button";
+
+    header.className =
+        "category-header";
+
+
+    header.innerHTML = `
+
+        <span class="category-left">
+
+            <span class="category-icon">
+                ${category.icon}
+            </span>
+
+            <span>
+
+                <span class="category-name">
+                    ${category.name}
+                </span>
+
+                <span class="category-description">
+                    ${category.description}
+                </span>
+
+            </span>
+
+        </span>
+
+        <span class="category-arrow">
+            ▼
+        </span>
+
+    `;
+
+
+    const eventList =
+        document.createElement("div");
+
+    eventList.className =
+        "event-list";
+
+
+    category.events.forEach(
+        eventCode => {
+
+            const event =
+                EVENTS[eventCode];
+
+            if (!event) {
+                return;
+            }
+
+            eventList.appendChild(
+                createEventButton(event)
+            );
+
+        }
+    );
+
+
+    header.addEventListener(
+        "click",
+        () => {
+
+            wrapper.classList.toggle(
+                "open"
+            );
+
+        }
+    );
+
+
+    wrapper.appendChild(header);
+
+    wrapper.appendChild(eventList);
+
+
+    return wrapper;
+
+}
+
+
+/* ============================================================
+   RENDER ALL CATEGORIES
+   ============================================================ */
+
+function renderCategories() {
+
+    DOM.categories.innerHTML =
+        "";
+
+
+    Object.entries(
+        EVENT_CATEGORIES
+    ).forEach(
+        (
+            [
+                categoryKey,
+                category
+            ]
+        ) => {
+
+            DOM.categories.appendChild(
+                createCategory(
+                    categoryKey,
+                    category
+                )
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   EVENT TRIGGER
+   ============================================================ */
+
+function triggerEvent(
+    eventCode
+) {
+
+    const event =
+        EVENTS[eventCode];
+
+
+    if (!event) {
+
+        console.error(
+            "Unknown event:",
+            eventCode
+        );
+
+        return;
+
+    }
+
+
+    STATE.score +=
+        event.points;
+
+
+    STATE.events +=
+        1;
+
+
+    STATE.history.unshift({
+
+        code:
+            event.code,
+
+        name:
+            event.name,
+
+        points:
+            event.points,
+
+        time:
+            Date.now()
+
+    });
+
+
+    renderHistory();
+
+    updateInterface();
+
+    saveState();
+
+
+    console.log(
+        `EVENT: ${event.code} +${event.points}`
+    );
+
+}
+
+
+/* ============================================================
+   SPECIAL PINK RULE
+   ============================================================ */
+
+/*
+   PINK is intentionally an event that can be triggered
+   repeatedly.
+
+   EVERY appearance = +75.
+
+   There is no once-only restriction.
+*/
+
+
+/* ============================================================
+   HOUSE BONUS RULES
+   ============================================================ */
+
+/*
+   NADO-H = +7
+   TE-H   = +15
+
+   These are separate events and can be triggered
+   independently from NADO / TE.
+*/
+
+
+/* ============================================================
+   EVENT DATABASE VERIFICATION
+   ============================================================ */
+
+function verifyEventDatabase() {
+
+    const requiredEvents = [
+
+        "NADO",
+        "PDS",
+        "DSTW",
+        "TE",
+
+        "FW",
+        "SFW",
+        "FLD",
+        "FE",
+
+        "EWW",
+        "PO",
+        "PR",
+
+        "NW",
+        "NUKE",
+        "N10",
+
+        "NADO-H",
+        "TE-H",
+
+        "RED",
+        "PINK"
+
+    ];
+
+
+    const missing =
+        requiredEvents.filter(
+            code => !EVENTS[code]
+        );
+
+
+    if (missing.length > 0) {
+
+        console.error(
+            "EVENT DATABASE ERROR:",
+            missing
+        );
+
+        return false;
+
+    }
+
+
+    console.log(
+        "EVENT DATABASE VERIFIED:",
+        requiredEvents.length,
+        "events"
+    );
+
+
+    return true;
+
+}
+
+
+/* ============================================================
+   PART 2 STARTUP
+   ============================================================ */
+
+verifyEventDatabase();
+
+renderCategories();
+
+renderHistory();
+
+updateInterface();
+
+
+console.log(
+    "PART 2 — EVENT DATABASE ONLINE"
+);
+
+
+/* ============================================================
+   END PART 2
+   ============================================================ */
 
