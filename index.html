@@ -1853,7 +1853,741 @@ console.log(
 /* ============================================================
    END PART 2
    ============================================================ */
-    </script>
+  /* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 3 — EVENT EFFECTS & VISUAL ENGINE
+   ============================================================ */
+
+
+/* ============================================================
+   EVENT EFFECT CONFIGURATION
+   ============================================================ */
+
+const EVENT_EFFECTS = {
+
+    NADO: {
+        className: "effect-tornado",
+        message: "🌪️ TORNADO DETECTED"
+    },
+
+    PDS: {
+        className: "effect-pds",
+        message: "⚠️ PDS WARNING"
+    },
+
+    DSTW: {
+        className: "effect-dstw",
+        message: "💨 DESTRUCTIVE SEVERE THUNDERSTORM"
+    },
+
+    TE: {
+        className: "effect-te",
+        message: "🚨 TORNADO EMERGENCY"
+    },
+
+    FW: {
+        className: "effect-flood-watch",
+        message: "🌧️ FLOOD WATCH"
+    },
+
+    SFW: {
+        className: "effect-flood-warning",
+        message: "🌊 FLOOD WARNING"
+    },
+
+    FLD: {
+        className: "effect-flood",
+        message: "🌊 FLOOD"
+    },
+
+    FE: {
+        className: "effect-flood-emergency",
+        message: "🚨 FLOOD EMERGENCY"
+    },
+
+    EWW: {
+        className: "effect-wind",
+        message: "💨 EXTREME WIND WARNING"
+    },
+
+    PO: {
+        className: "effect-power",
+        message: "⚡ POWER OUTAGE"
+    },
+
+    PR: {
+        className: "effect-restored",
+        message: "🔌 POWER RESTORED"
+    },
+
+    NW: {
+        className: "effect-nuke-watch",
+        message: "☢️ NUKE WATCH"
+    },
+
+    NUKE: {
+        className: "effect-nuke",
+        message: "☢️ NUKE ANNOUNCED"
+    },
+
+    N10: {
+        className: "effect-nuke",
+        message: "☢️ 10-MINUTE NUKE WARNING"
+    },
+
+    "NADO-H": {
+        className: "effect-house",
+        message: "🏠🌪️ TORNADO HITS HOUSE"
+    },
+
+    "TE-H": {
+        className: "effect-house-emergency",
+        message: "🏠🚨 TORNADO EMERGENCY HITS HOUSE"
+    },
+
+    RED: {
+        className: "effect-red",
+        message: "🟥 RED SERVER TEXT"
+    },
+
+    PINK: {
+        className: "effect-pink",
+        message: "🩷 PURPLE/PINK NUKE TEXT"
+    }
+
+};
+
+
+/* ============================================================
+   EFFECT CONTAINER
+   ============================================================ */
+
+function getEffectContainer() {
+
+    let container =
+        document.getElementById(
+            "effect-container"
+        );
+
+
+    if (container) {
+        return container;
+    }
+
+
+    container =
+        document.createElement("div");
+
+    container.id =
+        "effect-container";
+
+
+    document.body.appendChild(
+        container
+    );
+
+
+    return container;
+
+}
+
+
+/* ============================================================
+   EVENT POPUP
+   ============================================================ */
+
+function showEventPopup(
+    eventCode
+) {
+
+    const event =
+        EVENTS[eventCode];
+
+    const effect =
+        EVENT_EFFECTS[eventCode];
+
+
+    if (!event || !effect) {
+        return;
+    }
+
+
+    const container =
+        getEffectContainer();
+
+
+    const popup =
+        document.createElement("div");
+
+
+    popup.className =
+        `event-popup ${effect.className}`;
+
+
+    popup.innerHTML = `
+
+        <div class="event-popup-icon">
+            ${getEventIcon(eventCode)}
+        </div>
+
+        <div class="event-popup-content">
+
+            <div class="event-popup-message">
+                ${effect.message}
+            </div>
+
+            <div class="event-popup-points">
+                +${event.points} POINTS
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.appendChild(
+        popup
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            popup.classList.add(
+                "visible"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            popup.classList.remove(
+                "visible"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    popup.remove();
+
+                },
+                350
+            );
+
+        },
+        2600
+    );
+
+}
+
+
+/* ============================================================
+   EVENT ICONS
+   ============================================================ */
+
+function getEventIcon(
+    code
+) {
+
+    const icons = {
+
+        NADO: "🌪️",
+        PDS: "⚠️",
+        DSTW: "💨",
+        TE: "🚨",
+
+        FW: "🌧️",
+        SFW: "🌊",
+        FLD: "🌊",
+        FE: "🚨",
+
+        EWW: "💨",
+        PO: "⚡",
+        PR: "🔌",
+
+        NW: "☢️",
+        NUKE: "☢️",
+        N10: "☢️",
+
+        "NADO-H": "🏠🌪️",
+        "TE-H": "🏠🚨",
+
+        RED: "🟥",
+        PINK: "🩷"
+
+    };
+
+
+    return icons[code] || "⚠️";
+
+}
+
+
+/* ============================================================
+   SCORE FLASH
+   ============================================================ */
+
+function flashScore(
+    points
+) {
+
+    if (!DOM.score) {
+        return;
+    }
+
+
+    DOM.score.classList.remove(
+        "score-flash"
+    );
+
+
+    void DOM.score.offsetWidth;
+
+
+    DOM.score.classList.add(
+        "score-flash"
+    );
+
+
+    setTimeout(
+        () => {
+
+            DOM.score.classList.remove(
+                "score-flash"
+            );
+
+        },
+        550
+    );
+
+
+    createFloatingPoints(
+        points
+    );
+
+}
+
+
+/* ============================================================
+   FLOATING POINTS
+   ============================================================ */
+
+function createFloatingPoints(
+    points
+) {
+
+    const element =
+        document.createElement("div");
+
+
+    element.className =
+        "floating-points";
+
+
+    element.textContent =
+        `+${points}`;
+
+
+    element.style.left =
+        `${50 + (Math.random() * 20 - 10)}%`;
+
+
+    element.style.top =
+        "25%";
+
+
+    document.body.appendChild(
+        element
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            element.classList.add(
+                "float"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            element.remove();
+
+        },
+        1000
+    );
+
+}
+
+
+/* ============================================================
+   SCREEN FLASH
+   ============================================================ */
+
+function screenFlash(
+    className
+) {
+
+    const flash =
+        document.createElement("div");
+
+
+    flash.className =
+        `screen-flash ${className}`;
+
+
+    document.body.appendChild(
+        flash
+    );
+
+
+    requestAnimationFrame(
+        () => {
+
+            flash.classList.add(
+                "active"
+            );
+
+        }
+    );
+
+
+    setTimeout(
+        () => {
+
+            flash.classList.remove(
+                "active"
+            );
+
+
+            setTimeout(
+                () => {
+
+                    flash.remove();
+
+                },
+                300
+            );
+
+        },
+        450
+    );
+
+}
+
+
+/* ============================================================
+   EVENT-SPECIFIC EFFECTS
+   ============================================================ */
+
+function runEventEffect(
+    eventCode
+) {
+
+    showEventPopup(
+        eventCode
+    );
+
+
+    const event =
+        EVENTS[eventCode];
+
+
+    if (!event) {
+        return;
+    }
+
+
+    flashScore(
+        event.points
+    );
+
+
+    switch (
+        eventCode
+    ) {
+
+        case "NADO":
+
+            screenFlash(
+                "flash-tornado"
+            );
+
+            break;
+
+
+        case "PDS":
+
+            screenFlash(
+                "flash-warning"
+            );
+
+            break;
+
+
+        case "DSTW":
+
+            screenFlash(
+                "flash-warning"
+            );
+
+            break;
+
+
+        case "TE":
+
+            screenFlash(
+                "flash-emergency"
+            );
+
+            break;
+
+
+        case "FW":
+
+            screenFlash(
+                "flash-water"
+            );
+
+            break;
+
+
+        case "SFW":
+
+            screenFlash(
+                "flash-water"
+            );
+
+            break;
+
+
+        case "FLD":
+
+            screenFlash(
+                "flash-water"
+            );
+
+            break;
+
+
+        case "FE":
+
+            screenFlash(
+                "flash-emergency"
+            );
+
+            break;
+
+
+        case "EWW":
+
+            screenFlash(
+                "flash-wind"
+            );
+
+            break;
+
+
+        case "PO":
+
+            STATE.powerOut =
+                true;
+
+            document.body.classList.add(
+                "power-out"
+            );
+
+            saveState();
+
+            break;
+
+
+        case "PR":
+
+            STATE.powerOut =
+                false;
+
+            document.body.classList.remove(
+                "power-out"
+            );
+
+            saveState();
+
+            break;
+
+
+        case "NW":
+
+            screenFlash(
+                "flash-nuke-watch"
+            );
+
+            break;
+
+
+        case "NUKE":
+
+            screenFlash(
+                "flash-nuke"
+            );
+
+            break;
+
+
+        case "N10":
+
+            screenFlash(
+                "flash-nuke"
+            );
+
+            break;
+
+
+        case "NADO-H":
+
+            screenFlash(
+                "flash-house"
+            );
+
+            break;
+
+
+        case "TE-H":
+
+            screenFlash(
+                "flash-house-emergency"
+            );
+
+            break;
+
+
+        case "RED":
+
+            screenFlash(
+                "flash-red"
+            );
+
+            break;
+
+
+        case "PINK":
+
+            screenFlash(
+                "flash-pink"
+            );
+
+            break;
+
+    }
+
+}
+
+
+/* ============================================================
+   ENHANCED EVENT TRIGGER
+   ============================================================ */
+
+const originalTriggerEvent =
+    triggerEvent;
+
+
+triggerEvent =
+    function(eventCode) {
+
+        const before =
+            STATE.score;
+
+
+        originalTriggerEvent(
+            eventCode
+        );
+
+
+        const after =
+            STATE.score;
+
+
+        if (
+            after > before
+        ) {
+
+            runEventEffect(
+                eventCode
+            );
+
+        }
+
+    };
+
+
+/* ============================================================
+   ENHANCED POWER RESTORE
+   ============================================================ */
+
+const originalRestorePower =
+    restorePower;
+
+
+restorePower =
+    function() {
+
+        originalRestorePower();
+
+
+        document.body.classList.remove(
+            "power-out"
+        );
+
+
+        showEventPopup(
+            "PR"
+        );
+
+    };
+
+
+/* ============================================================
+   VISUAL ENGINE INITIALIZATION
+   ============================================================ */
+
+function initializeVisualEngine() {
+
+    getEffectContainer();
+
+
+    console.log(
+        "VISUAL EFFECT ENGINE INITIALIZED"
+    );
+
+}
+
+
+initializeVisualEngine();
+
+
+/* ============================================================
+   PART 3 ONLINE
+   ============================================================ */
+
+console.log(
+    "PART 3 — EVENT EFFECTS ONLINE"
+);
+
+
+/* ============================================================
+   END PART 3
+   ============================================================ */ 
+    
+   </script>
 </body>
 </html>
 
