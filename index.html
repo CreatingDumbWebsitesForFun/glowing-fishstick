@@ -3817,6 +3817,1093 @@ console.log(
 /* ============================================================
    END PART 2
    ============================================================ */
+    /* ============================================================
+   EVENT PANEL — FORCE VISIBLE
+   ============================================================ */
+
+const eventPanel =
+    document.createElement("section");
+
+eventPanel.className = "panel event-controls";
+
+eventPanel.innerHTML = `
+
+    <div class="panel-title">
+
+        <h2>
+            🎮 EVENT CONTROLS
+        </h2>
+
+        <span>
+            TAP TO RECORD
+        </span>
+
+    </div>
+
+    <div
+        id="event-buttons"
+        style="
+            padding:14px;
+            display:grid;
+            grid-template-columns:
+                repeat(2,minmax(0,1fr));
+            gap:8px;
+        "
+    ></div>
+
+`;
+
+
+/* Put it directly under the Live Server Feed */
+
+const liveFeed =
+    document.querySelector(
+        ".center-column > .panel"
+    );
+
+
+if (liveFeed) {
+
+    liveFeed.insertAdjacentElement(
+        "afterend",
+        eventPanel
+    );
+
+}
+
+
+/* ============================================================
+   EVENT BUTTONS
+   ============================================================ */
+
+const eventButtons =
+    document.getElementById(
+        "event-buttons"
+    );
+
+
+Object.values(EVENTS).forEach(
+    event => {
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+        button.type =
+            "button";
+
+        button.className =
+            "event-button";
+
+        button.innerHTML = `
+
+            <strong>
+                ${event.code}
+            </strong>
+
+            <br>
+
+            <small>
+                ${event.name}
+            </small>
+
+            <br>
+
+            <b>
+                +${event.points}
+            </b>
+
+        `;
+
+
+        button.style.cssText = `
+
+            min-height:65px;
+
+            padding:10px;
+
+            border:1px solid
+                var(--border);
+
+            border-radius:10px;
+
+            color:var(--text);
+
+            background:
+                var(--panel-light);
+
+            text-align:left;
+
+            cursor:pointer;
+
+        `;
+
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                triggerEvent(
+                    event.code
+                );
+
+            }
+        );
+
+
+        eventButtons.appendChild(
+            button
+        );
+
+    }
+);
+
+
+console.log(
+    "EVENT PANEL FORCED VISIBLE:",
+    eventButtons.children.length,
+    "buttons"
+);
+/* ============================================================
+   DAMAGE PROGRAM™
+   SUBURBAN WEATHER SIM
+   PART 4 / 5 — LIVE SYSTEM FIXES
+   ============================================================ */
+
+
+/* ============================================================
+   1. LIVE FILTER SYSTEM
+   ============================================================ */
+
+const filterTornado =
+    document.getElementById("filter-tornado");
+
+const filterFlood =
+    document.getElementById("filter-flood");
+
+const filterTropical =
+    document.getElementById("filter-tropical");
+
+const filterOther =
+    document.getElementById("filter-other");
+
+
+function isCategoryVisible(category) {
+
+    if (category === "tornado") {
+        return filterTornado.checked;
+    }
+
+    if (category === "flood") {
+        return filterFlood.checked;
+    }
+
+    if (category === "tropical") {
+        return filterTropical.checked;
+    }
+
+    return filterOther.checked;
+
+}
+
+
+function applyFeedFilters() {
+
+    const rows =
+        DOM.feed.querySelectorAll(
+            ".feed-row"
+        );
+
+
+    rows.forEach(row => {
+
+        const message =
+            row.querySelector(
+                ".feed-message"
+            );
+
+        if (!message) {
+            return;
+        }
+
+
+        const category =
+            message.className
+                .replace(
+                    "feed-message",
+                    ""
+                )
+                .trim();
+
+
+        row.style.display =
+            isCategoryVisible(category)
+                ? "grid"
+                : "none";
+
+    });
+
+}
+
+
+[
+    filterTornado,
+    filterFlood,
+    filterTropical,
+    filterOther
+].forEach(filter => {
+
+    filter.addEventListener(
+        "change",
+        applyFeedFilters
+    );
+
+});
+
+
+/* ============================================================
+   2. BETTER FEED RENDERING
+   ============================================================ */
+
+function renderFeedFixed() {
+
+    if (
+        STATE.history.length === 0
+    ) {
+
+        DOM.feed.innerHTML = `
+
+            <div class="feed-empty">
+                Waiting for
+                Suburban Weather Sim
+                events...
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    DOM.feed.innerHTML =
+        STATE.history
+            .map(event => `
+
+                <div
+                    class="feed-row"
+                    data-category="${event.category}"
+                >
+
+                    <div class="feed-time">
+                        [${event.time}]
+                    </div>
+
+                    <div
+                        class="feed-message ${event.category}"
+                    >
+                        ${event.message}
+                    </div>
+
+                    <div class="feed-points">
+                        +${event.points}
+                    </div>
+
+                </div>
+
+            `)
+            .join("");
+
+
+    applyFeedFilters();
+
+}
+
+
+/* Replace the previous feed renderer */
+
+renderFeed =
+    renderFeedFixed;
+
+
+/* ============================================================
+   3. LIVE SCORE CHART
+   ============================================================ */
+
+function updateLiveChart() {
+
+    const chart =
+        document.getElementById(
+            "score-chart"
+        );
+
+
+    if (!chart) {
+        return;
+    }
+
+
+    const values = {
+
+        tornado:
+            STATE.categoryPoints.tornado,
+
+        flood:
+            STATE.categoryPoints.flood,
+
+        tropical:
+            STATE.categoryPoints.tropical,
+
+        other:
+            STATE.categoryPoints.other
+
+    };
+
+
+    const total =
+        Object.values(values)
+            .reduce(
+                (sum, value) =>
+                    sum + value,
+                0
+            );
+
+
+    if (total === 0) {
+
+        chart.style.background =
+            "conic-gradient(#222b38 0deg 360deg)";
+
+        return;
+
+    }
+
+
+    const tornadoDegrees =
+        values.tornado / total * 360;
+
+    const floodDegrees =
+        values.flood / total * 360;
+
+    const tropicalDegrees =
+        values.tropical / total * 360;
+
+
+    const first =
+        tornadoDegrees;
+
+    const second =
+        first + floodDegrees;
+
+    const third =
+        second + tropicalDegrees;
+
+
+    chart.style.background = `
+
+        conic-gradient(
+
+            var(--red)
+            0deg ${first}deg,
+
+            var(--blue)
+            ${first}deg ${second}deg,
+
+            var(--green)
+            ${second}deg ${third}deg,
+
+            var(--orange)
+            ${third}deg 360deg
+
+        )
+
+    `;
+
+}
+
+
+/* ============================================================
+   4. LIVE BREAKDOWN
+   ============================================================ */
+
+function updateLiveBreakdown() {
+
+    const list =
+        document.getElementById(
+            "breakdown-list"
+        );
+
+
+    if (!list) {
+        return;
+    }
+
+
+    const categories = [
+
+        [
+            "Tornado / Thunderstorm",
+            "tornado",
+            "var(--red)"
+        ],
+
+        [
+            "Flooding",
+            "flood",
+            "var(--blue)"
+        ],
+
+        [
+            "Tropical",
+            "tropical",
+            "var(--green)"
+        ],
+
+        [
+            "Other",
+            "other",
+            "var(--orange)"
+        ]
+
+    ];
+
+
+    list.innerHTML =
+        categories
+            .map(
+                item => `
+
+                    <div class="breakdown-item">
+
+                        <span
+                            class="breakdown-dot"
+                            style="
+                                background:
+                                    ${item[2]};
+                            "
+                        ></span>
+
+                        <span>
+                            ${item[0]}
+                        </span>
+
+                        <strong>
+                            ${
+                                STATE.categoryPoints[
+                                    item[1]
+                                ]
+                            } PTS
+                        </strong>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+
+    updateLiveChart();
+
+}
+
+
+/* ============================================================
+   5. MAKE EVENT TRIGGER UPDATE EVERYTHING
+   ============================================================ */
+
+const triggerEventBeforePart4 =
+    triggerEvent;
+
+
+triggerEvent = function(eventCode) {
+
+    triggerEventBeforePart4(
+        eventCode
+    );
+
+
+    updateLiveBreakdown();
+
+    applyFeedFilters();
+
+    updateRadioDisplay(
+        eventCode
+    );
+
+};
+
+
+/* ============================================================
+   6. WEATHER RADIO
+   ============================================================ */
+
+const RADIO_MESSAGES = {
+
+    NADO: [
+        "TORNADO WARNING",
+        "Simulated tornado warning received.",
+        "🌪️"
+    ],
+
+    PDS: [
+        "PDS TORNADO WARNING",
+        "Particularly dangerous situation.",
+        "⚠️"
+    ],
+
+    DSTW: [
+        "DESTRUCTIVE SEVERE THUNDERSTORM WARNING",
+        "Destructive thunderstorm warning.",
+        "⛈️"
+    ],
+
+    TE: [
+        "TORNADO EMERGENCY",
+        "Simulated tornado emergency.",
+        "🚨"
+    ],
+
+    FW: [
+        "FLOOD WATCH",
+        "Flooding is possible.",
+        "🌊"
+    ],
+
+    SFW: [
+        "FLOOD WARNING",
+        "Flood warning received.",
+        "🌊"
+    ],
+
+    FLD: [
+        "FLOOD",
+        "Flood event recorded.",
+        "🌊"
+    ],
+
+    FE: [
+        "FLOOD EMERGENCY",
+        "Simulated flood emergency.",
+        "🚨"
+    ],
+
+    EWW: [
+        "EXTREME WIND WARNING",
+        "Extreme wind warning received.",
+        "💨"
+    ],
+
+    PO: [
+        "POWER OUTAGE",
+        "Power outage recorded.",
+        "⚡"
+    ],
+
+    PR: [
+        "POWER RESTORATION",
+        "Power restoration recorded.",
+        "🔌"
+    ],
+
+    NW: [
+        "NUCLEAR WATCH",
+        "Simulated nuclear watch.",
+        "☢️"
+    ],
+
+    NUKE: [
+        "NUCLEAR EVENT",
+        "Nuclear event announced.",
+        "☢️"
+    ],
+
+    N10: [
+        "10-MINUTE NUKE WARNING",
+        "Simulated warning received.",
+        "☢️"
+    ],
+
+    "NADO-H": [
+        "TORNADO — HOUSE BONUS",
+        "House damage bonus recorded.",
+        "🏠"
+    ],
+
+    "TE-H": [
+        "TORNADO EMERGENCY — HOUSE BONUS",
+        "House damage bonus recorded.",
+        "🏠"
+    ],
+
+    RED: [
+        "RED SERVER TEXT",
+        "Most destructive category text detected.",
+        "🟥"
+    ],
+
+    PINK: [
+        "PINK NUCLEAR TEXT",
+        "Purple/pink nuclear server text detected.",
+        "🩷"
+    ]
+
+};
+
+
+function updateRadioDisplay(eventCode) {
+
+    const data =
+        RADIO_MESSAGES[eventCode];
+
+
+    if (!data) {
+        return;
+    }
+
+
+    const screen =
+        document.getElementById(
+            "radio-screen"
+        );
+
+    const title =
+        document.getElementById(
+            "radio-title"
+        );
+
+    const message =
+        document.getElementById(
+            "radio-message"
+        );
+
+
+    if (
+        !screen ||
+        !title ||
+        !message
+    ) {
+        return;
+    }
+
+
+    title.textContent =
+        `${data[2]} ${data[0]}`;
+
+
+    message.textContent =
+        `${data[1]} • ` +
+        new Date().toLocaleTimeString(
+            [],
+            {
+                hour: "numeric",
+                minute: "2-digit"
+            }
+        );
+
+
+    screen.dataset.type =
+        EVENTS[eventCode].category;
+
+
+    screen.classList.remove(
+        "radio-alert"
+    );
+
+
+    void screen.offsetWidth;
+
+
+    screen.classList.add(
+        "radio-alert"
+    );
+
+}
+
+
+/* ============================================================
+   7. RADIO VISUAL STATES
+   ============================================================ */
+
+const radioFixStyle =
+    document.createElement("style");
+
+
+radioFixStyle.textContent = `
+
+    .radio-screen {
+        transition:
+            border-color 180ms ease,
+            background 180ms ease;
+    }
+
+
+    .radio-screen[data-type="tornado"] {
+        border-color:
+            rgba(255,77,85,0.65);
+    }
+
+
+    .radio-screen[data-type="flood"] {
+        border-color:
+            rgba(60,167,255,0.65);
+    }
+
+
+    .radio-screen[data-type="nuke"] {
+        border-color:
+            rgba(255,104,200,0.9);
+    }
+
+
+    .radio-screen.radio-alert {
+        animation:
+            radio-pulse 450ms ease;
+    }
+
+
+    @keyframes radio-pulse {
+
+        0% {
+            transform:
+                scale(1);
+        }
+
+        50% {
+            transform:
+                scale(1.025);
+        }
+
+        100% {
+            transform:
+                scale(1);
+        }
+
+    }
+
+
+    /* Make the feed more compact */
+
+    .feed {
+        height:
+            300px;
+    }
+
+
+    /* Compact breakdown */
+
+    .breakdown-body {
+        min-height:
+            190px;
+
+        padding:
+            14px;
+    }
+
+
+    .chart-placeholder {
+        width:
+            135px;
+
+        height:
+            135px;
+
+        border-width:
+            11px;
+    }
+
+
+    /* Compact right-side history */
+
+    .history {
+        height:
+            190px;
+    }
+
+`;
+
+
+document.head.appendChild(
+    radioFixStyle
+);
+
+
+/* ============================================================
+   8. REPLACE THE OLD QUICK REFERENCE
+      WITH THE COMPLETE 18-EVENT CHART
+   ============================================================ */
+
+function buildCompletePointSystem() {
+
+    const pointsPanel =
+        document.querySelector(
+            ".points-body"
+        );
+
+
+    if (!pointsPanel) {
+        return;
+    }
+
+
+    const rows = [
+
+        ["NADO", "Tornado", 1],
+        ["PDS", "PDS", 3],
+        [
+            "DSTW",
+            "Destructive Severe Thunderstorm Warning",
+            3
+        ],
+        ["TE", "Tornado Emergency", 10],
+
+        ["FW", "Flood Watch", 1],
+        ["SFW", "Flood Warning", 5],
+        ["FLD", "Flood", 10],
+        ["FE", "Flood Emergency", 20],
+
+        [
+            "EWW",
+            "Extreme Wind Warning",
+            20
+        ],
+        ["PO", "Power Outage", 7],
+        ["PR", "Power Restoration", 10],
+
+        ["NW", "Nuke Watch", 50],
+        ["NUKE", "Nuke announced", 75],
+        [
+            "N10",
+            "10-minute nuke warning",
+            75
+        ],
+
+        [
+            "NADO-H",
+            "Tornado hits house",
+            7
+        ],
+        [
+            "TE-H",
+            "Tornado Emergency hits house",
+            15
+        ],
+
+        [
+            "RED",
+            "Red server text",
+            5
+        ],
+        [
+            "PINK",
+            "Purple/pink nuke text",
+            75
+        ]
+
+    ];
+
+
+    pointsPanel.innerHTML = `
+
+        <div class="complete-points">
+
+            ${rows.map(row => `
+
+                <div class="complete-point-row">
+
+                    <span class="complete-code">
+                        ${row[0]}
+                    </span>
+
+                    <span class="complete-name">
+                        ${row[1]}
+                    </span>
+
+                    <strong>
+                        +${row[2]}
+                    </strong>
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+        <div class="pink-note">
+
+            🩷 PINK:
+            +75 for EACH appearance
+
+        </div>
+
+    `;
+
+
+    const style =
+        document.createElement(
+            "style"
+        );
+
+
+    style.textContent = `
+
+        .complete-points {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+        }
+
+
+        .complete-point-row {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                52px
+                minmax(0,1fr)
+                35px;
+
+            gap:
+                6px;
+
+            align-items:
+                center;
+
+            min-height:
+                29px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.06);
+
+            font-size:
+                9px;
+
+        }
+
+
+        .complete-code {
+
+            color:
+                var(--text);
+
+            font-weight:
+                950;
+
+        }
+
+
+        .complete-name {
+
+            color:
+                var(--muted);
+
+        }
+
+
+        .complete-point-row strong {
+
+            color:
+                var(--yellow);
+
+            text-align:
+                right;
+
+        }
+
+
+        .pink-note {
+
+            margin-top:
+                9px;
+
+            padding-top:
+                9px;
+
+            border-top:
+                1px solid var(--border);
+
+            color:
+                var(--pink);
+
+            font-size:
+                9px;
+
+            font-weight:
+                900;
+
+        }
+
+    `;
+
+
+    document.head.appendChild(
+        style
+    );
+
+}
+
+
+/* ============================================================
+   9. REMOVE DUPLICATE RESET DAY
+   ============================================================ */
+
+if (DOM.resetDay) {
+
+    DOM.resetDay.remove();
+
+}
+
+
+/* ============================================================
+   10. INITIALIZE FIXES
+   ============================================================ */
+
+buildCompletePointSystem();
+
+renderFeedFixed();
+
+updateLiveBreakdown();
+
+applyFeedFilters();
+
+
+console.log(
+    "=========================================="
+);
+
+console.log(
+    "PART 4 / 5 — LIVE SYSTEM FIXES ONLINE"
+);
+
+console.log(
+    "RADIO: ONLINE"
+);
+
+console.log(
+    "CHART: ONLINE"
+);
+
+console.log(
+    "FILTERS: ONLINE"
+);
+
+console.log(
+    "FULL POINT CHART: ONLINE"
+);
+
+console.log(
+    "DUPLICATE RESET: REMOVED"
+);
+
+console.log(
+    "=========================================="
+);
 
 </script>
 
