@@ -5234,8 +5234,282 @@ runSelfTest();
 /* ============================================================
    END PART 5
    ============================================================ */
+    /* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 6 — EVENT PANEL REBUILD
+   ============================================================ */
+
+
+/* ============================================================
+   EVENT PANEL — FORCE REBUILD
+   ============================================================ */
+
+function rebuildEventPanel() {
+
+    const container =
+        document.getElementById("categories");
+
+
+    if (!container) {
+
+        console.error(
+            "DAMAGE PROGRAM: Event Center container missing."
+        );
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    const categoryOrder = [
+
+        "tornado",
+        "flood",
+        "wind",
+        "nuke",
+        "house",
+        "special"
+
+    ];
+
+
+    categoryOrder.forEach(
+        categoryKey => {
+
+            const category =
+                EVENT_CATEGORIES[
+                    categoryKey
+                ];
+
+
+            if (!category) {
+
+                console.error(
+                    "Missing category:",
+                    categoryKey
+                );
+
+                return;
+
+            }
+
+
+            const wrapper =
+                document.createElement(
+                    "div"
+                );
+
+
+            wrapper.className =
+                "category";
+
+
+            /* ==================================================
+               CATEGORY HEADER
+               ================================================== */
+
+            const header =
+                document.createElement(
+                    "button"
+                );
+
+
+            header.type =
+                "button";
+
+
+            header.className =
+                "category-header";
+
+
+            header.innerHTML = `
+
+                <span class="category-left">
+
+                    <span class="category-icon">
+                        ${category.icon}
+                    </span>
+
+                    <span>
+
+                        <span class="category-name">
+                            ${category.name}
+                        </span>
+
+                        <span class="category-description">
+                            ${category.description}
+                        </span>
+
+                    </span>
+
+                </span>
+
+
+                <span class="category-arrow">
+                    ▼
+                </span>
+
+            `;
+
+
+            /* ==================================================
+               EVENT LIST
+               ================================================== */
+
+            const list =
+                document.createElement(
+                    "div"
+                );
+
+
+            list.className =
+                "event-list";
+
+
+            category.events.forEach(
+                eventCode => {
+
+                    const event =
+                        EVENTS[
+                            eventCode
+                        ];
+
+
+                    if (!event) {
+
+                        console.error(
+                            "Missing event:",
+                            eventCode
+                        );
+
+                        return;
+
+                    }
+
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    button.type =
+                        "button";
+
+
+                    button.className =
+                        "event-button";
+
+
+                    button.innerHTML = `
+
+                        <span class="event-code">
+                            ${event.code}
+                        </span>
+
+                        <span class="event-description">
+                            ${event.name}
+                        </span>
+
+                        <span class="event-points">
+                            +${event.points}
+                        </span>
+
+                    `;
+
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            triggerEvent(
+                                event.code
+                            );
+
+                        }
+                    );
+
+
+                    list.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+
+            /* ==================================================
+               CATEGORY TOGGLE
+               ================================================== */
+
+            header.addEventListener(
+                "click",
+                () => {
+
+                    wrapper.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            wrapper.appendChild(
+                header
+            );
+
+
+            wrapper.appendChild(
+                list
+            );
+
+
+            container.appendChild(
+                wrapper
+            );
+
+        }
+    );
+
+
+    console.log(
+        "DAMAGE PROGRAM: EVENT PANEL REBUILT"
+    );
+
+    console.log(
+        "Categories:",
+        container.children.length
+    );
+
+}
+
+
+/* ============================================================
+   FORCE EVENT PANEL
+   ============================================================ */
+
+rebuildEventPanel();
+
+
+/* ============================================================
+   PART 6 ONLINE
+   ============================================================ */
+
+console.log(
+    "PART 6 — EVENT PANEL REBUILD ONLINE"
+);
+
+
+/* ============================================================
+   END PART 6
+   ============================================================ */
     
    </script>
 </body>
 </html>
+
 
