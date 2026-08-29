@@ -5507,6 +5507,499 @@ console.log(
 /* ============================================================
    END PART 6
    ============================================================ */
+    /* ============================================================
+   DAMAGE PROGRAM™
+   FACTORY RESET
+   PART 7 — VISIBLE EVENT CATEGORY BUTTONS
+   ============================================================ */
+
+
+/* ============================================================
+   CATEGORY BUTTON STYLE
+   ============================================================ */
+
+const categoryButtonStyle =
+    document.createElement("style");
+
+categoryButtonStyle.textContent = `
+
+    .dp-category {
+
+        width: 100%;
+
+        margin-bottom: 10px;
+
+        overflow: hidden;
+
+        border: 1px solid var(--border);
+
+        border-radius: 17px;
+
+        background:
+            rgba(5,8,17,0.55);
+
+    }
+
+
+    .dp-category-button {
+
+        width: 100%;
+
+        min-height: 68px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 12px;
+
+        padding: 13px;
+
+        border: 0;
+
+        color: var(--text);
+
+        background: transparent;
+
+        text-align: left;
+
+        cursor: pointer;
+
+    }
+
+
+    .dp-category-button:hover {
+
+        background:
+            rgba(255,255,255,0.05);
+
+    }
+
+
+    .dp-category-left {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        min-width: 0;
+
+    }
+
+
+    .dp-category-icon {
+
+        width: 42px;
+
+        height: 42px;
+
+        flex: 0 0 auto;
+
+        display: grid;
+
+        place-items: center;
+
+        border-radius: 13px;
+
+        background:
+            rgba(255,255,255,0.055);
+
+        font-size: 23px;
+
+    }
+
+
+    .dp-category-text {
+
+        min-width: 0;
+
+    }
+
+
+    .dp-category-name {
+
+        display: block;
+
+        font-size: 14px;
+
+        font-weight: 950;
+
+    }
+
+
+    .dp-category-description {
+
+        display: block;
+
+        margin-top: 3px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+
+    }
+
+
+    .dp-category-arrow {
+
+        flex: 0 0 auto;
+
+        color: var(--muted);
+
+        font-size: 19px;
+
+        transition:
+            transform 180ms ease;
+
+    }
+
+
+    .dp-category.open
+    .dp-category-arrow {
+
+        transform:
+            rotate(180deg);
+
+    }
+
+
+    .dp-event-list {
+
+        display: none;
+
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+
+        gap: 9px;
+
+        padding: 0 10px 10px;
+
+    }
+
+
+    .dp-category.open
+    .dp-event-list {
+
+        display: grid;
+
+    }
+
+
+    .dp-event-button {
+
+        min-height: 78px;
+
+        padding: 12px;
+
+        border: 1px solid var(--border);
+
+        border-radius: 14px;
+
+        color: var(--text);
+
+        background:
+            rgba(255,255,255,0.035);
+
+        text-align: left;
+
+        cursor: pointer;
+
+    }
+
+
+    .dp-event-button:hover {
+
+        background:
+            rgba(255,255,255,0.08);
+
+        border-color:
+            rgba(255,255,255,0.22);
+
+    }
+
+
+    .dp-event-code {
+
+        display: block;
+
+        font-size: 14px;
+
+        font-weight: 950;
+
+    }
+
+
+    .dp-event-name {
+
+        display: block;
+
+        margin-top: 4px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+
+        line-height: 1.35;
+
+    }
+
+
+    .dp-event-points {
+
+        display: block;
+
+        margin-top: 7px;
+
+        color: var(--yellow);
+
+        font-size: 10px;
+
+        font-weight: 950;
+
+    }
+
+
+    @media (max-width: 540px) {
+
+        .dp-event-list {
+
+            grid-template-columns: 1fr;
+
+        }
+
+    }
+
+`;
+
+document.head.appendChild(
+    categoryButtonStyle
+);
+
+
+/* ============================================================
+   BUILD ACTUAL CATEGORY BUTTONS
+   ============================================================ */
+
+function buildVisibleEventPanel() {
+
+    const container =
+        document.getElementById(
+            "categories"
+        );
+
+
+    if (!container) {
+
+        console.error(
+            "DAMAGE PROGRAM: #categories does not exist."
+        );
+
+        return;
+
+    }
+
+
+    container.innerHTML = "";
+
+
+    Object.entries(
+        EVENT_CATEGORIES
+    ).forEach(
+        (
+            [
+                categoryKey,
+                category
+            ]
+        ) => {
+
+            const wrapper =
+                document.createElement(
+                    "div"
+                );
+
+
+            wrapper.className =
+                "dp-category";
+
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.type =
+                "button";
+
+
+            button.className =
+                "dp-category-button";
+
+
+            button.innerHTML = `
+
+                <span class="dp-category-left">
+
+                    <span class="dp-category-icon">
+                        ${category.icon}
+                    </span>
+
+                    <span class="dp-category-text">
+
+                        <span class="dp-category-name">
+                            ${category.name}
+                        </span>
+
+                        <span class="dp-category-description">
+                            ${category.description}
+                        </span>
+
+                    </span>
+
+                </span>
+
+                <span class="dp-category-arrow">
+                    ▼
+                </span>
+
+            `;
+
+
+            const list =
+                document.createElement(
+                    "div"
+                );
+
+
+            list.className =
+                "dp-event-list";
+
+
+            category.events.forEach(
+                eventCode => {
+
+                    const event =
+                        EVENTS[eventCode];
+
+
+                    if (!event) {
+                        return;
+                    }
+
+
+                    const eventButton =
+                        document.createElement(
+                            "button"
+                        );
+
+
+                    eventButton.type =
+                        "button";
+
+
+                    eventButton.className =
+                        "dp-event-button";
+
+
+                    eventButton.innerHTML = `
+
+                        <span class="dp-event-code">
+                            ${event.code}
+                        </span>
+
+                        <span class="dp-event-name">
+                            ${event.name}
+                        </span>
+
+                        <span class="dp-event-points">
+                            +${event.points}
+                        </span>
+
+                    `;
+
+
+                    eventButton.addEventListener(
+                        "click",
+                        eventObject => {
+
+                            eventObject.stopPropagation();
+
+                            triggerEvent(
+                                event.code
+                            );
+
+                        }
+                    );
+
+
+                    list.appendChild(
+                        eventButton
+                    );
+
+                }
+            );
+
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    wrapper.classList.toggle(
+                        "open"
+                    );
+
+                }
+            );
+
+
+            wrapper.appendChild(
+                button
+            );
+
+
+            wrapper.appendChild(
+                list
+            );
+
+
+            container.appendChild(
+                wrapper
+            );
+
+        }
+    );
+
+
+    console.log(
+        "VISIBLE EVENT PANEL READY"
+    );
+
+}
+
+
+/* ============================================================
+   RUN IT
+   ============================================================ */
+
+buildVisibleEventPanel();
+
+
+/* ============================================================
+   PART 7 ONLINE
+   ============================================================ */
+
+console.log(
+    "PART 7 — VISIBLE EVENT BUTTONS ONLINE"
+);
+
+
+/* ============================================================
+   END PART 7
+   ============================================================ */
     
    </script>
 </body>
