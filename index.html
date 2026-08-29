@@ -3968,78 +3968,454 @@ console.log(
 /* ============================================================
    DAMAGE PROGRAM™
    SUBURBAN WEATHER SIM
-   PART 4 / 5 — LIVE SYSTEM FIXES
+   PART 4 / 5 — LIVE DASHBOARD SYSTEM
    ============================================================ */
 
 
 /* ============================================================
-   1. LIVE FILTER SYSTEM
+   CATEGORY SCORE TRACKING
    ============================================================ */
 
-const filterTornado =
-    document.getElementById("filter-tornado");
-
-const filterFlood =
-    document.getElementById("filter-flood");
-
-const filterTropical =
-    document.getElementById("filter-tropical");
-
-const filterOther =
-    document.getElementById("filter-other");
+STATE.categoryPoints = {
+    tornado: 0,
+    flood: 0,
+    tropical: 0,
+    other: 0
+};
 
 
-function isCategoryVisible(category) {
+/* Recalculate category points from history */
 
-    if (category === "tornado") {
-        return filterTornado.checked;
-    }
+function calculateCategoryPoints() {
 
-    if (category === "flood") {
-        return filterFlood.checked;
-    }
+    STATE.categoryPoints = {
+        tornado: 0,
+        flood: 0,
+        tropical: 0,
+        other: 0
+    };
 
-    if (category === "tropical") {
-        return filterTropical.checked;
-    }
 
-    return filterOther.checked;
+    STATE.history.forEach(event => {
+
+        const databaseEvent =
+            EVENTS[event.code];
+
+        if (!databaseEvent) {
+            return;
+        }
+
+
+        let category =
+            databaseEvent.category;
+
+
+        if (
+            category !== "tornado" &&
+            category !== "flood" &&
+            category !== "tropical"
+        ) {
+
+            category = "other";
+
+        }
+
+
+        STATE.categoryPoints[category] +=
+            Number(event.points) || 0;
+
+    });
 
 }
 
 
-function applyFeedFilters() {
+/* ============================================================
+   LIVE SCORE CHART
+   ============================================================ */
+
+function createScoreChart() {
+
+    const scoreCard =
+        document.querySelector(
+            ".score-card"
+        );
+
+
+    if (!scoreCard) {
+        return;
+    }
+
+
+    let chart =
+        document.getElementById(
+            "live-score-chart"
+        );
+
+
+    if (chart) {
+        return;
+    }
+
+
+    chart =
+        document.createElement(
+            "div"
+        );
+
+    chart.id =
+        "live-score-chart";
+
+
+    chart.innerHTML = `
+
+        <div class="chart-title">
+            SCORE BREAKDOWN
+        </div>
+
+        <div class="chart-area">
+
+            <div
+                id="score-pie"
+                class="score-pie"
+            >
+                <div class="score-pie-hole">
+                    LIVE
+                </div>
+            </div>
+
+            <div
+                id="score-legend"
+                class="score-legend"
+            ></div>
+
+        </div>
+
+    `;
+
+
+    scoreCard.appendChild(
+        chart
+    );
+
+}
+
+
+/* ============================================================
+   UPDATE CHART
+   ============================================================ */
+
+function updateScoreChart() {
+
+    calculateCategoryPoints();
+
+
+    const pie =
+        document.getElementById(
+            "score-pie"
+        );
+
+    const legend =
+        document.getElementById(
+            "score-legend"
+        );
+
+
+    if (!pie || !legend) {
+        return;
+    }
+
+
+    const tornado =
+        STATE.categoryPoints.tornado;
+
+    const flood =
+        STATE.categoryPoints.flood;
+
+    const tropical =
+        STATE.categoryPoints.tropical;
+
+    const other =
+        STATE.categoryPoints.other;
+
+
+    const total =
+        tornado +
+        flood +
+        tropical +
+        other;
+
+
+    if (total === 0) {
+
+        pie.style.background =
+            "conic-gradient(#252c3d 0deg 360deg)";
+
+    }
+
+    else {
+
+        const tornadoDeg =
+            tornado / total * 360;
+
+        const floodDeg =
+            flood / total * 360;
+
+        const tropicalDeg =
+            tropical / total * 360;
+
+
+        pie.style.background = `
+
+            conic-gradient(
+
+                var(--red)
+                0deg
+                ${tornadoDeg}deg,
+
+                var(--blue)
+                ${tornadoDeg}deg
+                ${tornadoDeg + floodDeg}deg,
+
+                var(--green)
+                ${tornadoDeg + floodDeg}deg
+                ${tornadoDeg + floodDeg + tropicalDeg}deg,
+
+                var(--orange)
+                ${tornadoDeg + floodDeg + tropicalDeg}deg
+                360deg
+
+            )
+
+        `;
+
+    }
+
+
+    legend.innerHTML = `
+
+        <div class="legend-row">
+            <span class="legend-dot tornado-dot"></span>
+            <span>Tornado</span>
+            <strong>${tornado}</strong>
+        </div>
+
+        <div class="legend-row">
+            <span class="legend-dot flood-dot"></span>
+            <span>Flooding</span>
+            <strong>${flood}</strong>
+        </div>
+
+        <div class="legend-row">
+            <span class="legend-dot tropical-dot"></span>
+            <span>Tropical</span>
+            <strong>${tropical}</strong>
+        </div>
+
+        <div class="legend-row">
+            <span class="legend-dot other-dot"></span>
+            <span>Other</span>
+            <strong>${other}</strong>
+        </div>
+
+    `;
+
+}
+
+
+/* ============================================================
+   EVENT FILTERS
+   ============================================================ */
+
+function createFilters() {
+
+    const historyCard =
+        DOM.history.closest(
+            ".panel"
+        );
+
+
+    if (!historyCard) {
+        return;
+    }
+
+
+    if (
+        document.getElementById(
+            "event-filters"
+        )
+    ) {
+        return;
+    }
+
+
+    const filters =
+        document.createElement(
+            "div"
+        );
+
+
+    filters.id =
+        "event-filters";
+
+
+    filters.innerHTML = `
+
+        <button
+            class="filter active"
+            data-filter="all"
+        >
+            ALL
+        </button>
+
+        <button
+            class="filter active"
+            data-filter="tornado"
+        >
+            🌪️
+        </button>
+
+        <button
+            class="filter active"
+            data-filter="flood"
+        >
+            🌊
+        </button>
+
+        <button
+            class="filter active"
+            data-filter="tropical"
+        >
+            🌴
+        </button>
+
+        <button
+            class="filter active"
+            data-filter="other"
+        >
+            ⚡
+        </button>
+
+    `;
+
+
+    const title =
+        historyCard.querySelector(
+            ".section-title"
+        );
+
+
+    if (title) {
+
+        title.insertAdjacentElement(
+            "afterend",
+            filters
+        );
+
+    }
+
+
+    filters
+        .querySelectorAll(
+            ".filter"
+        )
+        .forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    filters
+                        .querySelectorAll(
+                            ".filter"
+                        )
+                        .forEach(
+                            otherButton =>
+                                otherButton.classList.remove(
+                                    "selected"
+                                )
+                        );
+
+
+                    button.classList.add(
+                        "selected"
+                    );
+
+
+                    applyHistoryFilter(
+                        button.dataset.filter
+                    );
+
+                }
+            );
+
+        });
+
+
+    const all =
+        filters.querySelector(
+            '[data-filter="all"]'
+        );
+
+
+    if (all) {
+        all.classList.add(
+            "selected"
+        );
+    }
+
+}
+
+
+/* ============================================================
+   FILTER HISTORY
+   ============================================================ */
+
+function applyHistoryFilter(
+    filter
+) {
 
     const rows =
-        DOM.feed.querySelectorAll(
-            ".feed-row"
+        DOM.history.querySelectorAll(
+            ".history-row"
         );
 
 
     rows.forEach(row => {
 
-        const message =
-            row.querySelector(
-                ".feed-message"
-            );
+        const code =
+            row.dataset.code;
 
-        if (!message) {
+
+        const event =
+            EVENTS[code];
+
+
+        if (!event) {
             return;
         }
 
 
-        const category =
-            message.className
-                .replace(
-                    "feed-message",
-                    ""
-                )
-                .trim();
+        let category =
+            event.category;
+
+
+        if (
+            category !== "tornado" &&
+            category !== "flood" &&
+            category !== "tropical"
+        ) {
+
+            category = "other";
+
+        }
 
 
         row.style.display =
-            isCategoryVisible(category)
-                ? "grid"
+            (
+                filter === "all" ||
+                category === filter
+            )
+                ? "flex"
                 : "none";
 
     });
@@ -4047,37 +4423,20 @@ function applyFeedFilters() {
 }
 
 
-[
-    filterTornado,
-    filterFlood,
-    filterTropical,
-    filterOther
-].forEach(filter => {
-
-    filter.addEventListener(
-        "change",
-        applyFeedFilters
-    );
-
-});
-
-
 /* ============================================================
-   2. BETTER FEED RENDERING
+   IMPROVED HISTORY
    ============================================================ */
 
-function renderFeedFixed() {
+function renderHistoryPart4() {
 
     if (
         STATE.history.length === 0
     ) {
 
-        DOM.feed.innerHTML = `
+        DOM.history.innerHTML = `
 
-            <div class="feed-empty">
-                Waiting for
-                Suburban Weather Sim
-                events...
+            <div class="history-empty">
+                No events yet.
             </div>
 
         `;
@@ -4087,26 +4446,28 @@ function renderFeedFixed() {
     }
 
 
-    DOM.feed.innerHTML =
+    DOM.history.innerHTML =
         STATE.history
             .map(event => `
 
                 <div
-                    class="feed-row"
-                    data-category="${event.category}"
+                    class="history-row"
+                    data-code="${event.code}"
                 >
 
-                    <div class="feed-time">
-                        [${event.time}]
+                    <div>
+
+                        <div class="history-code">
+                            ${event.code}
+                        </div>
+
+                        <div class="history-name">
+                            ${event.name}
+                        </div>
+
                     </div>
 
-                    <div
-                        class="feed-message ${event.category}"
-                    >
-                        ${event.message}
-                    </div>
-
-                    <div class="feed-points">
+                    <div class="history-points">
                         +${event.points}
                     </div>
 
@@ -4116,351 +4477,178 @@ function renderFeedFixed() {
             .join("");
 
 
-    applyFeedFilters();
+    const selected =
+        document.querySelector(
+            ".filter.selected"
+        );
+
+
+    if (selected) {
+
+        applyHistoryFilter(
+            selected.dataset.filter
+        );
+
+    }
 
 }
 
 
-/* Replace the previous feed renderer */
-
-renderFeed =
-    renderFeedFixed;
-
-
 /* ============================================================
-   3. LIVE SCORE CHART
+   WEATHER RADIO
    ============================================================ */
 
-function updateLiveChart() {
+function createWeatherRadio() {
 
-    const chart =
-        document.getElementById(
-            "score-chart"
+    const controls =
+        DOM.resetEverything.closest(
+            ".panel"
         );
 
 
-    if (!chart) {
+    if (!controls) {
         return;
     }
 
 
-    const values = {
-
-        tornado:
-            STATE.categoryPoints.tornado,
-
-        flood:
-            STATE.categoryPoints.flood,
-
-        tropical:
-            STATE.categoryPoints.tropical,
-
-        other:
-            STATE.categoryPoints.other
-
-    };
-
-
-    const total =
-        Object.values(values)
-            .reduce(
-                (sum, value) =>
-                    sum + value,
-                0
-            );
-
-
-    if (total === 0) {
-
-        chart.style.background =
-            "conic-gradient(#222b38 0deg 360deg)";
-
-        return;
-
-    }
-
-
-    const tornadoDegrees =
-        values.tornado / total * 360;
-
-    const floodDegrees =
-        values.flood / total * 360;
-
-    const tropicalDegrees =
-        values.tropical / total * 360;
-
-
-    const first =
-        tornadoDegrees;
-
-    const second =
-        first + floodDegrees;
-
-    const third =
-        second + tropicalDegrees;
-
-
-    chart.style.background = `
-
-        conic-gradient(
-
-            var(--red)
-            0deg ${first}deg,
-
-            var(--blue)
-            ${first}deg ${second}deg,
-
-            var(--green)
-            ${second}deg ${third}deg,
-
-            var(--orange)
-            ${third}deg 360deg
-
+    if (
+        document.getElementById(
+            "weather-radio"
         )
+    ) {
+        return;
+    }
+
+
+    const radio =
+        document.createElement(
+            "section"
+        );
+
+
+    radio.id =
+        "weather-radio";
+
+    radio.className =
+        "panel card";
+
+
+    radio.innerHTML = `
+
+        <div class="section-title">
+
+            <h2>
+                📻 WEATHER RADIO
+            </h2>
+
+            <span>
+                SWS SIMULATION
+            </span>
+
+        </div>
+
+        <div
+            id="radio-screen"
+            class="radio-screen"
+        >
+
+            <div
+                id="radio-title"
+                class="radio-title"
+            >
+                📻 STANDBY
+            </div>
+
+            <div
+                id="radio-message"
+                class="radio-message"
+            >
+                Waiting for a weather event...
+            </div>
+
+        </div>
 
     `;
 
-}
 
-
-/* ============================================================
-   4. LIVE BREAKDOWN
-   ============================================================ */
-
-function updateLiveBreakdown() {
-
-    const list =
-        document.getElementById(
-            "breakdown-list"
-        );
-
-
-    if (!list) {
-        return;
-    }
-
-
-    const categories = [
-
-        [
-            "Tornado / Thunderstorm",
-            "tornado",
-            "var(--red)"
-        ],
-
-        [
-            "Flooding",
-            "flood",
-            "var(--blue)"
-        ],
-
-        [
-            "Tropical",
-            "tropical",
-            "var(--green)"
-        ],
-
-        [
-            "Other",
-            "other",
-            "var(--orange)"
-        ]
-
-    ];
-
-
-    list.innerHTML =
-        categories
-            .map(
-                item => `
-
-                    <div class="breakdown-item">
-
-                        <span
-                            class="breakdown-dot"
-                            style="
-                                background:
-                                    ${item[2]};
-                            "
-                        ></span>
-
-                        <span>
-                            ${item[0]}
-                        </span>
-
-                        <strong>
-                            ${
-                                STATE.categoryPoints[
-                                    item[1]
-                                ]
-                            } PTS
-                        </strong>
-
-                    </div>
-
-                `
-            )
-            .join("");
-
-
-    updateLiveChart();
+    controls.insertAdjacentElement(
+        "beforebegin",
+        radio
+    );
 
 }
 
 
 /* ============================================================
-   5. MAKE EVENT TRIGGER UPDATE EVERYTHING
+   RADIO EVENT MESSAGES
    ============================================================ */
 
-const triggerEventBeforePart4 =
-    triggerEvent;
+const RADIO_MESSAGES_PART4 = {
 
-
-triggerEvent = function(eventCode) {
-
-    triggerEventBeforePart4(
-        eventCode
-    );
-
-
-    updateLiveBreakdown();
-
-    applyFeedFilters();
-
-    updateRadioDisplay(
-        eventCode
-    );
-
-};
-
-
-/* ============================================================
-   6. WEATHER RADIO
-   ============================================================ */
-
-const RADIO_MESSAGES = {
-
-    NADO: [
+    NADO:
         "TORNADO WARNING",
-        "Simulated tornado warning received.",
-        "🌪️"
-    ],
 
-    PDS: [
+    PDS:
         "PDS TORNADO WARNING",
-        "Particularly dangerous situation.",
-        "⚠️"
-    ],
 
-    DSTW: [
+    DSTW:
         "DESTRUCTIVE SEVERE THUNDERSTORM WARNING",
-        "Destructive thunderstorm warning.",
-        "⛈️"
-    ],
 
-    TE: [
+    TE:
         "TORNADO EMERGENCY",
-        "Simulated tornado emergency.",
-        "🚨"
-    ],
 
-    FW: [
+    FW:
         "FLOOD WATCH",
-        "Flooding is possible.",
-        "🌊"
-    ],
 
-    SFW: [
+    SFW:
         "FLOOD WARNING",
-        "Flood warning received.",
-        "🌊"
-    ],
 
-    FLD: [
+    FLD:
         "FLOOD",
-        "Flood event recorded.",
-        "🌊"
-    ],
 
-    FE: [
+    FE:
         "FLOOD EMERGENCY",
-        "Simulated flood emergency.",
-        "🚨"
-    ],
 
-    EWW: [
+    EWW:
         "EXTREME WIND WARNING",
-        "Extreme wind warning received.",
-        "💨"
-    ],
 
-    PO: [
+    PO:
         "POWER OUTAGE",
-        "Power outage recorded.",
-        "⚡"
-    ],
 
-    PR: [
+    PR:
         "POWER RESTORATION",
-        "Power restoration recorded.",
-        "🔌"
-    ],
 
-    NW: [
+    NW:
         "NUCLEAR WATCH",
-        "Simulated nuclear watch.",
-        "☢️"
-    ],
 
-    NUKE: [
+    NUKE:
         "NUCLEAR EVENT",
-        "Nuclear event announced.",
-        "☢️"
-    ],
 
-    N10: [
-        "10-MINUTE NUKE WARNING",
-        "Simulated warning received.",
-        "☢️"
-    ],
+    N10:
+        "10-MINUTE NUCLEAR WARNING",
 
-    "NADO-H": [
-        "TORNADO — HOUSE BONUS",
-        "House damage bonus recorded.",
-        "🏠"
-    ],
+    "NADO-H":
+        "TORNADO — HOUSE IMPACT",
 
-    "TE-H": [
-        "TORNADO EMERGENCY — HOUSE BONUS",
-        "House damage bonus recorded.",
-        "🏠"
-    ],
+    "TE-H":
+        "TORNADO EMERGENCY — HOUSE IMPACT",
 
-    RED: [
+    RED:
         "RED SERVER TEXT",
-        "Most destructive category text detected.",
-        "🟥"
-    ],
 
-    PINK: [
-        "PINK NUCLEAR TEXT",
-        "Purple/pink nuclear server text detected.",
-        "🩷"
-    ]
+    PINK:
+        "🩷 PINK NUCLEAR TEXT"
 
 };
 
 
-function updateRadioDisplay(eventCode) {
+/* ============================================================
+   UPDATE RADIO
+   ============================================================ */
 
-    const data =
-        RADIO_MESSAGES[eventCode];
-
-
-    if (!data) {
-        return;
-    }
-
+function updateWeatherRadio(
+    eventCode
+) {
 
     const screen =
         document.getElementById(
@@ -4487,27 +4675,39 @@ function updateRadioDisplay(eventCode) {
     }
 
 
+    const warning =
+        RADIO_MESSAGES_PART4[
+            eventCode
+        ];
+
+
+    if (!warning) {
+        return;
+    }
+
+
     title.textContent =
-        `${data[2]} ${data[0]}`;
+        warning;
 
 
     message.textContent =
-        `${data[1]} • ` +
-        new Date().toLocaleTimeString(
-            [],
-            {
-                hour: "numeric",
-                minute: "2-digit"
-            }
-        );
+        `Simulated SWS warning • ${
+            new Date().toLocaleTimeString(
+                [],
+                {
+                    hour: "numeric",
+                    minute: "2-digit"
+                }
+            )
+        }`;
 
 
-    screen.dataset.type =
-        EVENTS[eventCode].category;
+    screen.dataset.event =
+        eventCode;
 
 
     screen.classList.remove(
-        "radio-alert"
+        "radio-flash"
     );
 
 
@@ -4515,370 +4715,441 @@ function updateRadioDisplay(eventCode) {
 
 
     screen.classList.add(
-        "radio-alert"
+        "radio-flash"
     );
 
 }
 
 
 /* ============================================================
-   7. RADIO VISUAL STATES
+   HOOK EVENT SYSTEM
    ============================================================ */
 
-const radioFixStyle =
-    document.createElement("style");
+const triggerEventPart4 =
+    triggerEvent;
 
 
-radioFixStyle.textContent = `
+triggerEvent = function(
+    eventCode
+) {
+
+    triggerEventPart4(
+        eventCode
+    );
+
+
+    renderHistoryPart4();
+
+    updateScoreChart();
+
+    updateWeatherRadio(
+        eventCode
+    );
+
+    saveState();
+
+};
+
+
+/* ============================================================
+   RESET HOOK
+   ============================================================ */
+
+const resetEverythingPart4 =
+    resetEverything;
+
+
+resetEverything = function() {
+
+    resetEverythingPart4();
+
+    updateScoreChart();
+
+    renderHistoryPart4();
+
+};
+
+
+/* ============================================================
+   RESET SCORE HOOK
+   ============================================================ */
+
+const resetScorePart4 =
+    resetScore;
+
+
+resetScore = function() {
+
+    resetScorePart4();
+
+    updateScoreChart();
+
+};
+
+
+/* ============================================================
+   CLEAR HISTORY HOOK
+   ============================================================ */
+
+const clearHistoryPart4 =
+    clearHistory;
+
+
+clearHistory = function() {
+
+    clearHistoryPart4();
+
+    updateScoreChart();
+
+    renderHistoryPart4();
+
+};
+
+
+/* ============================================================
+   VISUAL DESIGN
+   ============================================================ */
+
+const part4Style =
+    document.createElement(
+        "style"
+    );
+
+
+part4Style.textContent = `
+
+    /* -------------------------------
+       SCORE CHART
+       ------------------------------- */
+
+    #live-score-chart {
+        margin-top: 22px;
+        padding-top: 18px;
+        border-top:
+            1px solid var(--border);
+    }
+
+
+    .chart-title {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 900;
+        letter-spacing: .18em;
+        margin-bottom: 14px;
+    }
+
+
+    .chart-area {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 25px;
+    }
+
+
+    .score-pie {
+        width: 125px;
+        height: 125px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+
+        background:
+            conic-gradient(
+                #252c3d
+                0deg
+                360deg
+            );
+
+        transition:
+            background 500ms ease;
+
+        flex-shrink: 0;
+    }
+
+
+    .score-pie-hole {
+        width: 68px;
+        height: 68px;
+        border-radius: 50%;
+
+        display: grid;
+        place-items: center;
+
+        background: var(--panel);
+        color: var(--muted);
+
+        font-size: 9px;
+        font-weight: 900;
+        letter-spacing: .12em;
+    }
+
+
+    .score-legend {
+        display: grid;
+        gap: 9px;
+        min-width: 170px;
+    }
+
+
+    .legend-row {
+        display: grid;
+        grid-template-columns:
+            10px 1fr auto;
+        gap: 7px;
+        align-items: center;
+
+        color: var(--muted);
+        font-size: 10px;
+    }
+
+
+    .legend-row strong {
+        color: var(--text);
+    }
+
+
+    .legend-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+    }
+
+
+    .tornado-dot {
+        background: var(--red);
+    }
+
+
+    .flood-dot {
+        background: var(--blue);
+    }
+
+
+    .tropical-dot {
+        background: var(--green);
+    }
+
+
+    .other-dot {
+        background: var(--orange);
+    }
+
+
+    /* -------------------------------
+       FILTERS
+       ------------------------------- */
+
+    #event-filters {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+
+    .filter {
+        border:
+            1px solid var(--border);
+
+        border-radius: 999px;
+
+        padding:
+            6px 10px;
+
+        color: var(--muted);
+
+        background:
+            rgba(255,255,255,.03);
+
+        cursor: pointer;
+    }
+
+
+    .filter.selected {
+        color: var(--text);
+
+        background:
+            rgba(84,221,255,.12);
+
+        border-color:
+            rgba(84,221,255,.35);
+    }
+
+
+    /* -------------------------------
+       WEATHER RADIO
+       ------------------------------- */
+
+    #weather-radio {
+        margin-top: 16px;
+    }
+
 
     .radio-screen {
+        padding: 17px;
+
+        border:
+            1px solid
+            rgba(84,221,255,.25);
+
+        border-radius: 15px;
+
+        background:
+            #080d19;
+
+        min-height: 92px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
         transition:
-            border-color 180ms ease,
-            background 180ms ease;
+            border-color .2s ease;
     }
 
 
-    .radio-screen[data-type="tornado"] {
+    .radio-title {
+        font-size: 14px;
+        font-weight: 950;
+        color: var(--text);
+    }
+
+
+    .radio-message {
+        margin-top: 7px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+    }
+
+
+    .radio-screen[data-event="PINK"],
+    .radio-screen[data-event="NUKE"],
+    .radio-screen[data-event="N10"],
+    .radio-screen[data-event="NW"] {
         border-color:
-            rgba(255,77,85,0.65);
+            rgba(255,95,213,.75);
     }
 
 
-    .radio-screen[data-type="flood"] {
+    .radio-screen[data-event="TE"],
+    .radio-screen[data-event="FE"],
+    .radio-screen[data-event="EWW"] {
         border-color:
-            rgba(60,167,255,0.65);
+            rgba(255,64,91,.75);
     }
 
 
-    .radio-screen[data-type="nuke"] {
+    .radio-screen[data-event="FW"],
+    .radio-screen[data-event="SFW"],
+    .radio-screen[data-event="FLD"] {
         border-color:
-            rgba(255,104,200,0.9);
+            rgba(67,137,255,.65);
     }
 
 
-    .radio-screen.radio-alert {
+    .radio-flash {
         animation:
-            radio-pulse 450ms ease;
+            radioFlash .45s ease;
     }
 
 
-    @keyframes radio-pulse {
+    @keyframes radioFlash {
 
         0% {
-            transform:
-                scale(1);
+            transform: scale(1);
         }
 
-        50% {
-            transform:
-                scale(1.025);
+        45% {
+            transform: scale(1.018);
         }
 
         100% {
-            transform:
-                scale(1);
+            transform: scale(1);
         }
 
     }
 
 
-    /* Make the feed more compact */
+    /* -------------------------------
+       SHORTER PAGE
+       ------------------------------- */
 
-    .feed {
-        height:
-            300px;
+    .score-card {
+        padding-top: 22px;
+        padding-bottom: 22px;
     }
 
-
-    /* Compact breakdown */
-
-    .breakdown-body {
-        min-height:
-            190px;
-
-        padding:
-            14px;
-    }
-
-
-    .chart-placeholder {
-        width:
-            135px;
-
-        height:
-            135px;
-
-        border-width:
-            11px;
-    }
-
-
-    /* Compact right-side history */
 
     .history {
-        height:
-            190px;
+        max-height: 300px;
+    }
+
+
+    .card {
+        padding: 15px;
+    }
+
+
+    .card + .card {
+        margin-top: 12px;
+    }
+
+
+    @media (max-width: 600px) {
+
+        .chart-area {
+            gap: 14px;
+        }
+
+        .score-pie {
+            width: 105px;
+            height: 105px;
+        }
+
+        .score-pie-hole {
+            width: 58px;
+            height: 58px;
+        }
+
+        .score-legend {
+            min-width: 135px;
+        }
+
     }
 
 `;
 
 
 document.head.appendChild(
-    radioFixStyle
+    part4Style
 );
 
 
 /* ============================================================
-   8. REPLACE THE OLD QUICK REFERENCE
-      WITH THE COMPLETE 18-EVENT CHART
+   START PART 4
    ============================================================ */
 
-function buildCompletePointSystem() {
+createScoreChart();
 
-    const pointsPanel =
-        document.querySelector(
-            ".points-body"
-        );
+createFilters();
 
+createWeatherRadio();
 
-    if (!pointsPanel) {
-        return;
-    }
+calculateCategoryPoints();
 
+updateScoreChart();
 
-    const rows = [
-
-        ["NADO", "Tornado", 1],
-        ["PDS", "PDS", 3],
-        [
-            "DSTW",
-            "Destructive Severe Thunderstorm Warning",
-            3
-        ],
-        ["TE", "Tornado Emergency", 10],
-
-        ["FW", "Flood Watch", 1],
-        ["SFW", "Flood Warning", 5],
-        ["FLD", "Flood", 10],
-        ["FE", "Flood Emergency", 20],
-
-        [
-            "EWW",
-            "Extreme Wind Warning",
-            20
-        ],
-        ["PO", "Power Outage", 7],
-        ["PR", "Power Restoration", 10],
-
-        ["NW", "Nuke Watch", 50],
-        ["NUKE", "Nuke announced", 75],
-        [
-            "N10",
-            "10-minute nuke warning",
-            75
-        ],
-
-        [
-            "NADO-H",
-            "Tornado hits house",
-            7
-        ],
-        [
-            "TE-H",
-            "Tornado Emergency hits house",
-            15
-        ],
-
-        [
-            "RED",
-            "Red server text",
-            5
-        ],
-        [
-            "PINK",
-            "Purple/pink nuke text",
-            75
-        ]
-
-    ];
-
-
-    pointsPanel.innerHTML = `
-
-        <div class="complete-points">
-
-            ${rows.map(row => `
-
-                <div class="complete-point-row">
-
-                    <span class="complete-code">
-                        ${row[0]}
-                    </span>
-
-                    <span class="complete-name">
-                        ${row[1]}
-                    </span>
-
-                    <strong>
-                        +${row[2]}
-                    </strong>
-
-                </div>
-
-            `).join("")}
-
-        </div>
-
-        <div class="pink-note">
-
-            🩷 PINK:
-            +75 for EACH appearance
-
-        </div>
-
-    `;
-
-
-    const style =
-        document.createElement(
-            "style"
-        );
-
-
-    style.textContent = `
-
-        .complete-points {
-
-            display:
-                flex;
-
-            flex-direction:
-                column;
-
-        }
-
-
-        .complete-point-row {
-
-            display:
-                grid;
-
-            grid-template-columns:
-                52px
-                minmax(0,1fr)
-                35px;
-
-            gap:
-                6px;
-
-            align-items:
-                center;
-
-            min-height:
-                29px;
-
-            border-bottom:
-                1px solid
-                rgba(255,255,255,0.06);
-
-            font-size:
-                9px;
-
-        }
-
-
-        .complete-code {
-
-            color:
-                var(--text);
-
-            font-weight:
-                950;
-
-        }
-
-
-        .complete-name {
-
-            color:
-                var(--muted);
-
-        }
-
-
-        .complete-point-row strong {
-
-            color:
-                var(--yellow);
-
-            text-align:
-                right;
-
-        }
-
-
-        .pink-note {
-
-            margin-top:
-                9px;
-
-            padding-top:
-                9px;
-
-            border-top:
-                1px solid var(--border);
-
-            color:
-                var(--pink);
-
-            font-size:
-                9px;
-
-            font-weight:
-                900;
-
-        }
-
-    `;
-
-
-    document.head.appendChild(
-        style
-    );
-
-}
-
-
-/* ============================================================
-   9. REMOVE DUPLICATE RESET DAY
-   ============================================================ */
-
-if (DOM.resetDay) {
-
-    DOM.resetDay.remove();
-
-}
-
-
-/* ============================================================
-   10. INITIALIZE FIXES
-   ============================================================ */
-
-buildCompletePointSystem();
-
-renderFeedFixed();
-
-updateLiveBreakdown();
-
-applyFeedFilters();
+renderHistoryPart4();
 
 
 console.log(
-    "=========================================="
+    "======================================"
 );
 
 console.log(
-    "PART 4 / 5 — LIVE SYSTEM FIXES ONLINE"
+    "PART 4 / 5 — LIVE DASHBOARD ONLINE"
 );
 
 console.log(
@@ -4894,15 +5165,11 @@ console.log(
 );
 
 console.log(
-    "FULL POINT CHART: ONLINE"
+    "FULL POINT SYSTEM: READY"
 );
 
 console.log(
-    "DUPLICATE RESET: REMOVED"
-);
-
-console.log(
-    "=========================================="
+    "======================================"
 );
 
 </script>
