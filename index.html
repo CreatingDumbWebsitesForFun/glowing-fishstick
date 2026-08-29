@@ -2892,6 +2892,931 @@ console.log(
 /* ============================================================
    END PART 1
    ============================================================ */
+    /* ============================================================
+   DAMAGE PROGRAM™
+   SUBURBAN WEATHER SIM
+   PART 2 / 5 — EVENT BUTTON SYSTEM
+   ============================================================ */
+
+
+/* ============================================================
+   EVENT DATABASE
+   ============================================================ */
+
+const EVENTS = {
+
+    NADO: {
+        code: "NADO",
+        name: "Tornado",
+        points: 1,
+        category: "tornado",
+        message: "Tornado reported"
+    },
+
+    PDS: {
+        code: "PDS",
+        name: "PDS",
+        points: 3,
+        category: "tornado",
+        message: "PDS Tornado Warning"
+    },
+
+    DSTW: {
+        code: "DSTW",
+        name: "Destructive Severe Thunderstorm Warning",
+        points: 3,
+        category: "tornado",
+        message: "Destructive Severe Thunderstorm Warning"
+    },
+
+    TE: {
+        code: "TE",
+        name: "Tornado Emergency",
+        points: 10,
+        category: "tornado",
+        message: "TORNADO EMERGENCY"
+    },
+
+
+    FW: {
+        code: "FW",
+        name: "Flood Watch",
+        points: 1,
+        category: "flood",
+        message: "Flood Watch"
+    },
+
+    SFW: {
+        code: "SFW",
+        name: "Flood Warning",
+        points: 5,
+        category: "flood",
+        message: "Flood Warning"
+    },
+
+    FLD: {
+        code: "FLD",
+        name: "Flood",
+        points: 10,
+        category: "flood",
+        message: "Flood reported"
+    },
+
+    FE: {
+        code: "FE",
+        name: "Flood Emergency",
+        points: 20,
+        category: "flood",
+        message: "FLOOD EMERGENCY"
+    },
+
+
+    EWW: {
+        code: "EWW",
+        name: "Extreme Wind Warning",
+        points: 20,
+        category: "other",
+        message: "Extreme Wind Warning"
+    },
+
+    PO: {
+        code: "PO",
+        name: "Power Outage",
+        points: 7,
+        category: "other",
+        message: "Power Outage reported"
+    },
+
+    PR: {
+        code: "PR",
+        name: "Power Restoration",
+        points: 10,
+        category: "other",
+        message: "Power restored"
+    },
+
+
+    NW: {
+        code: "NW",
+        name: "Nuke Watch",
+        points: 50,
+        category: "nuke",
+        message: "NUCLEAR WATCH"
+    },
+
+    NUKE: {
+        code: "NUKE",
+        name: "Nuke announced",
+        points: 75,
+        category: "nuke",
+        message: "There is a nuke."
+    },
+
+    N10: {
+        code: "N10",
+        name: "10-minute nuke warning",
+        points: 75,
+        category: "nuke",
+        message: "We have 10 minutes."
+    },
+
+
+    "NADO-H": {
+        code: "NADO-H",
+        name: "Tornado hits house",
+        points: 7,
+        category: "other",
+        message: "Tornado hits house"
+    },
+
+    "TE-H": {
+        code: "TE-H",
+        name: "Tornado Emergency hits house",
+        points: 15,
+        category: "other",
+        message: "Tornado Emergency hits house"
+    },
+
+
+    RED: {
+        code: "RED",
+        name: "Red server text",
+        points: 5,
+        category: "other",
+        message: "Red server text"
+    },
+
+    PINK: {
+        code: "PINK",
+        name: "Purple/pink nuke text",
+        points: 75,
+        category: "nuke",
+        message: "Purple/pink nuclear server text"
+    }
+
+};
+
+
+/* ============================================================
+   EVENT CATEGORIES
+   ============================================================ */
+
+const EVENT_GROUPS = {
+
+    tornado: {
+        title: "🌪️ TORNADO / THUNDERSTORM",
+        events: [
+            "NADO",
+            "PDS",
+            "DSTW",
+            "TE"
+        ]
+    },
+
+    flood: {
+        title: "🌊 FLOODING",
+        events: [
+            "FW",
+            "SFW",
+            "FLD",
+            "FE"
+        ]
+    },
+
+    other: {
+        title: "⚡ OTHER",
+        events: [
+            "EWW",
+            "PO",
+            "PR",
+            "NADO-H",
+            "TE-H",
+            "RED"
+        ]
+    },
+
+    nuke: {
+        title: "☢️ NUKE",
+        events: [
+            "NW",
+            "NUKE",
+            "N10",
+            "PINK"
+        ]
+    }
+
+};
+
+
+/* ============================================================
+   EVENT PANEL STYLES
+   ============================================================ */
+
+const eventPanelStyle =
+    document.createElement("style");
+
+eventPanelStyle.textContent = `
+
+    .event-controls {
+        margin-top: 14px;
+    }
+
+    .event-controls-body {
+        padding: 14px;
+    }
+
+    .event-group {
+        margin-bottom: 14px;
+    }
+
+    .event-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .event-group-title {
+        margin-bottom: 8px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+        font-weight: 950;
+
+        letter-spacing: 0.08em;
+    }
+
+    .event-buttons {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+    }
+
+    .event-button {
+        min-height: 62px;
+
+        padding: 9px 11px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 10px;
+
+        color: var(--text);
+
+        background:
+            var(--panel-light);
+
+        text-align: left;
+
+        cursor: pointer;
+
+        transition:
+            transform 120ms ease,
+            background 120ms ease,
+            border-color 120ms ease;
+    }
+
+    .event-button:hover {
+        background:
+            #202938;
+
+        border-color:
+            var(--border-bright);
+
+        transform:
+            translateY(-1px);
+    }
+
+    .event-button:active {
+        transform:
+            scale(0.98);
+    }
+
+    .event-code {
+        display: block;
+
+        font-size: 13px;
+        font-weight: 950;
+    }
+
+    .event-name {
+        display: block;
+
+        margin-top: 3px;
+
+        color: var(--muted);
+
+        font-size: 9px;
+
+        line-height: 1.3;
+    }
+
+    .event-points {
+        display: block;
+
+        margin-top: 5px;
+
+        color: var(--yellow);
+
+        font-size: 10px;
+
+        font-weight: 950;
+    }
+
+    .event-button.nuke {
+        border-color:
+            rgba(255,104,200,0.25);
+    }
+
+    .event-button.extreme {
+        border-color:
+            rgba(255,77,85,0.25);
+    }
+
+    @media (max-width: 500px) {
+
+        .event-buttons {
+            grid-template-columns: 1fr;
+        }
+
+    }
+
+`;
+
+document.head.appendChild(
+    eventPanelStyle
+);
+
+
+/* ============================================================
+   CREATE EVENT PANEL
+   ============================================================ */
+
+function createEventPanel() {
+
+    const breakdown =
+        document.querySelector(
+            ".breakdown"
+        );
+
+    if (!breakdown) {
+
+        console.error(
+            "Damage Program: breakdown panel not found."
+        );
+
+        return;
+
+    }
+
+
+    const panel =
+        document.createElement("section");
+
+    panel.className =
+        "panel event-controls";
+
+
+    panel.innerHTML = `
+
+        <div class="panel-title">
+
+            <h2>
+                🎮 EVENT CONTROLS
+            </h2>
+
+            <span>
+                TAP TO RECORD
+            </span>
+
+        </div>
+
+        <div
+            class="event-controls-body"
+            id="event-buttons-container"
+        >
+        </div>
+
+    `;
+
+
+    breakdown.parentNode.insertBefore(
+        panel,
+        breakdown
+    );
+
+
+    const container =
+        document.getElementById(
+            "event-buttons-container"
+        );
+
+
+    Object.entries(
+        EVENT_GROUPS
+    ).forEach(
+        (
+            [
+                groupKey,
+                group
+            ]
+        ) => {
+
+            const groupElement =
+                document.createElement(
+                    "div"
+                );
+
+            groupElement.className =
+                "event-group";
+
+
+            const title =
+                document.createElement(
+                    "div"
+                );
+
+            title.className =
+                "event-group-title";
+
+            title.textContent =
+                group.title;
+
+
+            const buttons =
+                document.createElement(
+                    "div"
+                );
+
+            buttons.className =
+                "event-buttons";
+
+
+            group.events.forEach(
+                eventCode => {
+
+                    const event =
+                        EVENTS[eventCode];
+
+                    if (!event) {
+                        return;
+                    }
+
+
+                    const button =
+                        document.createElement(
+                            "button"
+                        );
+
+                    button.type =
+                        "button";
+
+                    button.className =
+                        "event-button";
+
+
+                    if (
+                        event.category ===
+                        "nuke"
+                    ) {
+
+                        button.classList.add(
+                            "nuke"
+                        );
+
+                    }
+
+
+                    if (
+                        event.code === "TE" ||
+                        event.code === "FE" ||
+                        event.code === "EWW" ||
+                        event.code === "TE-H"
+                    ) {
+
+                        button.classList.add(
+                            "extreme"
+                        );
+
+                    }
+
+
+                    button.innerHTML = `
+
+                        <span class="event-code">
+                            ${event.code}
+                        </span>
+
+                        <span class="event-name">
+                            ${event.name}
+                        </span>
+
+                        <span class="event-points">
+                            +${event.points}
+                        </span>
+
+                    `;
+
+
+                    button.addEventListener(
+                        "click",
+                        () => {
+
+                            triggerEvent(
+                                eventCode
+                            );
+
+                        }
+                    );
+
+
+                    buttons.appendChild(
+                        button
+                    );
+
+                }
+            );
+
+
+            groupElement.appendChild(
+                title
+            );
+
+            groupElement.appendChild(
+                buttons
+            );
+
+            container.appendChild(
+                groupElement
+            );
+
+        }
+    );
+
+}
+
+
+/* ============================================================
+   TRIGGER EVENT
+   ============================================================ */
+
+function triggerEvent(
+    eventCode
+) {
+
+    const event =
+        EVENTS[eventCode];
+
+
+    if (!event) {
+
+        console.error(
+            "Unknown event:",
+            eventCode
+        );
+
+        return;
+
+    }
+
+
+    /* --------------------------------------------------------
+       SCORE
+       -------------------------------------------------------- */
+
+    STATE.score +=
+        event.points;
+
+
+    STATE.eventsToday +=
+        1;
+
+
+    /* --------------------------------------------------------
+       CATEGORY SCORE
+       -------------------------------------------------------- */
+
+    if (
+        Object.prototype.hasOwnProperty.call(
+            STATE.categoryPoints,
+            event.category
+        )
+    ) {
+
+        STATE.categoryPoints[
+            event.category
+        ] += event.points;
+
+    }
+
+    else {
+
+        STATE.categoryPoints.other +=
+            event.points;
+
+    }
+
+
+    /* --------------------------------------------------------
+       TIME
+       -------------------------------------------------------- */
+
+    const now =
+        new Date();
+
+    const time =
+        now.toLocaleTimeString(
+            [],
+            {
+                hour:
+                    "numeric",
+
+                minute:
+                    "2-digit"
+            }
+        );
+
+
+    /* --------------------------------------------------------
+       HISTORY EVENT
+       -------------------------------------------------------- */
+
+    const historyEvent = {
+
+        code:
+            event.code,
+
+        name:
+            event.name,
+
+        message:
+            event.message,
+
+        points:
+            event.points,
+
+        category:
+            event.category,
+
+        time:
+            time
+
+    };
+
+
+    STATE.history.unshift(
+        historyEvent
+    );
+
+
+    /* --------------------------------------------------------
+       LIMIT HISTORY
+       -------------------------------------------------------- */
+
+    if (
+        STATE.history.length > 100
+    ) {
+
+        STATE.history =
+            STATE.history.slice(
+                0,
+                100
+            );
+
+    }
+
+
+    /* --------------------------------------------------------
+       UPDATE SCORE
+       -------------------------------------------------------- */
+
+    updateScoreDisplay();
+
+    updateEventCount();
+
+
+    /* --------------------------------------------------------
+       FEED
+       -------------------------------------------------------- */
+
+    renderFeed();
+
+
+    /* --------------------------------------------------------
+       HISTORY
+       -------------------------------------------------------- */
+
+    renderHistory();
+
+
+    /* --------------------------------------------------------
+       BREAKDOWN
+       -------------------------------------------------------- */
+
+    updateBreakdown();
+
+
+    console.log(
+        `EVENT: ${event.code} +${event.points}`
+    );
+
+}
+
+
+/* ============================================================
+   RENDER LIVE SERVER FEED
+   ============================================================ */
+
+function renderFeed() {
+
+    if (
+        STATE.history.length === 0
+    ) {
+
+        DOM.feed.innerHTML = `
+
+            <div class="feed-empty">
+
+                Waiting for
+                Suburban Weather Sim
+                events...
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    DOM.feed.innerHTML =
+        STATE.history
+            .map(
+                event => `
+
+                    <div class="feed-row">
+
+                        <div class="feed-time">
+                            [${event.time}]
+                        </div>
+
+                        <div
+                            class="feed-message ${event.category}"
+                        >
+                            ${event.message}
+                        </div>
+
+                        <div class="feed-points">
+                            +${event.points}
+                        </div>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   UPDATE SCORE BREAKDOWN
+   ============================================================ */
+
+function updateBreakdown() {
+
+    const list =
+        document.getElementById(
+            "breakdown-list"
+        );
+
+
+    if (!list) {
+        return;
+    }
+
+
+    const categories = [
+
+        [
+            "Tornado / Thunderstorm",
+            "tornado",
+            "var(--red)"
+        ],
+
+        [
+            "Flooding",
+            "flood",
+            "var(--blue)"
+        ],
+
+        [
+            "Tropical",
+            "tropical",
+            "var(--green)"
+        ],
+
+        [
+            "Other",
+            "other",
+            "var(--orange)"
+        ]
+
+    ];
+
+
+    list.innerHTML =
+        categories
+            .map(
+                category => `
+
+                    <div class="breakdown-item">
+
+                        <span
+                            class="breakdown-dot"
+                            style="
+                                background:
+                                    ${category[2]};
+                            "
+                        ></span>
+
+                        <span>
+                            ${category[0]}
+                        </span>
+
+                        <strong>
+                            ${
+                                STATE.categoryPoints[
+                                    category[1]
+                                ]
+                            } PTS
+                        </strong>
+
+                    </div>
+
+                `
+            )
+            .join("");
+
+}
+
+
+/* ============================================================
+   OVERRIDE RESET
+   ============================================================ */
+
+const originalResetScore =
+    resetScore;
+
+
+resetScore = function() {
+
+    originalResetScore();
+
+    STATE.categoryPoints = {
+
+        tornado:
+            0,
+
+        flood:
+            0,
+
+        tropical:
+            0,
+
+        other:
+            0
+
+    };
+
+
+    renderFeed();
+
+    updateBreakdown();
+
+};
+
+
+/* ============================================================
+   BUILD EVENT PANEL
+   ============================================================ */
+
+createEventPanel();
+
+updateBreakdown();
+
+
+console.log(
+    "PART 2 / 5 — EVENT BUTTONS ONLINE"
+);
+
+
+/* ============================================================
+   END PART 2
+   ============================================================ */
 
 </script>
 
